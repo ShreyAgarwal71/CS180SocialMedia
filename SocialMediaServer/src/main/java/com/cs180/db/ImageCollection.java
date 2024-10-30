@@ -1,1 +1,4 @@
-public class ImageCollection implements Collection {}
+package com.cs180.db;
+
+public class ImageCollection implements Collection {
+}
