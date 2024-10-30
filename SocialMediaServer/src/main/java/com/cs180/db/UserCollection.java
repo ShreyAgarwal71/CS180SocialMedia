@@ -3,6 +3,13 @@ package com.cs180.db;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * A Collection class to manage users
+ * 
+ * @author Ates Isfendiyaroglu, L17
+ *
+ * @version 30 October 2024
+ */
 public class UserCollection implements Collection {
 	private final String fileName;
 	private ArrayList<User> users;

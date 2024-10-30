@@ -3,6 +3,13 @@ package com.cs180.db;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * A Collection class to manage posts
+ * 
+ * @author Ates Isfendiyaroglu, L17
+ *
+ * @version 30 October 2024
+ */
 public class PostCollection implements Collection {
 	private final String fileName;
 	private ArrayList<Post> posts;

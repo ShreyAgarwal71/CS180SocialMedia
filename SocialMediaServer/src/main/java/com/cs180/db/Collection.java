@@ -43,4 +43,8 @@ public interface Collection {
 
 		return exitCode;
 	} 
+
+	abstract Object getElement(Object obj);
+	abstract boolean updateElement(Object obj);
+	abstract boolean removeElement(Object obj);
 }
