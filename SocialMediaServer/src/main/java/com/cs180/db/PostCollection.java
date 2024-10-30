@@ -1,1 +1,5 @@
-public class PostCollection implements Collection {}
+package com.cs180.db;
+
+public class PostCollection implements Collection {
+
+}
