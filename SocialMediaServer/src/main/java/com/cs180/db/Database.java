@@ -44,6 +44,9 @@ public class Database {
 				exitCode = uc.removeElement(index);
 			} else if (obj instanceof Long) {
 				exitCode = uc.removeElement(((Long) obj).intValue());
+			} else if (obj instanceof User) {
+				int index = uc.indexOf(obj);
+				exitCode = uc.removeElement(index);
 			}
 		}
 		return exitCode;
@@ -66,6 +69,9 @@ public class Database {
 				exitCode = pc.removeElement(index);
 			} else if (obj instanceof Long) {
 				exitCode = pc.removeElement(((Long) obj).intValue());
+			} else if (obj instanceof Post) {
+				int index = pc.indexOf(obj);
+				exitCode = pc.removeElement(index);
 			}
 		}
 		return exitCode;
@@ -88,6 +94,9 @@ public class Database {
 				exitCode = cc.removeElement(index);
 			} else if (obj instanceof Long) {
 				exitCode = cc.removeElement(((Long) obj).intValue());
+			} else if (obj instanceof Comment) {
+				int index = cc.indexOf(obj);
+				exitCode = cc.removeElement(index);
 			}
 		}
 		return exitCode;
