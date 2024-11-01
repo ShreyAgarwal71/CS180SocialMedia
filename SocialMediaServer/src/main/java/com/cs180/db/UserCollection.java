@@ -104,5 +104,4 @@ public class UserCollection implements Collection {
 			
 		return exitCode;
 	}
-
 }

@@ -20,10 +20,88 @@ public class CommentCollection implements Collection {
 		comments = new ArrayList<>(Arrays.asList((Comment[]) o));
 	}
 
-	// Wrapper for writeData for easier use
-	public boolean writePosts() {
+	/**
+	 * Wrapper method for the Collection interface's writeData method.
+	 * This methods fills up Collection.writeData()'s parameters automatically.
+	 * Returns true on success, false on fail.
+	 * @return exitCode
+	 */
+	public boolean writeComments() {
 		Object[] temp = new Object[comments.size()];
 		comments.toArray(temp);
 		return this.writeData(fileName, temp);
+	}
+	
+	@Override
+	public int indexOf(Object obj) {
+		int index = -1;
+		if (!(obj instanceof Comment))
+			return index;
+		Comment c = (Comment) obj;
+
+		for (int i = 0; i < comments.size(); i++) {
+			if (comments.get(i).equals(c)) {
+				index = i;
+				break;
+			}
+		}
+		
+		return index;
+	}
+
+	@Override
+	public boolean updateElement(Object target, Object newObj) {
+		boolean exitCode = false;
+
+		int index = this.indexOf(target);
+		if (index == -1)
+			return exitCode;
+
+		if (index < comments.size() && index >= 0) {
+			comments.set(index, (Comment) newObj);
+			exitCode = this.writeComments();
+		}
+		
+		return exitCode;
+	}
+
+	@Override
+	public boolean updateElement(int index, Object newObj) {
+		boolean exitCode = false;
+		if (index >= comments.size() || index < 0 || !(newObj instanceof Comment))
+			return exitCode;
+
+		comments.set(index, (Comment) newObj);
+		exitCode = this.writeComments();
+			
+		return exitCode;
+	}
+
+	@Override
+	public boolean removeElement(Object obj) {
+		boolean exitCode = false;
+
+		int index = this.indexOf(obj);
+		if (index == -1)
+			return exitCode;
+
+		if (index < comments.size() && index >= 0) {
+			comments.remove(index);
+			exitCode = this.writeComments();
+		}
+
+		return exitCode;
+	}
+
+	@Override
+	public boolean removeElement(int index) {
+		boolean exitCode = false;
+		if (index >= comments.size() || index < 0)
+			return exitCode;
+
+		comments.remove(index);
+		exitCode = this.writeComments();
+			
+		return exitCode;
 	}
 }
