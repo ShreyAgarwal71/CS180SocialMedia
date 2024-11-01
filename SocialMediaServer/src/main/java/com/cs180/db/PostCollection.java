@@ -32,15 +32,6 @@ public class PostCollection implements Collection {
 		return this.writeData(fileName, temp);
 	}
 	
-	/**
-	 * Finds the index of the given Object in the Collection's ArrayList.
-	 * Returns -1 if the Object's type doesn't match the expected type or
-	 * if the targeted Object doesn't exist in the ArrayList.
-	 *
-	 * @param obj
-	 *
-	 * @return index
-	 */
 	@Override
 	public int indexOf(Object obj) {
 		int index = -1;
@@ -58,14 +49,6 @@ public class PostCollection implements Collection {
 		return index;
 	}
 
-	/**
-	 * Updates the targeted Object to match the newly given Object.
-	 * Returns false if the Object's type doesn't match the expected type or
-	 * if the targeted Object doesn't exist in the Collection's ArrayList.
-	 *
-	 * @param target, newObj
-	 * @return exitCode
-	 */
 	@Override
 	public boolean updateElement(Object target, Object newObj) {
 		boolean exitCode = false;
@@ -82,14 +65,6 @@ public class PostCollection implements Collection {
 		return exitCode;
 	}
 
-	/**
-	 * Updates the targeted Object to match the newly given Object.
-	 * Returns false if the Object's type doesn't match the expected type or
-	 * if the targeted Object doesn't exist in the Collection's ArrayList.
-	 *
-	 * @param index, newObj
-	 * @return exitCode
-	 */
 	@Override
 	public boolean updateElement(int index, Object newObj) {
 		boolean exitCode = false;
@@ -102,14 +77,6 @@ public class PostCollection implements Collection {
 		return exitCode;
 	}
 
-	/**
-	 * Deletes the specified Object from the Collection.
-	 * Returns false if the Object's type doesn't match the expected type or
-	 * if the targeted Object doesn't exist in the Collection's ArrayList.
-	 *
-	 * @param obj
-	 * @return exitCode
-	 */
 	@Override
 	public boolean removeElement(Object obj) {
 		boolean exitCode = false;
@@ -126,14 +93,6 @@ public class PostCollection implements Collection {
 		return exitCode;
 	}
 
-	/**
-	 * Deletes the specified Object from the Collection.
-	 * Returns false if the index if out of bounds or
-	 * if the targeted Object doesn't exist in the Collection's ArrayList.
-	 *
-	 * @param index
-	 * @return exitCode
-	 */
 	@Override
 	public boolean removeElement(int index) {
 		boolean exitCode = false;
