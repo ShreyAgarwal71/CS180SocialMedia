@@ -31,6 +31,28 @@ public class CommentCollection implements Collection {
 		comments.toArray(temp);
 		return this.writeData(fileName, temp);
 	}
+
+	/**
+	 * Returns the index of the first Comment with the provided commentID field
+	 * from the comments ArrayList.
+	 * Returns -1 if none of the Comment instances in the ArrayList has a 
+	 * matching commentID field.
+	 *
+	 * @param commentID
+	 * @return index
+	 */
+	public int indexOf(int commentID) {
+		int index = -1;
+		
+		for (int i = 0; i < comments.size(); i++) {
+			if (comments.get(i).getCommentID() == commentID) {
+				index = i;
+				break;
+			}
+		}
+
+		return index;
+	}
 	
 	@Override
 	public int indexOf(Object obj) {
