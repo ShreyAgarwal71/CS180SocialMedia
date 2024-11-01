@@ -30,7 +30,7 @@ public class Database {
 	 * Method to call when the server asks to update an element
 	 * from the PostCollection.
 	 * IMPORTANT: DO NOT GIVE PRIMITIVE TYPE PARAMETERS, USE WRAPPER CLASSES!!!
-	 * (ex. user Integer x instead of int x)
+	 * (ex. use Integer x instead of int x)
 	 * USE LONG FOR INDEX VALUES!!!
 	 *
 	 * @param obj 
@@ -56,7 +56,7 @@ public class Database {
 	 * Method to call when the server asks to update an element
 	 * from the PostCollection.
 	 * IMPORTANT: DO NOT GIVE PRIMITIVE TYPE PARAMETERS, USE WRAPPER CLASSES!!!
-	 * (ex. user Integer x instead of int x)
+	 * (ex. use Integer x instead of int x)
 	 * USE LONG FOR INDEX VALUES!!!
 	 *
 	 * @param obj 
@@ -82,7 +82,7 @@ public class Database {
 	 * Method to call when the server asks to update an element
 	 * from the CommentCollection.
 	 * IMPORTANT: DO NOT GIVE PRIMITIVE TYPE PARAMETERS, USE WRAPPER CLASSES!!!
-	 * (ex. user Integer x instead of int x)
+	 * (ex. use Integer x instead of int x)
 	 * USE LONG FOR INDEX VALUES!!!
 	 *
 	 * @param obj 
@@ -108,7 +108,7 @@ public class Database {
 	 * Method to call when the server asks to remove an element
 	 * from the UserCollection.
 	 * IMPORTANT: DO NOT GIVE PRIMITIVE TYPE PARAMETERS, USE WRAPPER CLASSES!!!
-	 * (ex. user Integer x instead of int x)
+	 * (ex. use Integer x instead of int x)
 	 * USE LONG FOR INDEX VALUES!!!
 	 *
 	 * @param obj 
@@ -134,7 +134,7 @@ public class Database {
 	 * Method to call when the server asks to remove an element
 	 * from the PostCollection.
 	 * IMPORTANT: DO NOT GIVE PRIMITIVE TYPE PARAMETERS, USE WRAPPER CLASSES!!!
-	 * (ex. user Integer x instead of int x)
+	 * (ex. use Integer x instead of int x)
 	 * USE LONG FOR INDEX VALUES!!!
 	 *
 	 * @param obj 
@@ -160,7 +160,7 @@ public class Database {
 	 * Method to call when the server asks to remove an element
 	 * from the CommentCollection.
 	 * IMPORTANT: DO NOT GIVE PRIMITIVE TYPE PARAMETERS, USE WRAPPER CLASSES!!!
-	 * (ex. user Integer x instead of int x)
+	 * (ex. use Integer x instead of int x)
 	 * USE LONG FOR INDEX VALUES!!!
 	 *
 	 * @param obj 
