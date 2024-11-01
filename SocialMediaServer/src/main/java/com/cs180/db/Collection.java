@@ -37,7 +37,8 @@ public interface Collection {
 
 	/**
 	 * Writes Object data to the specified file. Can be used from 
-	 * all Collection classes thanks to polymorphism
+	 * all Collection classes thanks to polymorphism.
+	 * Returns true if successfull, false if unsuccessfull.
 	 *
 	 * @param fileName, data
 	 * @return exitCode -> true = success, false = failure
@@ -56,8 +57,53 @@ public interface Collection {
 		return exitCode;
 	} 
 
-	// Abstract methods for read/update/destroy operations
-	abstract Object getElement(Object obj);
-	abstract boolean updateElement(Object obj);
+	/**
+	 * Finds the index of the given Object in the Collection's ArrayList.
+	 * Returns -1 if the Object's type doesn't match the expected type or
+	 * if the targeted Object doesn't exist in the ArrayList.
+	 *
+	 * @param obj
+	 * @return index
+	 */
+	abstract int indexOf(Object obj);
+
+	/**
+	 * Updates the targeted Object to match the newly given Object.
+	 * Returns false if the Object's type doesn't match the expected type or
+	 * if the targeted Object doesn't exist in the Collection's ArrayList.
+	 *
+	 * @param target, newObj
+	 * @return exitCode
+	 */
+	abstract boolean updateElement(Object target, Object newObj);
+
+	/**
+	 * Updates the targeted Object to match the newly given Object.
+	 * Returns false if the Object's type doesn't match the expected type or
+	 * if the targeted Object doesn't exist in the Collection's ArrayList.
+	 *
+	 * @param index, newObj
+	 * @return exitCode
+	 */
+	abstract boolean updateElement(int index, Object newObj);
+
+	/**
+	 * Deletes the specified Object from the Collection.
+	 * Returns false if the Object's type doesn't match the expected type or
+	 * if the targeted Object doesn't exist in the Collection's ArrayList.
+	 *
+	 * @param obj
+	 * @return exitCode
+	 */
 	abstract boolean removeElement(Object obj);
+
+	/**
+	 * Deletes the specified Object from the Collection.
+	 * Returns false if the index if out of bounds or
+	 * if the targeted Object doesn't exist in the Collection's ArrayList.
+	 *
+	 * @param index
+	 * @return exitCode
+	 */
+	abstract boolean removeElement(int index);
 }
