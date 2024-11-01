@@ -26,14 +26,4 @@ public class UserCollection implements Collection {
 		users.toArray(temp);
 		return this.writeData(fileName, temp);
 	}
-
-	@Override
-	public Object[] readData(String fileName) {
-		return Collection.super.readData(fileName);
-	}
-
-	@Override
-	public boolean writeData(String fileName, Object[] data) {
-		return Collection.super.writeData(fileName, data);
-	}
 }

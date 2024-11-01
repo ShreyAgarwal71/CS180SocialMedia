@@ -14,7 +14,13 @@ import java.io.ObjectOutputStream;
  * @version 30 October 2024
  */
 public interface Collection {
-	// It will be crazy if these actualy work
+	/**
+	 * Reads Object data from the specified file. Can be used from 
+	 * all Collection classes thanks to polymorphism
+	 *
+	 * @param fileName
+	 * @return data
+	 */
 	default Object[] readData(String fileName) {
 		File f = new File(fileName);
 
@@ -29,7 +35,13 @@ public interface Collection {
 		return data;
 	}
 
-	// true -> success, false -> failure
+	/**
+	 * Writes Object data to the specified file. Can be used from 
+	 * all Collection classes thanks to polymorphism
+	 *
+	 * @param fileName, data
+	 * @return exitCode -> true = success, false = failure
+	 */
 	default boolean writeData(String fileName, Object[] data) {
 		boolean exitCode = true;
 		File f = new File(fileName);
@@ -44,6 +56,7 @@ public interface Collection {
 		return exitCode;
 	} 
 
+	// Abstract methods for read/update/destroy operations
 	abstract Object getElement(Object obj);
 	abstract boolean updateElement(Object obj);
 	abstract boolean removeElement(Object obj);
