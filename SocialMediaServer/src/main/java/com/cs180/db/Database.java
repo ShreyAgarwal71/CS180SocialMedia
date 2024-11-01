@@ -27,11 +27,89 @@ public class Database {
 	}
 
 	/**
+	 * Method to call when the server asks to update an element
+	 * from the PostCollection.
+	 * IMPORTANT: DO NOT GIVE PRIMITIVE TYPE PARAMETERS, USE WRAPPER CLASSES!!!
+	 * (ex. user Integer x instead of int x)
+	 * USE LONG FOR INDEX VALUES!!!
+	 *
+	 * @param obj 
+	 * @return exitCode
+	 */
+	public boolean updateUser(Object obj, User newElement) {
+		boolean exitCode = false;
+		synchronized (ucLock) {
+			if (obj instanceof String) {
+				int index = uc.indexOf(((String) obj));
+				exitCode = uc.updateElement(index, (Object) newElement);
+			} else if (obj instanceof Long) {
+				exitCode = uc.updateElement(((Long) obj).intValue(), (Object) newElement);
+			} else if (obj instanceof User) {
+				int index = uc.indexOf(obj);
+				exitCode = uc.updateElement(index, (Object) newElement);
+			}
+		}
+		return exitCode;
+	}
+
+	/**
+	 * Method to call when the server asks to update an element
+	 * from the PostCollection.
+	 * IMPORTANT: DO NOT GIVE PRIMITIVE TYPE PARAMETERS, USE WRAPPER CLASSES!!!
+	 * (ex. user Integer x instead of int x)
+	 * USE LONG FOR INDEX VALUES!!!
+	 *
+	 * @param obj 
+	 * @return exitCode
+	 */
+	public boolean updatePost(Object obj, Post newElement) {
+		boolean exitCode = false;
+		synchronized (pcLock) {
+			if (obj instanceof Integer) {
+				int index = pc.indexOf(((Integer) obj).intValue());
+				exitCode = pc.updateElement(index, (Object) newElement);
+			} else if (obj instanceof Long) {
+				exitCode = pc.updateElement(((Long) obj).intValue(), (Object) newElement);
+			} else if (obj instanceof Post) {
+				int index = pc.indexOf(obj);
+				exitCode = pc.updateElement(index, (Object) newElement);
+			}
+		}
+		return exitCode;
+	}
+
+	/**
+	 * Method to call when the server asks to update an element
+	 * from the CommentCollection.
+	 * IMPORTANT: DO NOT GIVE PRIMITIVE TYPE PARAMETERS, USE WRAPPER CLASSES!!!
+	 * (ex. user Integer x instead of int x)
+	 * USE LONG FOR INDEX VALUES!!!
+	 *
+	 * @param obj 
+	 * @return exitCode
+	 */
+	public boolean updateComment(Object obj, Comment newElement) {
+		boolean exitCode = false;
+		synchronized (ccLock) {
+			if (obj instanceof Integer) {
+				int index = cc.indexOf(((Integer) obj).intValue());
+				exitCode = cc.updateElement(index, (Object) newElement);
+			} else if (obj instanceof Long) {
+				exitCode = cc.updateElement(((Long) obj).intValue(), (Object) newElement);
+			} else if (obj instanceof Comment) {
+				int index = cc.indexOf(obj);
+				exitCode = cc.updateElement(index, (Object) newElement);
+			}
+		}
+		return exitCode;
+	}
+
+	/**
 	 * Method to call when the server asks to remove an element
 	 * from the UserCollection.
 	 * IMPORTANT: DO NOT GIVE PRIMITIVE TYPE PARAMETERS, USE WRAPPER CLASSES!!!
-	 * USE LONG FOR INDEX VALUES!!!
 	 * (ex. user Integer x instead of int x)
+	 * USE LONG FOR INDEX VALUES!!!
 	 *
 	 * @param obj 
 	 * @return exitCode
@@ -57,6 +135,7 @@ public class Database {
 	 * from the PostCollection.
 	 * IMPORTANT: DO NOT GIVE PRIMITIVE TYPE PARAMETERS, USE WRAPPER CLASSES!!!
 	 * (ex. user Integer x instead of int x)
+	 * USE LONG FOR INDEX VALUES!!!
 	 *
 	 * @param obj 
 	 * @return exitCode
@@ -82,6 +161,7 @@ public class Database {
 	 * from the CommentCollection.
 	 * IMPORTANT: DO NOT GIVE PRIMITIVE TYPE PARAMETERS, USE WRAPPER CLASSES!!!
 	 * (ex. user Integer x instead of int x)
+	 * USE LONG FOR INDEX VALUES!!!
 	 *
 	 * @param obj 
 	 * @return exitCode
