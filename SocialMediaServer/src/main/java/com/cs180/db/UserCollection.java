@@ -31,6 +31,28 @@ public class UserCollection implements Collection {
 		users.toArray(temp);
 		return this.writeData(fileName, temp);
 	}
+
+	/**
+	 * Returns the index of the first User with the provided username field
+	 * from the users ArrayList.
+	 * Returns -1 if none of the User instances in the ArrayList has a 
+	 * matching username field.
+	 *
+	 * @param username
+	 * @return index
+	 */
+	public int indexOf(String username) {
+		int index = -1;
+		
+		for (int i = 0; i < users.size(); i++) {
+			if (users.get(i).getUsername().equals(username)) {
+				index = i;
+				break;
+			}
+		}
+
+		return index;
+	}
 	
 	@Override
 	public int indexOf(Object obj) {

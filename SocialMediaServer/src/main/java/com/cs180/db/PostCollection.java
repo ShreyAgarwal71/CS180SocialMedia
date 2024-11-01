@@ -32,6 +32,28 @@ public class PostCollection implements Collection {
 		return this.writeData(fileName, temp);
 	}
 	
+	/**
+	 * Returns the index of the first Post with the provided postID field
+	 * from the posts ArrayList.
+	 * Returns -1 if none of the Post instances in the ArrayList has a 
+	 * matching postID field.
+	 *
+	 * @param postID
+	 * @return index
+	 */
+	public int indexOf(int postID) {
+		int index = -1;
+		
+		for (int i = 0; i < posts.size(); i++) {
+			if (posts.get(i).getPostID() == postID) {
+				index = i;
+				break;
+			}
+		}
+
+		return index;
+	}
+
 	@Override
 	public int indexOf(Object obj) {
 		int index = -1;
