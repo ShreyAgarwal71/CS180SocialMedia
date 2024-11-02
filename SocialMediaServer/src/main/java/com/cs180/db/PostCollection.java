@@ -2,36 +2,73 @@ package com.cs180.db;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 /**
  * A Collection class to manage posts
  * 
- * @author Ates Isfendiyaroglu, L17
+ * @author Ates Isfendiyaroglu and Mahit Mehta, L17
  *
- * @version 30 October 2024
+ * @version November 2nd, 2024
  */
-public class PostCollection implements Collection {
+public class PostCollection implements Collection<Post> {
 	private final String fileName;
 	private ArrayList<Post> posts;
+	private final ScheduledThreadPoolExecutor scheduler;
+	private boolean needWrite = false;
 
-	public PostCollection(String fileName) {
+	public PostCollection(String fileName, ScheduledThreadPoolExecutor scheduler) {
 		this.fileName = fileName;
-		Object[] o = this.readData(fileName);
-		posts = new ArrayList<>(Arrays.asList((Post[]) o));
+		Post[] o = this.readData(fileName);
+		if (o == null) {
+			posts = new ArrayList<>();
+		} else {
+			posts = new ArrayList<>(Arrays.asList(o));
+		}
+
+		this.scheduler = scheduler;
+		this.scheduler.scheduleAtFixedRate(() -> {
+			if (!needWrite)
+				return;
+
+			this.writePosts();
+			needWrite = false;
+		}, 0, Collection.ASYNC_WRITE_FREQ, java.util.concurrent.TimeUnit.SECONDS);
+	}
+
+	public void save() {
+		if (!needWrite)
+			return;
+		this.writePosts();
 	}
 
 	/**
 	 * Wrapper method for the Collection interface's writeData method.
 	 * This methods fills up Collection.writeData()'s parameters automatically.
 	 * Returns true on success, false on fail.
+	 * 
 	 * @return exitCode
 	 */
 	public boolean writePosts() {
-		Object[] temp = new Object[posts.size()];
-		posts.toArray(temp);
-		return this.writeData(fileName, temp);
+		Post[] arr = new Post[posts.size()];
+		posts.toArray(arr);
+		return this.writeData(fileName, arr);
 	}
-	
+
+	@Override
+	public boolean addElement(Object obj) {
+		boolean exitCode = false;
+		if (!(obj instanceof Post))
+			return exitCode;
+
+		Post p = (Post) obj;
+		posts.add(p);
+		needWrite = true;
+		exitCode = true;
+
+		return exitCode;
+	}
+
 	@Override
 	public int indexOf(Object obj) {
 		int index = -1;
@@ -45,7 +82,7 @@ public class PostCollection implements Collection {
 				break;
 			}
 		}
-		
+
 		return index;
 	}
 
@@ -59,9 +96,10 @@ public class PostCollection implements Collection {
 
 		if (index < posts.size() && index >= 0) {
 			posts.set(index, (Post) newObj);
-			exitCode = this.writePosts();
+			needWrite = true;
+			exitCode = true;
 		}
-		
+
 		return exitCode;
 	}
 
@@ -72,8 +110,9 @@ public class PostCollection implements Collection {
 			return exitCode;
 
 		posts.set(index, (Post) newObj);
-		exitCode = this.writePosts();
-			
+		needWrite = true;
+		exitCode = true;
+
 		return exitCode;
 	}
 
@@ -87,7 +126,8 @@ public class PostCollection implements Collection {
 
 		if (index < posts.size() && index >= 0) {
 			posts.remove(index);
-			exitCode = this.writePosts();
+			needWrite = true;
+			exitCode = true;
 		}
 
 		return exitCode;
@@ -100,8 +140,9 @@ public class PostCollection implements Collection {
 			return exitCode;
 
 		posts.remove(index);
-		exitCode = this.writePosts();
-			
+		needWrite = true;
+		exitCode = true;
+
 		return exitCode;
 	}
 }
