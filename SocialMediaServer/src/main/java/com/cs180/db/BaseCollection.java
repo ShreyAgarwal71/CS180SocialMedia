@@ -1,8 +1,11 @@
 package com.cs180.db;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.function.Predicate;
 
 abstract class BaseCollection<T extends Serializable> implements Collection<T> {
     protected RwLockArrayList<T> records;
@@ -42,7 +45,7 @@ abstract class BaseCollection<T extends Serializable> implements Collection<T> {
     abstract boolean writeRecords();
 
     /**
-     * @implNote: Not Thread Safe, Needs Locking
+     * @implNote: Not Thread Safe, Needs Locking (Meant for internal use)
      *
      * @param T
      * @return index
@@ -106,11 +109,57 @@ abstract class BaseCollection<T extends Serializable> implements Collection<T> {
         return exitCode;
     }
 
+    @Override
     public int count() {
         this.records.lockRead();
         int size = this.records.size();
         this.records.unlockRead();
 
         return size;
+    }
+
+    @Override
+    public T findOne(Predicate<T> predicate) {
+        this.records.lockRead();
+
+        for (T t : this.records.getList()) {
+            if (predicate.test(t)) {
+                this.records.unlockRead();
+                return t;
+            }
+        }
+
+        this.records.unlockRead();
+        return null;
+    }
+
+    @Override
+    public List<T> findAll(Predicate<T> predicate) {
+        this.records.lockRead();
+
+        List<T> result = new ArrayList<>();
+        for (T t : this.records.getList()) {
+            if (predicate.test(t)) {
+                result.add(t);
+            }
+        }
+
+        this.records.unlockRead();
+        return result;
+    }
+
+    @Override
+    public List<T> findAll(Predicate<T> predicate, int limit) {
+        this.records.lockRead();
+
+        List<T> result = new ArrayList<>();
+        for (T t : this.records.getList()) {
+            if (predicate.test(t) && result.size() < limit) {
+                result.add(t);
+            }
+        }
+
+        this.records.unlockRead();
+        return result;
     }
 }

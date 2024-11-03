@@ -1,5 +1,6 @@
 package com.cs180.db;
 
+import java.util.List;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 /**
@@ -52,5 +53,15 @@ public class PostCollection extends BaseCollection<Post> {
 		}
 
 		return index;
+	}
+
+	/**
+	 * Find all posts by a specific username
+	 * 
+	 * @param username
+	 * @return List<Post>
+	 */
+	public List<Post> findByUsername(String username) {
+		return this.findAll(post -> post.getUsername().equals(username));
 	}
 }
