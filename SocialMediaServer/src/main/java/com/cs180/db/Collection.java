@@ -2,32 +2,40 @@ package com.cs180.db;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
 /**
  * A Collection interface to help manage our program's database
  * 
- * @author Ates Isfendiyaroglu, L17
+ * @author Ates Isfendiyaroglu and Mahit Mehta, L17
  *
- * @version 30 October 2024
+ * @version November 2nd, 2024
  */
-public interface Collection {
+public interface Collection<T extends Serializable> {
+	int ASYNC_WRITE_FREQ = 5; // seconds
+
 	/**
-	 * Reads Object data from the specified file. Can be used from 
+	 * Reads Object data from the specified file. Can be used from
 	 * all Collection classes thanks to polymorphism
 	 *
 	 * @param fileName
 	 * @return data
 	 */
-	default Object[] readData(String fileName) {
+	@SuppressWarnings("unchecked")
+	default T[] readData(String fileName) {
 		File f = new File(fileName);
 
-		Object[] data = null;
+		T[] data = null;
 		try (ObjectInputStream os = new ObjectInputStream(new FileInputStream(f))) {
-			Object o = os.readObject();
-			data = (Object[]) o;
+			// TODO: Perform this unchecked cast safely
+			data = (T[]) os.readObject();
+		} catch (FileNotFoundException e) {
+			System.out.println("Creating new file: " + fileName);
+			return data;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -36,56 +44,46 @@ public interface Collection {
 	}
 
 	/**
-	 * Writes Object data to the specified file. Can be used from 
+	 * Writes Object data to the specified file. Can be used from
 	 * all Collection classes thanks to polymorphism.
 	 * Returns true if successfull, false if unsuccessfull.
 	 *
-	 * @param fileName, data
+	 * @param fileName,
+	 *            data
 	 * @return exitCode -> true = success, false = failure
 	 */
-	default boolean writeData(String fileName, Object[] data) {
+	default boolean writeData(String fileName, T[] data) {
 		boolean exitCode = true;
 		File f = new File(fileName);
-
 		try (ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(f))) {
-			os.writeObject((Object) os);
+			os.writeObject(data);
 		} catch (Exception e) {
 			e.printStackTrace();
 			exitCode = false;
 		}
 
 		return exitCode;
-	} 
+	}
 
 	/**
-	 * Finds the index of the given Object in the Collection's ArrayList.
-	 * Returns -1 if the Object's type doesn't match the expected type or
-	 * if the targeted Object doesn't exist in the ArrayList.
+	 * Adds the given Object to the Collection's ArrayList.
+	 * Returns false if the Object's type doesn't match the expected type.
 	 *
 	 * @param obj
-	 * @return index
+	 * @return exitCode
 	 */
-	abstract int indexOf(Object obj);
+	abstract boolean addElement(T obj);
 
 	/**
 	 * Updates the targeted Object to match the newly given Object.
 	 * Returns false if the Object's type doesn't match the expected type or
 	 * if the targeted Object doesn't exist in the Collection's ArrayList.
 	 *
-	 * @param target, newObj
+	 * @param target,
+	 *            newObj
 	 * @return exitCode
 	 */
-	abstract boolean updateElement(Object target, Object newObj);
-
-	/**
-	 * Updates the targeted Object to match the newly given Object.
-	 * Returns false if the Object's type doesn't match the expected type or
-	 * if the targeted Object doesn't exist in the Collection's ArrayList.
-	 *
-	 * @param index, newObj
-	 * @return exitCode
-	 */
-	abstract boolean updateElement(int index, Object newObj);
+	abstract boolean updateElement(T target, T newObj);
 
 	/**
 	 * Deletes the specified Object from the Collection.
@@ -95,15 +93,10 @@ public interface Collection {
 	 * @param obj
 	 * @return exitCode
 	 */
-	abstract boolean removeElement(Object obj);
+	abstract boolean removeElement(T obj);
 
 	/**
-	 * Deletes the specified Object from the Collection.
-	 * Returns false if the index if out of bounds or
-	 * if the targeted Object doesn't exist in the Collection's ArrayList.
-	 *
-	 * @param index
-	 * @return exitCode
+	 * Saves the Collection's data to the file.
 	 */
-	abstract boolean removeElement(int index);
+	abstract void save();
 }

@@ -1,17 +1,19 @@
 package com.cs180.db;
 
+import java.io.Serializable;
+
 /**
  * User
  * 
  * This class represents a user object that can be added to a user collection.
  * 
  * 
- * @author Shrey Agarwal
+ * @author Shrey Agarwal and Mahit Mehta
  *
- * @version October 29, 2024
+ * @version November 2nd, 2024
  * 
  */
-public class User {
+public class User implements Serializable {
     private String username;
     private String password;
     private String displayName;

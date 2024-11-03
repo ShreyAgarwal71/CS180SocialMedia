@@ -1,5 +1,7 @@
 package com.cs180.db;
 
+import java.io.Serializable;
+
 /**
  * Comment
  * 
@@ -7,12 +9,12 @@ package com.cs180.db;
  * comment.
  * 
  * 
- * @author Shrey Agarwal, Lab 29927-L17
+ * @author Shrey Agarwal and Mahit Mehta, Lab 29927-L17
  *
- * @version October 29, 2024
+ * @version November 2nd, 2024
  * 
  */
-public class Comment {
+public class Comment implements Serializable {
     private String messageComment;
     private User user;
     private String date;

@@ -1,51 +1,77 @@
 package com.cs180.db;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 /**
  * A Collection class to manage users
  * 
- * @author Ates Isfendiyaroglu, L17
+ * @author Ates Isfendiyaroglu and Mahit Mehta, L17
  *
- * @version 30 October 2024
+ * @version November 2nd, 2024
  */
-public class UserCollection implements Collection {
+public class UserCollection implements Collection<User> {
 	private final String fileName;
-	private ArrayList<User> users;
+	private RwLockArrayList<User> users;
 
-	public UserCollection(String fileName) {
+	private final ScheduledThreadPoolExecutor scheduler;
+	private boolean needWrite = false;
+
+	public UserCollection(String fileName, ScheduledThreadPoolExecutor scheduler) {
 		this.fileName = fileName;
-		Object[] o = this.readData(fileName);
-		users = new ArrayList<>(Arrays.asList((User[]) o));
+		User[] arr = this.readData(fileName);
+		if (arr == null) {
+			users = new RwLockArrayList<User>();
+		} else {
+			users = new RwLockArrayList<User>(Arrays.asList(arr));
+		}
+
+		this.scheduler = scheduler;
+		this.scheduler.scheduleAtFixedRate(() -> {
+			if (!this.needWrite)
+				return;
+
+			this.writeUsers();
+			this.needWrite = false;
+		}, 0, Collection.ASYNC_WRITE_FREQ, java.util.concurrent.TimeUnit.SECONDS);
+	}
+
+	public void save() {
+		if (!this.needWrite)
+			return;
+
+		this.writeUsers();
 	}
 
 	/**
 	 * Wrapper method for the Collection interface's writeData method.
 	 * This methods fills up Collection.writeData()'s parameters automatically.
 	 * Returns true on success, false on fail.
+	 * 
 	 * @return exitCode
 	 */
 	public boolean writeUsers() {
-		Object[] temp = new Object[users.size()];
-		users.toArray(temp);
-		return this.writeData(fileName, temp);
+		this.users.lockRead();
+		User[] arr = new User[this.users.size()];
+		this.users.toArray(arr);
+		this.users.unlockRead();
+
+		return writeData(fileName, arr);
 	}
 
 	/**
-	 * Returns the index of the first User with the provided username field
-	 * from the users ArrayList.
-	 * Returns -1 if none of the User instances in the ArrayList has a 
-	 * matching username field.
+	 * @implNote: Not Thread Safe, Needs Locking
 	 *
-	 * @param username
+	 * @param User
 	 * @return index
+	 *         Return the index of the user with the same username
+	 *         Returns -1 if none of the users have the same username
 	 */
-	public int indexOf(String username) {
+	private int indexOf(User user) {
 		int index = -1;
-		
+
 		for (int i = 0; i < users.size(); i++) {
-			if (users.get(i).getUsername().equals(username)) {
+			if (this.users.get(i).getUsername().equals(user.getUsername())) {
 				index = i;
 				break;
 			}
@@ -53,77 +79,57 @@ public class UserCollection implements Collection {
 
 		return index;
 	}
-	
-	@Override
-	public int indexOf(Object obj) {
-		int index = -1;
-		if (!(obj instanceof User))
-			return index;
-		User u = (User) obj;
 
-		for (int i = 0; i < users.size(); i++) {
-			if (users.get(i).equals(u)) {
-				index = i;
-				break;
-			}
-		}
-		
-		return index;
-	}
-
-	@Override
-	public boolean updateElement(Object target, Object newObj) {
+	public boolean addElement(User user) {
 		boolean exitCode = false;
+
+		this.users.lockWrite();
+		this.users.add(user);
+		this.users.unlockWrite();
+
+		this.needWrite = true;
+		exitCode = true;
+
+		return exitCode;
+	}
+
+	public boolean updateElement(User target, User user) {
+		boolean exitCode = false;
+
+		this.users.lockWrite();
 
 		int index = this.indexOf(target);
-		if (index == -1)
+		if (index == -1) {
+			this.users.unlockWrite();
 			return exitCode;
-
-		if (index < users.size() && index >= 0) {
-			users.set(index, (User) newObj);
-			exitCode = this.writeUsers();
-		}
-		
-		return exitCode;
-	}
-
-	@Override
-	public boolean updateElement(int index, Object newObj) {
-		boolean exitCode = false;
-		if (index >= users.size() || index < 0 || !(newObj instanceof User))
-			return exitCode;
-
-		users.set(index, (User) newObj);
-		exitCode = this.writeUsers();
-			
-		return exitCode;
-	}
-
-	@Override
-	public boolean removeElement(Object obj) {
-		boolean exitCode = false;
-
-		int index = this.indexOf(obj);
-		if (index == -1)
-			return exitCode;
-
-		if (index < users.size() && index >= 0) {
-			users.remove(index);
-			exitCode = this.writeUsers();
 		}
 
+		this.users.set(index, user);
+		this.users.unlockWrite();
+
+		this.needWrite = true;
+		exitCode = true;
+
 		return exitCode;
 	}
 
-	@Override
-	public boolean removeElement(int index) {
+	public boolean removeElement(User user) {
 		boolean exitCode = false;
-		if (index >= users.size() || index < 0)
-			return exitCode;
 
-		users.remove(index);
-		exitCode = this.writeUsers();
-			
+		this.users.lockWrite();
+
+		int index = this.indexOf(user);
+		if (index == -1) {
+			this.users.unlockWrite();
+			return exitCode;
+		}
+
+		this.users.remove(index);
+		this.users.unlockWrite();
+
+		this.needWrite = true;
+		exitCode = true;
+
 		return exitCode;
 	}
 }

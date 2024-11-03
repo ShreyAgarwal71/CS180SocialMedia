@@ -1,184 +1,80 @@
 package com.cs180.db;
 
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 /**
  * A Database class to manage the Collection singletons
  *
- * @author Ates Isfendiyaroglu, L17
+ * @author Ates Isfendiyaroglu and Mahit Mehta, L17
  *
- * @version 1 November 2024
+ * @version November 2nd, 2024
  */
 public class Database {
+	private static final ScheduledThreadPoolExecutor scheduler = new ScheduledThreadPoolExecutor(3);
+
 	private static final String userFile = "users.txt";
 	private static final String postFile = "posts.txt";
 	private static final String commentFile = "comments.txt";
 
-	private static final Object ucLock = new Object();
-	private static final Object pcLock = new Object();
-	private static final Object ccLock = new Object();
+	private static final UserCollection uc = new UserCollection(userFile, scheduler);
+	private static final PostCollection pc = new PostCollection(postFile, scheduler);
+	private static final CommentCollection cc = new CommentCollection(commentFile, scheduler);
 
-	private final UserCollection uc;
-	private final PostCollection pc;
-	private final CommentCollection cc;
-	
+	private static final AtomicBoolean hasBeenInitialized = new AtomicBoolean(false);
+
 	public Database() {
-		uc = new UserCollection(userFile);
-		pc = new PostCollection(postFile);
-		cc = new CommentCollection(commentFile);
+		if (hasBeenInitialized.compareAndSet(false, true)) {
+			Runtime.getRuntime().addShutdownHook((new Thread() {
+				public void run() {
+					System.out.println("save");
+					Database.uc.save();
+					Database.pc.save();
+					Database.cc.save();
+				}
+			}));
+		}
 	}
 
-	/**
-	 * Method to call when the server asks to update an element
-	 * from the PostCollection.
-	 * IMPORTANT: DO NOT GIVE PRIMITIVE TYPE PARAMETERS, USE WRAPPER CLASSES!!!
-	 * (ex. use Integer x instead of int x)
-	 * USE LONG FOR INDEX VALUES!!!
-	 *
-	 * @param obj 
-	 * @return exitCode
-	 */
-	public boolean updateUser(Object obj, User newElement) {
-		boolean exitCode = false;
-		synchronized (ucLock) {
-			if (obj instanceof String) {
-				int index = uc.indexOf(((String) obj));
-				exitCode = uc.updateElement(index, (Object) newElement);
-			} else if (obj instanceof Long) {
-				exitCode = uc.updateElement(((Long) obj).intValue(), (Object) newElement);
-			} else if (obj instanceof User) {
-				int index = uc.indexOf(obj);
-				exitCode = uc.updateElement(index, (Object) newElement);
-			}
-		}
-		return exitCode;
+	public UserCollection getUserCollection() {
+		return Database.uc;
 	}
 
-	/**
-	 * Method to call when the server asks to update an element
-	 * from the PostCollection.
-	 * IMPORTANT: DO NOT GIVE PRIMITIVE TYPE PARAMETERS, USE WRAPPER CLASSES!!!
-	 * (ex. use Integer x instead of int x)
-	 * USE LONG FOR INDEX VALUES!!!
-	 *
-	 * @param obj 
-	 * @return exitCode
-	 */
-	public boolean updatePost(Object obj, Post newElement) {
-		boolean exitCode = false;
-		synchronized (pcLock) {
-			if (obj instanceof Integer) {
-				int index = pc.indexOf(((Integer) obj).intValue());
-				exitCode = pc.updateElement(index, (Object) newElement);
-			} else if (obj instanceof Long) {
-				exitCode = pc.updateElement(((Long) obj).intValue(), (Object) newElement);
-			} else if (obj instanceof Post) {
-				int index = pc.indexOf(obj);
-				exitCode = pc.updateElement(index, (Object) newElement);
-			}
-		}
-		return exitCode;
+	public PostCollection getPostCollection() {
+		return Database.pc;
 	}
 
-	/**
-	 * Method to call when the server asks to update an element
-	 * from the CommentCollection.
-	 * IMPORTANT: DO NOT GIVE PRIMITIVE TYPE PARAMETERS, USE WRAPPER CLASSES!!!
-	 * (ex. use Integer x instead of int x)
-	 * USE LONG FOR INDEX VALUES!!!
-	 *
-	 * @param obj 
-	 * @return exitCode
-	 */
-	public boolean updateComment(Object obj, Comment newElement) {
-		boolean exitCode = false;
-		synchronized (ccLock) {
-			if (obj instanceof Integer) {
-				int index = cc.indexOf(((Integer) obj).intValue());
-				exitCode = cc.updateElement(index, (Object) newElement);
-			} else if (obj instanceof Long) {
-				exitCode = cc.updateElement(((Long) obj).intValue(), (Object) newElement);
-			} else if (obj instanceof Comment) {
-				int index = cc.indexOf(obj);
-				exitCode = cc.updateElement(index, (Object) newElement);
-			}
-		}
-		return exitCode;
+	public CommentCollection getCommentCollection() {
+		return Database.cc;
 	}
 
-	/**
-	 * Method to call when the server asks to remove an element
-	 * from the UserCollection.
-	 * IMPORTANT: DO NOT GIVE PRIMITIVE TYPE PARAMETERS, USE WRAPPER CLASSES!!!
-	 * (ex. use Integer x instead of int x)
-	 * USE LONG FOR INDEX VALUES!!!
-	 *
-	 * @param obj 
-	 * @return exitCode
-	 */
-	public boolean removeUser(Object obj) {
-		boolean exitCode = false;
-		synchronized (ucLock) {
-			if (obj instanceof String) {
-				int index = uc.indexOf((String) obj);
-				exitCode = uc.removeElement(index);
-			} else if (obj instanceof Long) {
-				exitCode = uc.removeElement(((Long) obj).intValue());
-			} else if (obj instanceof User) {
-				int index = uc.indexOf(obj);
-				exitCode = uc.removeElement(index);
-			}
-		}
-		return exitCode;
+	public static void main(String[] args) {
+		populateTest();
 	}
 
-	/**
-	 * Method to call when the server asks to remove an element
-	 * from the PostCollection.
-	 * IMPORTANT: DO NOT GIVE PRIMITIVE TYPE PARAMETERS, USE WRAPPER CLASSES!!!
-	 * (ex. use Integer x instead of int x)
-	 * USE LONG FOR INDEX VALUES!!!
-	 *
-	 * @param obj 
-	 * @return exitCode
-	 */
-	public boolean removePost(Object obj) {
-		boolean exitCode = false;
-		synchronized (pcLock) {
-			if (obj instanceof Integer) {
-				int index = pc.indexOf(((Integer) obj).intValue());
-				exitCode = pc.removeElement(index);
-			} else if (obj instanceof Long) {
-				exitCode = pc.removeElement(((Long) obj).intValue());
-			} else if (obj instanceof Post) {
-				int index = pc.indexOf(obj);
-				exitCode = pc.removeElement(index);
-			}
-		}
-		return exitCode;
-	}
+	private static void populateTest() {
+		Database db = new Database();
 
-	/**
-	 * Method to call when the server asks to remove an element
-	 * from the CommentCollection.
-	 * IMPORTANT: DO NOT GIVE PRIMITIVE TYPE PARAMETERS, USE WRAPPER CLASSES!!!
-	 * (ex. use Integer x instead of int x)
-	 * USE LONG FOR INDEX VALUES!!!
-	 *
-	 * @param obj 
-	 * @return exitCode
-	 */
-	public boolean removeComment(Object obj) {
-		boolean exitCode = false;
-		synchronized (ccLock) {
-			if (obj instanceof Integer) {
-				int index = cc.indexOf(((Integer) obj).intValue());
-				exitCode = cc.removeElement(index);
-			} else if (obj instanceof Long) {
-				exitCode = cc.removeElement(((Long) obj).intValue());
-			} else if (obj instanceof Comment) {
-				int index = cc.indexOf(obj);
-				exitCode = cc.removeElement(index);
-			}
+		long start = System.currentTimeMillis();
+		for (int i = 0; i < 10; i++) {
+			User u = new User("user" + i, "pass" + i, "username: " + i, "email" + i);
+			db.getUserCollection().addElement(u);
+			System.out.println("User added: " + u);
 		}
-		return exitCode;
+
+		for (int i = 0; i < 3; i++) {
+			Post u = new Post("hello", "mahit", "11/11/11", 1, 0, "image", new Comment[0]);
+			db.getPostCollection().addElement(u);
+			System.out.println("post added: " + u);
+		}
+
+		for (int i = 0; i < 3; i++) {
+			Comment u = new Comment("hello", new User("user" + i, "pass" + i, "username:" + i, "email" + i),
+					"11/11/11", 1, 0, new Comment[0]);
+			db.getCommentCollection().addElement(u);
+			System.out.println("comment added: " + u);
+		}
+		System.out.println("Time to add data: " + (System.currentTimeMillis() - start) + "ms");
+
 	}
 }

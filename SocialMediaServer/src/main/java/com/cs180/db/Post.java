@@ -1,40 +1,45 @@
 package com.cs180.db;
 
+import java.io.Serializable;
+
 /**
  * Post
  * 
  * This class represents a post object that can be added to a feed.
  * 
  * 
- * @author Shrey Agarwal
+ * @author Shrey Agarwal and Mahit Mehta
  *
- * @version October 29, 2024
+ * @version November 2nd, 2024
  * 
  */
-public class Post {
+public class Post implements Serializable {
     private String messagePost;
-    private User user;
+    private String username;
     private String date;
     private int postID;
     private int votes;
+    private String imageURL;
     private Comment[] comments;
 
     /**
      * Constructor for Post
      * 
      * @param messagePost
-     * @param user
+     * @param username
      * @param date
      * @param postID
      * @param votes
      * @param comments
      */
-    public Post(String messagePost, User user, String date, int postID, int votes, Comment[] comments) {
+    public Post(String messagePost, String username, String date, int postID, int votes, String imageURL,
+            Comment[] comments) {
         this.messagePost = messagePost;
-        this.user = user;
+        this.username = username;
         this.date = date;
         this.postID = postID;
         this.votes = votes;
+        this.imageURL = imageURL;
         this.comments = comments;
     }
 
@@ -52,8 +57,8 @@ public class Post {
      * 
      * @return user
      */
-    public User getUser() {
-        return user;
+    public String getUsername() {
+        return username;
     }
 
     /**
@@ -83,6 +88,10 @@ public class Post {
         return votes;
     }
 
+    public String getImageURL() {
+        return imageURL;
+    }
+
     /**
      * Getter for comments
      * 
@@ -106,8 +115,8 @@ public class Post {
      * 
      * @param user
      */
-    public void setUser(User user) {
-        this.user = user;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     /**
@@ -137,6 +146,10 @@ public class Post {
         this.votes = votes;
     }
 
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
+    }
+
     /**
      * Setter for comments
      * 
@@ -157,8 +170,9 @@ public class Post {
         if (!(obj instanceof Post))
             return false;
         Post p = (Post) obj;
-        return p.messagePost.equals(messagePost) && p.user.equals(user) && p.date.equals(date) && p.postID == postID
-                && p.votes == votes && p.comments.equals(comments);
+        return p.messagePost.equals(messagePost) && p.username.equals(username) && p.date.equals(date)
+                && p.postID == postID
+                && p.votes == votes && p.imageURL.equals(imageURL) && p.comments.equals(comments);
     }
 
     /**
@@ -167,7 +181,7 @@ public class Post {
      * @return String
      */
     public String toString() {
-        return messagePost + "," + user + "," + date + "," + postID + "," + votes + "," + comments;
+        return messagePost + "," + username + "," + date + "," + postID + "," + votes + "," + imageURL + "," + comments;
     }
 
 }
