@@ -133,4 +133,13 @@ public class PostCollection implements Collection<Post> {
 
 		return exitCode;
 	}
+
+	@Override
+	public int count() {
+		this.posts.lockRead();
+		int size = this.posts.size();
+		this.posts.unlockRead();
+
+		return size;
+	}
 }

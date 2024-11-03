@@ -99,4 +99,11 @@ public interface Collection<T extends Serializable> {
 	 * Saves the Collection's data to the file.
 	 */
 	abstract void save();
+
+	/**
+	 * Returns the number of elements in the Collection.
+	 *
+	 * @return count
+	 */
+	abstract int count();
 }
