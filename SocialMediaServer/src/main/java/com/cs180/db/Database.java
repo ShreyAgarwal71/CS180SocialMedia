@@ -1,5 +1,6 @@
 package com.cs180.db;
 
+import java.util.ArrayList;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -27,10 +28,11 @@ public class Database {
 		if (hasBeenInitialized.compareAndSet(false, true)) {
 			Runtime.getRuntime().addShutdownHook((new Thread() {
 				public void run() {
-					System.out.println("save");
+					System.out.println("Database: Saving data");
 					Database.uc.save();
 					Database.pc.save();
 					Database.cc.save();
+					System.out.println("Database: Saved Data");
 				}
 			}));
 		}
@@ -49,7 +51,39 @@ public class Database {
 	}
 
 	public static void main(String[] args) {
-		populateTest();
+		// populateTest();
+		multiThreadTest();
+	}
+
+	private static void multiThreadTest() {
+		ArrayList<Thread> threads = new ArrayList<>();
+
+		for (int i = 0; i < 10; i++) {
+			Thread t = new Thread(() -> {
+				Database db = new Database();
+
+				for (int j = 0; j < 1000; j++) {
+					db.getUserCollection()
+							.addElement(new User("user_" + j, "pass", "username_ " + j, "email_" + j));
+				}
+			});
+			threads.add(t);
+			t.start();
+		}
+
+		for (Thread t : threads) {
+			try {
+				t.join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+
+		System.out.println("All threads have finished executing");
+
+		Database db = new Database();
+
+		System.out.println("Users in the database:" + db.getUserCollection().count());
 	}
 
 	private static void populateTest() {

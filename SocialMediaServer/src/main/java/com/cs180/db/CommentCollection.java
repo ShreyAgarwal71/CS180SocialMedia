@@ -61,7 +61,7 @@ public class CommentCollection implements Collection<Comment> {
 	/**
 	 * @implNote: Not Thread Safe, Needs Locking
 	 *
-	 * @param post
+	 * @param Comment
 	 * @return index
 	 *         Return the index of the comment with the same commentID
 	 *         Returns -1 if none of the comments have the same commentID
@@ -133,5 +133,13 @@ public class CommentCollection implements Collection<Comment> {
 		exitCode = true;
 
 		return exitCode;
+	}
+
+	public int count() {
+		this.comments.lockRead();
+		int size = this.comments.size();
+		this.comments.unlockRead();
+
+		return size;
 	}
 }

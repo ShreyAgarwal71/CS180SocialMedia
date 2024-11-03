@@ -132,4 +132,12 @@ public class UserCollection implements Collection<User> {
 
 		return exitCode;
 	}
+
+	public int count() {
+		this.users.lockRead();
+		int size = this.users.size();
+		this.users.unlockRead();
+
+		return size;
+	}
 }
