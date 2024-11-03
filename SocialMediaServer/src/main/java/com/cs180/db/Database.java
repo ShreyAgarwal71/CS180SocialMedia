@@ -14,17 +14,39 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Database {
 	private static final ScheduledThreadPoolExecutor scheduler = new ScheduledThreadPoolExecutor(3);
 
-	private static final String userFile = "users.txt";
-	private static final String postFile = "posts.txt";
-	private static final String commentFile = "comments.txt";
+	private static final Object mainLock = new Object();
 
-	private static final UserCollection uc = new UserCollection(userFile, scheduler);
-	private static final PostCollection pc = new PostCollection(postFile, scheduler);
-	private static final CommentCollection cc = new CommentCollection(commentFile, scheduler);
+	private static String userFile = "users.txt";
+	private static String postFile = "posts.txt";
+	private static String commentFile = "comments.txt";
+
+	private static UserCollection uc;
+	private static PostCollection pc;
+	private static CommentCollection cc;
 
 	private static final AtomicBoolean hasBeenInitialized = new AtomicBoolean(false);
 
+	public static void init(String userFile, String postFile, String commentFile) {
+		Database.userFile = userFile;
+		Database.postFile = postFile;
+		Database.commentFile = commentFile;
+
+		init();
+	}
+
+	public static void init() {
+		synchronized (mainLock) {
+			if (uc == null) {
+				uc = new UserCollection(Database.userFile, scheduler);
+				pc = new PostCollection(Database.postFile, scheduler);
+				cc = new CommentCollection(Database.commentFile, scheduler);
+			}
+		}
+	}
+
 	public Database() {
+		init();
+
 		if (hasBeenInitialized.compareAndSet(false, true)) {
 			Runtime.getRuntime().addShutdownHook((new Thread() {
 				public void run() {

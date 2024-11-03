@@ -44,6 +44,10 @@ public class UserCollection extends BaseCollection<User> {
 	public int indexOf(User user) {
 		int index = -1;
 
+		if (user == null) {
+			return index;
+		}
+
 		for (int i = 0; i < this.records.size(); i++) {
 			if (this.records.get(i).getUsername().equals(user.getUsername())) {
 				index = i;
