@@ -1,6 +1,5 @@
 package com.cs180.db;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
@@ -13,32 +12,32 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
  */
 public class CommentCollection implements Collection<Comment> {
 	private final String fileName;
-	private ArrayList<Comment> comments;
+	private RwLockArrayList<Comment> comments;
 
 	private final ScheduledThreadPoolExecutor scheduler;
 	private boolean needWrite = false;
 
 	public CommentCollection(String fileName, ScheduledThreadPoolExecutor scheduler) {
 		this.fileName = fileName;
-		Comment[] o = this.readData(fileName);
-		if (o == null) {
-			comments = new ArrayList<>();
+		Comment[] arr = this.readData(fileName);
+		if (arr == null) {
+			this.comments = new RwLockArrayList<>();
 		} else {
-			comments = new ArrayList<>(Arrays.asList(o));
+			this.comments = new RwLockArrayList<>(Arrays.asList(arr));
 		}
 
 		this.scheduler = scheduler;
 		this.scheduler.scheduleAtFixedRate(() -> {
-			if (!needWrite)
+			if (!this.needWrite)
 				return;
 
 			this.writeComments();
-			needWrite = false;
+			this.needWrite = false;
 		}, 0, Collection.ASYNC_WRITE_FREQ, java.util.concurrent.TimeUnit.SECONDS);
 	}
 
 	public void save() {
-		if (!needWrite)
+		if (!this.needWrite)
 			return;
 		this.writeComments();
 	}
@@ -51,34 +50,27 @@ public class CommentCollection implements Collection<Comment> {
 	 * @return exitCode
 	 */
 	public boolean writeComments() {
-		Comment[] arr = new Comment[comments.size()];
-		comments.toArray(arr);
+		this.comments.lockRead();
+		Comment[] arr = new Comment[this.comments.size()];
+		this.comments.toArray(arr);
+		this.comments.unlockRead();
+
 		return this.writeData(fileName, arr);
 	}
 
-	@Override
-	public boolean addElement(Object obj) {
-		boolean exitCode = false;
-		if (!(obj instanceof Comment))
-			return exitCode;
-
-		Comment c = (Comment) obj;
-		comments.add(c);
-		needWrite = true;
-		exitCode = true;
-
-		return exitCode;
-	}
-
-	@Override
-	public int indexOf(Object obj) {
+	/**
+	 * @implNote: Not Thread Safe, Needs Locking
+	 *
+	 * @param post
+	 * @return index
+	 *         Return the index of the comment with the same commentID
+	 *         Returns -1 if none of the comments have the same commentID
+	 */
+	public int indexOf(Comment comment) {
 		int index = -1;
-		if (!(obj instanceof Comment))
-			return index;
-		Comment c = (Comment) obj;
 
-		for (int i = 0; i < comments.size(); i++) {
-			if (comments.get(i).equals(c)) {
+		for (int i = 0; i < this.comments.size(); i++) {
+			if (this.comments.get(i).getCommentID() == comment.getCommentID()) {
 				index = i;
 				break;
 			}
@@ -88,60 +80,56 @@ public class CommentCollection implements Collection<Comment> {
 	}
 
 	@Override
-	public boolean updateElement(Object target, Object newObj) {
+	public boolean addElement(Comment c) {
 		boolean exitCode = false;
 
-		int index = this.indexOf(target);
-		if (index == -1)
-			return exitCode;
+		this.comments.lockWrite();
+		this.comments.add(c);
+		this.comments.unlockWrite();
 
-		if (index < comments.size() && index >= 0) {
-			comments.set(index, (Comment) newObj);
-			needWrite = true;
-			exitCode = true;
-		}
-
-		return exitCode;
-	}
-
-	@Override
-	public boolean updateElement(int index, Object newObj) {
-		boolean exitCode = false;
-		if (index >= comments.size() || index < 0 || !(newObj instanceof Comment))
-			return exitCode;
-
-		comments.set(index, (Comment) newObj);
-		needWrite = true;
+		this.needWrite = true;
 		exitCode = true;
 
 		return exitCode;
 	}
 
 	@Override
-	public boolean removeElement(Object obj) {
+	public boolean updateElement(Comment target, Comment comment) {
 		boolean exitCode = false;
 
-		int index = this.indexOf(obj);
-		if (index == -1)
-			return exitCode;
+		this.comments.lockWrite();
 
-		if (index < comments.size() && index >= 0) {
-			comments.remove(index);
-			needWrite = true;
-			exitCode = true;
+		int index = this.indexOf(target);
+		if (index == -1) {
+			this.comments.unlockWrite();
+			return exitCode;
 		}
+
+		this.comments.set(index, comment);
+		this.comments.unlockWrite();
+
+		this.needWrite = true;
+		exitCode = true;
 
 		return exitCode;
 	}
 
 	@Override
-	public boolean removeElement(int index) {
+	public boolean removeElement(Comment comment) {
 		boolean exitCode = false;
-		if (index >= comments.size() || index < 0)
-			return exitCode;
 
-		comments.remove(index);
-		needWrite = true;
+		this.comments.lockWrite();
+
+		int index = this.indexOf(comment);
+		if (index == -1) {
+			this.comments.unlockWrite();
+			return exitCode;
+		}
+
+		this.comments.remove(index);
+		this.comments.unlockWrite();
+
+		this.needWrite = true;
 		exitCode = true;
 
 		return exitCode;

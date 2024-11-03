@@ -1,6 +1,5 @@
 package com.cs180.db;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
@@ -13,31 +12,31 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
  */
 public class PostCollection implements Collection<Post> {
 	private final String fileName;
-	private ArrayList<Post> posts;
+	private RwLockArrayList<Post> posts;
 	private final ScheduledThreadPoolExecutor scheduler;
 	private boolean needWrite = false;
 
 	public PostCollection(String fileName, ScheduledThreadPoolExecutor scheduler) {
 		this.fileName = fileName;
-		Post[] o = this.readData(fileName);
-		if (o == null) {
-			posts = new ArrayList<>();
+		Post[] arr = this.readData(fileName);
+		if (arr == null) {
+			this.posts = new RwLockArrayList<>();
 		} else {
-			posts = new ArrayList<>(Arrays.asList(o));
+			this.posts = new RwLockArrayList<>(Arrays.asList(arr));
 		}
 
 		this.scheduler = scheduler;
 		this.scheduler.scheduleAtFixedRate(() -> {
-			if (!needWrite)
+			if (!this.needWrite)
 				return;
 
 			this.writePosts();
-			needWrite = false;
+			this.needWrite = false;
 		}, 0, Collection.ASYNC_WRITE_FREQ, java.util.concurrent.TimeUnit.SECONDS);
 	}
 
 	public void save() {
-		if (!needWrite)
+		if (!this.needWrite)
 			return;
 		this.writePosts();
 	}
@@ -50,34 +49,27 @@ public class PostCollection implements Collection<Post> {
 	 * @return exitCode
 	 */
 	public boolean writePosts() {
-		Post[] arr = new Post[posts.size()];
-		posts.toArray(arr);
+		this.posts.lockRead();
+		Post[] arr = new Post[this.posts.size()];
+		this.posts.toArray(arr);
+		this.posts.unlockRead();
+
 		return this.writeData(fileName, arr);
 	}
 
-	@Override
-	public boolean addElement(Object obj) {
-		boolean exitCode = false;
-		if (!(obj instanceof Post))
-			return exitCode;
-
-		Post p = (Post) obj;
-		posts.add(p);
-		needWrite = true;
-		exitCode = true;
-
-		return exitCode;
-	}
-
-	@Override
-	public int indexOf(Object obj) {
+	/**
+	 * @implNote: Not Thread Safe, Needs Locking
+	 *
+	 * @param post
+	 * @return index
+	 *         Return the index of the post with the same postID
+	 *         Returns -1 if none of the posts have the same postID
+	 */
+	private int indexOf(Post post) {
 		int index = -1;
-		if (!(obj instanceof Post))
-			return index;
-		Post p = (Post) obj;
 
 		for (int i = 0; i < posts.size(); i++) {
-			if (posts.get(i).equals(p)) {
+			if (this.posts.get(i).getPostID() == post.getPostID()) {
 				index = i;
 				break;
 			}
@@ -87,60 +79,56 @@ public class PostCollection implements Collection<Post> {
 	}
 
 	@Override
-	public boolean updateElement(Object target, Object newObj) {
+	public boolean addElement(Post post) {
 		boolean exitCode = false;
 
-		int index = this.indexOf(target);
-		if (index == -1)
-			return exitCode;
+		this.posts.lockWrite();
+		this.posts.add(post);
+		this.posts.unlockWrite();
 
-		if (index < posts.size() && index >= 0) {
-			posts.set(index, (Post) newObj);
-			needWrite = true;
-			exitCode = true;
-		}
-
-		return exitCode;
-	}
-
-	@Override
-	public boolean updateElement(int index, Object newObj) {
-		boolean exitCode = false;
-		if (index >= posts.size() || index < 0 || !(newObj instanceof Post))
-			return exitCode;
-
-		posts.set(index, (Post) newObj);
-		needWrite = true;
+		this.needWrite = true;
 		exitCode = true;
 
 		return exitCode;
 	}
 
 	@Override
-	public boolean removeElement(Object obj) {
+	public boolean updateElement(Post target, Post post) {
 		boolean exitCode = false;
 
-		int index = this.indexOf(obj);
-		if (index == -1)
-			return exitCode;
+		this.posts.lockWrite();
 
-		if (index < posts.size() && index >= 0) {
-			posts.remove(index);
-			needWrite = true;
-			exitCode = true;
+		int index = this.indexOf(target);
+		if (index == -1) {
+			this.posts.unlockWrite();
+			return exitCode;
 		}
+
+		this.posts.set(index, post);
+		this.posts.unlockWrite();
+
+		this.needWrite = true;
+		exitCode = true;
 
 		return exitCode;
 	}
 
 	@Override
-	public boolean removeElement(int index) {
+	public boolean removeElement(Post post) {
 		boolean exitCode = false;
-		if (index >= posts.size() || index < 0)
-			return exitCode;
 
-		posts.remove(index);
-		needWrite = true;
+		this.posts.lockWrite();
+
+		int index = this.indexOf(post);
+		if (index == -1) {
+			this.posts.unlockWrite();
+			return exitCode;
+		}
+
+		this.posts.remove(index);
+		this.posts.unlockWrite();
+
+		this.needWrite = true;
 		exitCode = true;
 
 		return exitCode;

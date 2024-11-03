@@ -66,23 +66,13 @@ public interface Collection<T extends Serializable> {
 	}
 
 	/**
-	 * Finds the index of the given Object in the Collection's ArrayList.
-	 * Returns -1 if the Object's type doesn't match the expected type or
-	 * if the targeted Object doesn't exist in the ArrayList.
-	 *
-	 * @param obj
-	 * @return index
-	 */
-	public int indexOf(Object obj);
-
-	/**
 	 * Adds the given Object to the Collection's ArrayList.
 	 * Returns false if the Object's type doesn't match the expected type.
 	 *
 	 * @param obj
 	 * @return exitCode
 	 */
-	abstract boolean addElement(Object obj);
+	abstract boolean addElement(T obj);
 
 	/**
 	 * Updates the targeted Object to match the newly given Object.
@@ -93,18 +83,7 @@ public interface Collection<T extends Serializable> {
 	 *            newObj
 	 * @return exitCode
 	 */
-	abstract boolean updateElement(Object target, Object newObj);
-
-	/**
-	 * Updates the targeted Object to match the newly given Object.
-	 * Returns false if the Object's type doesn't match the expected type or
-	 * if the targeted Object doesn't exist in the Collection's ArrayList.
-	 *
-	 * @param index,
-	 *            newObj
-	 * @return exitCode
-	 */
-	abstract boolean updateElement(int index, Object newObj);
+	abstract boolean updateElement(T target, T newObj);
 
 	/**
 	 * Deletes the specified Object from the Collection.
@@ -114,17 +93,7 @@ public interface Collection<T extends Serializable> {
 	 * @param obj
 	 * @return exitCode
 	 */
-	abstract boolean removeElement(Object obj);
-
-	/**
-	 * Deletes the specified Object from the Collection.
-	 * Returns false if the index if out of bounds or
-	 * if the targeted Object doesn't exist in the Collection's ArrayList.
-	 *
-	 * @param index
-	 * @return exitCode
-	 */
-	abstract boolean removeElement(int index);
+	abstract boolean removeElement(T obj);
 
 	/**
 	 * Saves the Collection's data to the file.

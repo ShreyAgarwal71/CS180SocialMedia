@@ -1,39 +1,51 @@
 package com.cs180.db;
 
 import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * Database
- * 
- * This class represents the database that will handle all the collections
- * 
- * @author Mahit Mehta, L17
+ * A Database class to manage the Collection singletons
+ *
+ * @author Ates Isfendiyaroglu and Mahit Mehta, L17
  *
  * @version November 2nd, 2024
- * 
  */
 public class Database {
+	private static final ScheduledThreadPoolExecutor scheduler = new ScheduledThreadPoolExecutor(3);
+
 	private static final String userFile = "users.txt";
 	private static final String postFile = "posts.txt";
 	private static final String commentFile = "comments.txt";
-	private final UserCollection uc;
-	private final PostCollection pc;
-	private final CommentCollection cc;
+
+	private static final UserCollection uc = new UserCollection(userFile, scheduler);
+	private static final PostCollection pc = new PostCollection(postFile, scheduler);
+	private static final CommentCollection cc = new CommentCollection(commentFile, scheduler);
+
+	private static final AtomicBoolean hasBeenInitialized = new AtomicBoolean(false);
 
 	public Database() {
-		ScheduledThreadPoolExecutor scheduler = new ScheduledThreadPoolExecutor(3);
+		if (hasBeenInitialized.compareAndSet(false, true)) {
+			Runtime.getRuntime().addShutdownHook((new Thread() {
+				public void run() {
+					System.out.println("save");
+					Database.uc.save();
+					Database.pc.save();
+					Database.cc.save();
+				}
+			}));
+		}
+	}
 
-		uc = new UserCollection(userFile, scheduler);
-		pc = new PostCollection(postFile, scheduler);
-		cc = new CommentCollection(commentFile, scheduler);
+	public UserCollection getUserCollection() {
+		return Database.uc;
+	}
 
-		Runtime.getRuntime().addShutdownHook((new Thread() {
-			public void run() {
-				uc.save();
-				pc.save();
-				cc.save();
-			}
-		}));
+	public PostCollection getPostCollection() {
+		return Database.pc;
+	}
+
+	public CommentCollection getCommentCollection() {
+		return Database.cc;
 	}
 
 	public static void main(String[] args) {
@@ -43,31 +55,26 @@ public class Database {
 	private static void populateTest() {
 		Database db = new Database();
 
-		for (int i = 0; i < 1000; i++) {
+		long start = System.currentTimeMillis();
+		for (int i = 0; i < 10; i++) {
 			User u = new User("user" + i, "pass" + i, "username: " + i, "email" + i);
-			db.uc.addElement(u);
+			db.getUserCollection().addElement(u);
 			System.out.println("User added: " + u);
 		}
 
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 3; i++) {
 			Post u = new Post("hello", "mahit", "11/11/11", 1, 0, "image", new Comment[0]);
-			db.pc.addElement(u);
+			db.getPostCollection().addElement(u);
 			System.out.println("post added: " + u);
 		}
 
-		for (int i = 0; i < 10; i++) {
-			Comment u = new Comment("hello", new User("user" + i, "pass" + i, "username: " + i, "email" + i),
+		for (int i = 0; i < 3; i++) {
+			Comment u = new Comment("hello", new User("user" + i, "pass" + i, "username:" + i, "email" + i),
 					"11/11/11", 1, 0, new Comment[0]);
-			db.cc.addElement(u);
+			db.getCommentCollection().addElement(u);
 			System.out.println("comment added: " + u);
 		}
-	}
+		System.out.println("Time to add data: " + (System.currentTimeMillis() - start) + "ms");
 
-	/**
-	 * I suggest making each collection singleton have its own socket
-	 * in its own thread and thus achieveing concurrenty.
-	 * This would mean the implementation of this class would be left for phase 2.
-	 *
-	 * TODO: Implement the class
-	 */
+	}
 }
