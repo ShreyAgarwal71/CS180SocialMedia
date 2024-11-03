@@ -52,10 +52,10 @@ public class Database {
 
 	public static void main(String[] args) {
 		// populateTest();
-		multiThreadTest();
+		// writeMultiThreadTest();
 	}
 
-	private static void multiThreadTest() {
+	private static void writeMultiThreadTest() {
 		ArrayList<Thread> threads = new ArrayList<>();
 
 		for (int i = 0; i < 10; i++) {

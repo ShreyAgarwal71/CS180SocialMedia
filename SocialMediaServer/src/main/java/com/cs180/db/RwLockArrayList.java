@@ -14,6 +14,15 @@ public class RwLockArrayList<T extends Serializable> {
     public RwLockArrayList() {
     }
 
+    public RwLockArrayList(List<T> arr) {
+        writeLock.lock();
+        try {
+            list.addAll(arr);
+        } finally {
+            writeLock.unlock();
+        }
+    }
+
     public void lockRead() {
         readLock.lock();
     }
@@ -28,15 +37,6 @@ public class RwLockArrayList<T extends Serializable> {
 
     public void unlockWrite() {
         writeLock.unlock();
-    }
-
-    public RwLockArrayList(List<T> arr) {
-        writeLock.lock();
-        try {
-            list.addAll(arr);
-        } finally {
-            writeLock.unlock();
-        }
     }
 
     public int size() {
