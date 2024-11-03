@@ -7,6 +7,8 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * A Collection interface to help manage our program's database
@@ -106,4 +108,29 @@ public interface Collection<T extends Serializable> {
 	 * @return count
 	 */
 	abstract int count();
+
+	/**
+	 * Returns all the elements in the Collection that match the given predicate.
+	 *
+	 * @param predicate
+	 * @return data
+	 */
+	abstract List<T> findAll(Predicate<T> predicate);
+
+	/**
+	 * Returns all the elements in the Collection that match the given predicate up
+	 * to the given limit.
+	 *
+	 * @param predicate
+	 * @return data
+	 */
+	abstract List<T> findAll(Predicate<T> predicate, int limit);
+
+	/**
+	 * Returns the first element that matches the given predicate.
+	 *
+	 * @param predicate
+	 * @return data
+	 */
+	abstract T findOne(Predicate<T> predicate);
 }

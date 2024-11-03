@@ -1,6 +1,5 @@
 package com.cs180.db;
 
-import java.util.Arrays;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 /**
@@ -34,7 +33,7 @@ public class UserCollection extends BaseCollection<User> {
 	}
 
 	/**
-	 * @implNote: Not Thread Safe, Needs Locking
+	 * @implNote: Not Thread Safe, Needs Locking (Meant for internal use)
 	 *
 	 * @param User
 	 * @return index
@@ -53,5 +52,17 @@ public class UserCollection extends BaseCollection<User> {
 		}
 
 		return index;
+	}
+
+	/**
+	 * Find a user by username
+	 * 
+	 * @param username
+	 * @return user
+	 *         Return the user with the same username
+	 *         Returns null if none of the users have the same username
+	 */
+	public User findByUsername(String username) {
+		return this.findOne(user -> user.getUsername().equals(username));
 	}
 }

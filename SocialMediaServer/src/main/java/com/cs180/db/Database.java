@@ -53,6 +53,64 @@ public class Database {
 	public static void main(String[] args) {
 		// populateTest();
 		// writeMultiThreadTest();
+		deleteMultiThreadTest();
+	}
+
+	/**
+	 * Should output 0 users in the database if ran successfully
+	 */
+	private static void deleteMultiThreadTest() {
+		ArrayList<Thread> threads = new ArrayList<>();
+
+		for (int i = 0; i < 10; i++) {
+			Thread t = new Thread(() -> {
+				Database db = new Database();
+
+				for (int j = 0; j < 1000; j++) {
+					db.getUserCollection().removeElement(db.getUserCollection().findByUsername("user_" + j));
+				}
+			});
+			threads.add(t);
+			t.start();
+		}
+
+		for (Thread t : threads) {
+			try {
+				t.join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+
+		System.out.println("All threads have finished executing");
+
+		Database db = new Database();
+
+		System.out.println("Users in the database:" + db.getUserCollection().count());
+	}
+
+	private static void deleteTest() {
+		Database db = new Database();
+
+		System.out.println("Users in the database:" + db.getUserCollection().count());
+		System.out.println(db.getUserCollection().findByUsername("user_482").getEmail());
+
+		db.getUserCollection().removeElement(db.getUserCollection().findByUsername("user_482"));
+
+		System.out.println("Users in the database:" + db.getUserCollection().count());
+	}
+
+	private static void readTest() {
+		Database db = new Database();
+
+		System.out.println("Users in the database:" + db.getUserCollection().count());
+		System.out.println(db.getUserCollection().findByUsername("user_482").getEmail());
+
+		System.out.println(db.getUserCollection().findAll(u -> {
+			String[] parts = u.getUsername().split("_");
+			return Integer.parseInt(parts[1]) % 2 == 0;
+		}).size());
+
 	}
 
 	private static void writeMultiThreadTest() {

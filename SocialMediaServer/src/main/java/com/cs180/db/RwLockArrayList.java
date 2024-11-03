@@ -51,16 +51,16 @@ public class RwLockArrayList<T extends Serializable> {
         list.set(index, o);
     }
 
-    public void remove(T o) {
-        list.remove(o);
-    }
-
     public void remove(int index) {
         list.remove(index);
     }
 
     public void add(T item) {
         list.add(item);
+    }
+
+    public List<T> getList() {
+        return list;
     }
 
     public T get(int index) {

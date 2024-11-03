@@ -33,7 +33,7 @@ public class CommentCollection extends BaseCollection<Comment> {
 	}
 
 	/**
-	 * @implNote: Not Thread Safe, Needs Locking
+	 * @implNote: Not Thread Safe, Needs Locking (Meant for internal use)
 	 *
 	 * @param Comment
 	 * @return index
