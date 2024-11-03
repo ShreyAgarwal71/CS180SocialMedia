@@ -17,10 +17,9 @@ public class Post implements Serializable {
     private String messagePost;
     private String username;
     private String date;
-    private int postID;
+    private int postId;
     private int votes;
     private String imageURL;
-    private Comment[] comments;
 
     /**
      * Constructor for Post
@@ -28,19 +27,16 @@ public class Post implements Serializable {
      * @param messagePost
      * @param username
      * @param date
-     * @param postID
+     * @param postId
      * @param votes
-     * @param comments
      */
-    public Post(String messagePost, String username, String date, int postID, int votes, String imageURL,
-            Comment[] comments) {
+    public Post(String messagePost, String username, String date, int postId, int votes, String imageURL) {
         this.messagePost = messagePost;
         this.username = username;
         this.date = date;
-        this.postID = postID;
+        this.postId = postId;
         this.votes = votes;
         this.imageURL = imageURL;
-        this.comments = comments;
     }
 
     /**
@@ -75,8 +71,8 @@ public class Post implements Serializable {
      * 
      * @return postID
      */
-    public int getPostID() {
-        return postID;
+    public int getPostId() {
+        return postId;
     }
 
     /**
@@ -90,15 +86,6 @@ public class Post implements Serializable {
 
     public String getImageURL() {
         return imageURL;
-    }
-
-    /**
-     * Getter for comments
-     * 
-     * @return comments
-     */
-    public Comment[] getComments() {
-        return comments;
     }
 
     /**
@@ -133,8 +120,8 @@ public class Post implements Serializable {
      * 
      * @param postID
      */
-    public void setPostID(int postID) {
-        this.postID = postID;
+    public void setPostId(int postID) {
+        this.postId = postID;
     }
 
     /**
@@ -151,15 +138,6 @@ public class Post implements Serializable {
     }
 
     /**
-     * Setter for comments
-     * 
-     * @param comments
-     */
-    public void setComments(Comment[] comments) {
-        this.comments = comments;
-    }
-
-    /**
      * Equals method for Post
      * 
      * @param obj
@@ -171,8 +149,8 @@ public class Post implements Serializable {
             return false;
         Post p = (Post) obj;
         return p.messagePost.equals(messagePost) && p.username.equals(username) && p.date.equals(date)
-                && p.postID == postID
-                && p.votes == votes && p.imageURL.equals(imageURL) && p.comments.equals(comments);
+                && p.postId == postId
+                && p.votes == votes && p.imageURL.equals(imageURL);
     }
 
     /**
@@ -181,7 +159,7 @@ public class Post implements Serializable {
      * @return String
      */
     public String toString() {
-        return messagePost + "," + username + "," + date + "," + postID + "," + votes + "," + imageURL + "," + comments;
+        return messagePost + "," + username + "," + date + "," + postId + "," + votes + "," + imageURL;
     }
 
 }

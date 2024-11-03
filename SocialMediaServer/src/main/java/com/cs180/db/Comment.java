@@ -18,7 +18,8 @@ public class Comment implements Serializable {
     private String messageComment;
     private User user;
     private String date;
-    private int commentID;
+    private int commentId;
+    private int postId;
     private int votes;
     private Comment[] comments;
 
@@ -28,15 +29,18 @@ public class Comment implements Serializable {
      * @param messageComment
      * @param user
      * @param date
-     * @param commentID
+     * @param commentId
+     * @param postId
      * @param votes
      * @param comments
      */
-    public Comment(String messageComment, User user, String date, int commentID, int votes, Comment[] comments) {
+    public Comment(String messageComment, User user, String date, int commentId, int postId, int votes,
+            Comment[] comments) {
         this.messageComment = messageComment;
         this.user = user;
         this.date = date;
-        this.commentID = commentID;
+        this.postId = postId;
+        this.commentId = commentId;
         this.votes = votes;
         this.comments = comments;
     }
@@ -73,8 +77,17 @@ public class Comment implements Serializable {
      * 
      * @return commentID
      */
-    public int getCommentID() {
-        return commentID;
+    public int getCommentId() {
+        return commentId;
+    }
+
+    /**
+     * Getter for postId
+     * 
+     * @return postId
+     */
+    public int getPostId() {
+        return postId;
     }
 
     /**
@@ -93,6 +106,15 @@ public class Comment implements Serializable {
      */
     public Comment[] getComments() {
         return comments;
+    }
+
+    /**
+     * Setter for comments
+     * 
+     * @param comments
+     */
+    public void setComments(Comment[] comments) {
+        this.comments = comments;
     }
 
     /**
@@ -127,8 +149,17 @@ public class Comment implements Serializable {
      * 
      * @param commentID
      */
-    public void setCommentID(int commentID) {
-        this.commentID = commentID;
+    public void setCommentId(int commentId) {
+        this.commentId = commentId;
+    }
+
+    /**
+     * Setter for postId
+     * 
+     * @param postId
+     */
+    public void setPostId(int postId) {
+        this.postId = postId;
     }
 
     /**
@@ -138,15 +169,6 @@ public class Comment implements Serializable {
      */
     public void setVotes(int votes) {
         this.votes = votes;
-    }
-
-    /**
-     * Setter for comments
-     * 
-     * @param comments
-     */
-    public void setComments(Comment[] comments) {
-        this.comments = comments;
     }
 
     /**
@@ -161,7 +183,7 @@ public class Comment implements Serializable {
             return false;
         Comment c = (Comment) obj;
         return c.messageComment.equals(messageComment) && c.user.equals(user) && c.date.equals(date)
-                && c.commentID == commentID && c.votes == votes && c.comments.equals(comments);
+                && c.commentId == commentId && c.postId == postId && c.votes == votes && c.comments.equals(comments);
     }
 
     /**
@@ -170,7 +192,7 @@ public class Comment implements Serializable {
      * @return String
      */
     public String toString() {
-        return messageComment + "," + user + "," + date + "," + commentID + "," + votes + "," + comments;
+        return messageComment + "," + user + "," + date + "," + commentId + "," + postId + "," + votes + "," + comments;
     }
 
 }

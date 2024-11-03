@@ -44,7 +44,7 @@ public class CommentCollection extends BaseCollection<Comment> {
 		int index = -1;
 
 		for (int i = 0; i < this.records.size(); i++) {
-			if (this.records.get(i).getCommentID() == comment.getCommentID()) {
+			if (this.records.get(i).getCommentId() == comment.getCommentId()) {
 				index = i;
 				break;
 			}

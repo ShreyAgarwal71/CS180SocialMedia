@@ -46,7 +46,7 @@ public class PostCollection extends BaseCollection<Post> {
 		int index = -1;
 
 		for (int i = 0; i < this.records.size(); i++) {
-			if (this.records.get(i).getPostID() == post.getPostID()) {
+			if (this.records.get(i).getPostId() == post.getPostId()) {
 				index = i;
 				break;
 			}
