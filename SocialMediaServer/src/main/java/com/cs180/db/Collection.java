@@ -52,7 +52,7 @@ public interface Collection<T extends Serializable> {
 	 *            data
 	 * @return exitCode -> true = success, false = failure
 	 */
-	default boolean writeData(String fileName, T[] data) {
+	default boolean persistToDisk(String fileName, T[] data) {
 		boolean exitCode = true;
 		File f = new File(fileName);
 		try (ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(f))) {
