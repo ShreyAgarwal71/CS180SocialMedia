@@ -165,4 +165,144 @@ public class DatabaseTest {
 
       assertEquals(2, comments.size(), "Expected 2 comments to be found");
    }
+
+   /**
+    * Test verifies that duplicate comments are not added to the collection
+    */
+   @Test
+   public void preventsDuplicateComment() {
+      Database db = new Database();
+
+      String testUserName = "testUserName";
+      int postId = 1;
+      int commentId = 1; // intentionally set to 1 to test duplicate
+
+      Comment testCommentOne = new Comment("testCommentOne", testUserName, "testDateOne", commentId, postId, 0,
+            new Comment[0]);
+      Comment testCommentDuplicate = new Comment("testCommentTwo", testUserName, "testDateTwo", commentId, postId, 0,
+            new Comment[0]);
+
+      db.getCommentCollection().addElement(testCommentOne);
+      assertFalse(db.getCommentCollection().addElement(testCommentDuplicate),
+            "Expected duplicate comment to not be added");
+
+      int count = db.getCommentCollection().count();
+
+      assertEquals(1, count, "Expected 1 comment to be found");
+   }
+
+   /**
+    * Test verifies that a comment is removed from the collection
+    */
+   @Test
+   public void removesComment() {
+      Database db = new Database();
+
+      String testUserName = "testUserName";
+      int postId = 1;
+
+      Comment testCommentOne = new Comment("testCommentOne", testUserName, "testDateOne", 1, postId, 0, new Comment[0]);
+
+      db.getCommentCollection().addElement(testCommentOne);
+
+      int count = db.getCommentCollection().count();
+      assertEquals(1, count, "Expected 1 comment to be found");
+
+      db.getCommentCollection().removeElement(testCommentOne);
+      count = db.getCommentCollection().count();
+      assertEquals(0, count, "Expected 0 comments to be found");
+   }
+
+   /**
+    * Test verifies that a comment is updated in the collection
+    */
+   @Test
+   public void updatesComment() {
+      Database db = new Database();
+
+      String testUserName = "testUserName";
+      int postId = 1;
+
+      Comment testCommentOne = new Comment("testCommentOne", testUserName, "testDateOne", 1, postId, 0, new Comment[0]);
+
+      db.getCommentCollection().addElement(testCommentOne);
+
+      Comment updatedComment = new Comment("testCommentTwo", testUserName, "testDateOne", 1, postId, 1, new Comment[0]);
+
+      db.getCommentCollection().updateElement(testCommentOne, updatedComment);
+
+      Comment comment = db.getCommentCollection().findOne(c -> c.getCommentId() == testCommentOne.getCommentId());
+
+      assertNotNull(comment, "Expected comment to be found");
+
+      assertEquals("testCommentTwo", comment.getMessageComment(), "Expected comment to be updated");
+      assertEquals(1, comment.getVotes(), "Expected comment votes to be updated");
+   }
+
+   // =============== End -- CommentCollection Tests =================
+
+   // =============== Start -- UserCollection Tests =================
+
+   /**
+    * Test verifies that a user can be found by username
+    * {@link com.cs180.db.UserCollection#findByUsername(String)}
+    */
+   @Test
+   public void queryUserByUsername() {
+      Database db = new Database();
+
+      String testUserName = "testUserName";
+      User testUser = new User(testUserName, "testPassword", "testDisplayName", "testEmail");
+
+      db.getUserCollection().addElement(testUser);
+
+      User user = db.getUserCollection().findByUsername(testUserName);
+
+      assertNotNull(user, "Expected user to be found");
+   }
+
+   /**
+    * Test verifies that a user is removed from the collection
+    */
+   @Test
+   public void removesUser() {
+      Database db = new Database();
+
+      String testUserName = "testUserName";
+      User testUser = new User(testUserName, "testPassword", "testDisplayName", "testEmail");
+
+      db.getUserCollection().addElement(testUser);
+
+      int count = db.getUserCollection().count();
+      assertEquals(1, count, "Expected 1 user to be found");
+
+      db.getUserCollection().removeElement(testUser);
+      count = db.getUserCollection().count();
+      assertEquals(0, count, "Expected 0 users to be found");
+   }
+
+   /**
+    * Test verifies that a user is updated in the collection
+    */
+
+   @Test
+   public void updatesUser() {
+      Database db = new Database();
+
+      String testUserName = "testUserName";
+      User testUser = new User(testUserName, "testPassword", "testDisplayName", "testEmail");
+
+      db.getUserCollection().addElement(testUser);
+
+      User updatedUser = new User(testUserName, "testPassword", "testDisplayNameTwo", "testEmailTwo");
+
+      db.getUserCollection().updateElement(testUser, updatedUser);
+
+      User user = db.getUserCollection().findByUsername(testUserName);
+
+      assertNotNull(user, "Expected user to be found");
+
+      assertEquals("testDisplayNameTwo", user.getDisplayName(), "Expected user display name to be updated");
+      assertEquals("testEmailTwo", user.getEmail(), "Expected user email to be updated");
+   }
 }
