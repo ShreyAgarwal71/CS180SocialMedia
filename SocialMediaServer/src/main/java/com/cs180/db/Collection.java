@@ -7,8 +7,12 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.function.Predicate;
+
+import com.cs180.App;
 
 /**
  * A Collection interface to help manage our program's database
@@ -45,6 +49,24 @@ public interface Collection<T extends Serializable> {
 		return data;
 	}
 
+	static Path getOSDataBasePath() {
+		String os = System.getProperty("os.name").toLowerCase();
+
+		if (os.contains("win")) {
+			return Paths.get(System.getenv("APPDATA"), App.ID);
+		} else if (os.contains("mac")) {
+			return Paths.get(System.getProperty("user.home"), "/Library/Application Support", App.ID);
+		} else if (os.contains("nix") || os.contains("nux")) {
+			return Paths.get(System.getProperty("user.home"), String.format(".%s", App.ID.toLowerCase()));
+		} else {
+			return Paths.get(System.getProperty("user.home"), App.ID);
+		}
+	}
+
+	static String getCollectionAbsolutePath(String fileName) {
+		return getOSDataBasePath().resolve(fileName).toString();
+	}
+
 	/**
 	 * Writes Object data to the specified file. Can be used from
 	 * all Collection classes thanks to polymorphism.
@@ -57,7 +79,7 @@ public interface Collection<T extends Serializable> {
 	default boolean persistToDisk(String fileName, T[] data) {
 		boolean exitCode = true;
 
-		File basePath = new File(BaseCollection.getOSDataBasePath().toString());
+		File basePath = new File(getOSDataBasePath().toString());
 		File path = null;
 
 		if (basePath.exists() == false) {

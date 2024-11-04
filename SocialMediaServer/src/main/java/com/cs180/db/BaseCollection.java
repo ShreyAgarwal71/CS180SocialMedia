@@ -1,15 +1,11 @@
 package com.cs180.db;
 
 import java.io.Serializable;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.function.Predicate;
-
-import com.cs180.App;
 
 abstract class BaseCollection<T extends Serializable> implements Collection<T> {
     protected RwLockArrayList<T> records;
@@ -39,24 +35,6 @@ abstract class BaseCollection<T extends Serializable> implements Collection<T> {
         if (!this.needWrite)
             return;
         this.writeRecords();
-    }
-
-    public static Path getOSDataBasePath() {
-        String os = System.getProperty("os.name").toLowerCase();
-
-        if (os.contains("win")) {
-            return Paths.get(System.getenv("APPDATA"), App.ID);
-        } else if (os.contains("mac")) {
-            return Paths.get(System.getProperty("user.home"), "/Library/Application Support", App.ID);
-        } else if (os.contains("nix") || os.contains("nux")) {
-            return Paths.get(System.getProperty("user.home"), String.format(".%s", App.ID.toLowerCase()));
-        } else {
-            return Paths.get(System.getProperty("user.home"), App.ID);
-        }
-    }
-
-    public static String getCollectionAbsolutePath(String fileName) {
-        return getOSDataBasePath().resolve(fileName).toString();
     }
 
     /**

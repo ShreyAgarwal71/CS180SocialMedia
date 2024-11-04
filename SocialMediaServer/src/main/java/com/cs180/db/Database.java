@@ -37,9 +37,9 @@ public class Database {
 	public static void init() {
 		synchronized (mainLock) {
 			if (uc == null) {
-				uc = new UserCollection(BaseCollection.getCollectionAbsolutePath(Database.userFileName), scheduler);
-				pc = new PostCollection(BaseCollection.getCollectionAbsolutePath(Database.postFileName), scheduler);
-				cc = new CommentCollection(BaseCollection.getCollectionAbsolutePath(Database.commentFileName),
+				uc = new UserCollection(Collection.getCollectionAbsolutePath(Database.userFileName), scheduler);
+				pc = new PostCollection(Collection.getCollectionAbsolutePath(Database.postFileName), scheduler);
+				cc = new CommentCollection(Collection.getCollectionAbsolutePath(Database.commentFileName),
 						scheduler);
 			}
 		}
@@ -75,8 +75,8 @@ public class Database {
 
 	public static void main(String[] args) {
 		// populateTest();
-		// writeMultiThreadTest();
-		deleteMultiThreadTest();
+		writeMultiThreadTest();
+		// deleteMultiThreadTest();
 	}
 
 	/**
