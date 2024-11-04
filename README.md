@@ -2,10 +2,10 @@
 
 CS180SocialMedia is a Java-based backend simulation for a simple social media platform. The platform is a digital wall-writing app, essentially users will be able to join classes they are currently enrolled in and view posts that previous students have made. Plase 1 contains for basic user management, posting, and commenting, with data persistence through the use of a file storing system. This project is built with Maven and includes Java classes for users, posts, comments, and images.
 
-**Class**: CS 180  
+**Class**: CS 180 
 **Group Names**:
 
-- Shrey Agarwal
+- Submitted by Shrey Agarwal
 - Christian Slade
 - Zayan Niaz
 - Ates Isfendiyaroglu
