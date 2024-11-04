@@ -6,9 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
-
-import javax.xml.crypto.Data;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -49,6 +48,103 @@ public class DatabaseTest {
       userFile.delete();
       postFile.delete();
       commentFile.delete();
+   }
+
+   // ======================= Multithreading Tests =======================
+   @Test
+   /**
+    * Test verifies that multiple threads can write users to the database without
+    * any issues
+    */
+   public void writeMultiThread() {
+      ArrayList<Thread> threads = new ArrayList<>();
+
+      for (int i = 0; i < 10; i++) {
+         final int threadNum = i;
+         Thread t = new Thread(() -> {
+            Database db = new Database();
+
+            for (int j = 0; j < 1000; j++) {
+               db.getUserCollection()
+                     .addElement(
+                           new User("user_" + (j + threadNum * 1000), "pass", "username_ " + j, "email_" + j));
+            }
+         });
+         threads.add(t);
+         t.start();
+      }
+
+      for (Thread t : threads) {
+         try {
+            t.join();
+         } catch (InterruptedException e) {
+            e.printStackTrace();
+         }
+      }
+
+      Database db = new Database();
+      assertEquals(10000, db.getUserCollection().count(), "Expected 10000 users to be found");
+   }
+
+   @Test
+   /**
+    * Test verifies that multiple threads can delete users from the database
+    * without any issues
+    *
+    * Should output 0 users in the database if ran successfully
+    */
+   public void deleteMultiThread() {
+      ArrayList<Thread> threadsAppend = new ArrayList<>();
+
+      for (int i = 0; i < 10; i++) {
+         final int threadNum = i;
+         Thread t = new Thread(() -> {
+            Database db = new Database();
+
+            for (int j = 0; j < 1000; j++) {
+               db.getUserCollection()
+                     .addElement(
+                           new User("user_" + (j + threadNum * 1000), "pass", "username_ " + j, "email_" + j));
+            }
+         });
+         threadsAppend.add(t);
+         t.start();
+      }
+
+      for (Thread t : threadsAppend) {
+         try {
+            t.join();
+         } catch (InterruptedException e) {
+            e.printStackTrace();
+         }
+      }
+
+      ArrayList<Thread> threadsDelete = new ArrayList<>();
+
+      for (int i = 0; i < 10; i++) {
+         final int threadNum = i;
+         Thread t = new Thread(() -> {
+            Database db = new Database();
+
+            for (int j = 0; j < 1000; j++) {
+               db.getUserCollection()
+                     .removeElement(db.getUserCollection().findByUsername("user_" + (j + threadNum * 1000)));
+            }
+         });
+         threadsDelete.add(t);
+         t.start();
+      }
+
+      for (Thread t : threadsDelete) {
+         try {
+            t.join();
+         } catch (InterruptedException e) {
+            e.printStackTrace();
+         }
+      }
+
+      Database db = new Database();
+      assertEquals(0, db.getUserCollection().count());
    }
 
    // ================== Start -- PostCollection Tests ===================
