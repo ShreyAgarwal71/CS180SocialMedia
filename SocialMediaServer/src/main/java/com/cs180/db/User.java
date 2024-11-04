@@ -5,7 +5,8 @@ import java.io.Serializable;
 /**
  * User
  * 
- * This class represents a user object that can be added to a user collection.
+ * This class represents a user object that can be added to a user collection. A
+ * user contains a username, password, display name, and email.
  * 
  * 
  * @author Shrey Agarwal and Mahit Mehta
