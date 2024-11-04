@@ -9,9 +9,9 @@ import java.io.Serializable;
  * comment.
  * 
  * 
- * @author Shrey Agarwal and Mahit Mehta, Lab 29927-L17
- *
- * @version November 2nd, 2024
+ * @author Shrey Agarwal
+ * @author Mahit Mehta
+ * @version 2024-11-03
  * 
  */
 public class Comment implements Serializable {

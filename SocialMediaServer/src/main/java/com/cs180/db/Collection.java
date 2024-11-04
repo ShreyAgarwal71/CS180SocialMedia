@@ -20,9 +20,9 @@ import com.cs180.App;
  * add, update, and remove elements from the collection, and find elements in
  * the collection that match a given predicate.
  * 
- * @author Ates Isfendiyaroglu and Mahit Mehta, L17
- *
- * @version November 2nd, 2024
+ * @author Mahit Mehta
+ * @author Ates Isfendiyaroglu
+ * @version 2024-11-03
  */
 public interface Collection<T extends Serializable> {
 	int ASYNC_WRITE_FREQ = 5; // seconds
@@ -76,7 +76,7 @@ public interface Collection<T extends Serializable> {
 	 * Returns true if successfull, false if unsuccessfull.
 	 *
 	 * @param fileName,
-	 *                  data
+	 *            data
 	 * @return exitCode -> true = success, false = failure
 	 */
 	default boolean persistToDisk(String fileName, T[] data) {
@@ -124,7 +124,7 @@ public interface Collection<T extends Serializable> {
 	 * if the targeted Object doesn't exist in the Collection's ArrayList.
 	 *
 	 * @param target,
-	 *                newObj
+	 *            newObj
 	 * @return exitCode
 	 */
 	abstract boolean updateElement(T target, T newObj);

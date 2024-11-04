@@ -8,9 +8,10 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
  * for reading and writing post data to and from the disk. It also provides
  * methods to find posts by their postID.
  * 
- * @author Ates Isfendiyaroglu and Mahit Mehta, L17
- *
- * @version November 2nd, 2024
+ * @author Ates Isfendiyaroglu
+ * @author Mahit Mehta
+ * @version 2024-11-03
+ * 
  */
 public class PostCollection extends BaseCollection<Post> {
 	private final String fileName;

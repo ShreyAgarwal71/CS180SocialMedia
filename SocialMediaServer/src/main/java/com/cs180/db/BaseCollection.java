@@ -15,8 +15,8 @@ import java.util.function.Predicate;
  * elements in the collection.
  * 
  * @param <T>
- * @version November 2nd, 2024
- * 
+ * @author Mahit Mehta
+ * @version 2024-11-03
  */
 abstract class BaseCollection<T extends Serializable> implements Collection<T> {
     protected RwLockArrayList<T> records;

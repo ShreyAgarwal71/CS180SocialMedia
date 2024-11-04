@@ -13,9 +13,11 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * to store user, post, and comment data. This class is a generic class. The
  * type of the elements in the list is specified by the type parameter T.
  * 
- * @param <T> The type of the elements in the list
+ * @param <T>
+ *            The type of the elements in the list
  * 
- * @version November 2nd, 2024
+ * @author Mahit Mehta
+ * @version 2024-11-03
  * 
  */
 public class RwLockArrayList<T extends Serializable> {

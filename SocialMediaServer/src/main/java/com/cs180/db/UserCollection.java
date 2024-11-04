@@ -7,9 +7,10 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
  * is responsible for reading and writing user data to and from the disk. It
  * also provides methods to find users by their username.
  * 
- * @author Ates Isfendiyaroglu and Mahit Mehta, L17
- *
- * @version November 2nd, 2024
+ * @author Ates Isfendiyaroglu
+ * @author Mahit Mehta
+ * @version 2024-11-03
+ * 
  */
 public class UserCollection extends BaseCollection<User> {
 	private final String fileName;

@@ -8,9 +8,9 @@ import java.io.Serializable;
  * This class represents a post object that can be added to a feed.
  * 
  * 
- * @author Shrey Agarwal and Mahit Mehta
- *
- * @version November 2nd, 2024
+ * @author Shrey Agarwal
+ * @author Mahit Mehta
+ * @version 2024-11-03
  * 
  */
 public class Post implements Serializable {

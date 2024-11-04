@@ -8,9 +8,9 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
  * responsible for reading and writing comment data to and from the disk. It
  * also provides methods to find comments by their postID.
  * 
- * @author Ates Isfendiyaroglu and Mahit Mehta, L17
- *
- * @version November 2nd, 2024
+ * @author Ates Isfendiyaroglu
+ * @author Mahit Mehta
+ * @version 2024-11-03
  */
 public class CommentCollection extends BaseCollection<Comment> {
 	private final String fileName;

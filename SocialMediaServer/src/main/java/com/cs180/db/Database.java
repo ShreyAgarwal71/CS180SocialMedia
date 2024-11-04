@@ -10,9 +10,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * PostCollection, and the CommentCollection. The Database class is a singleton
  * class.
  *
- * @author Ates Isfendiyaroglu and Mahit Mehta, L17
- *
- * @version November 2nd, 2024
+ * @author Ates Isfendiyaroglu
+ * @author Mahit Mehta
+ * @version 2024-11-03
  */
 public class Database {
 	private static final ScheduledThreadPoolExecutor scheduler = new ScheduledThreadPoolExecutor(3);
