@@ -9,8 +9,7 @@ import java.io.Serializable;
  * comment.
  * 
  * 
- * @author Shrey Agarwal
- * @author Mahit Mehta
+ * @author Shrey Agarwal and Mahit Mehta
  * @version 2024-11-03
  * 
  */
@@ -131,8 +130,8 @@ public class Comment implements Serializable {
      * 
      * @param username
      */
-    public void setUser(String username) {
-        this.username = username;
+    public void setUser(String newUsername) {
+        this.username = newUsername;
     }
 
     /**

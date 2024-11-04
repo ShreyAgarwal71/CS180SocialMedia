@@ -10,14 +10,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * PostCollection, and the CommentCollection. The Database class is a singleton
  * class.
  *
- * @author Ates Isfendiyaroglu
- * @author Mahit Mehta
+ * @author Ates Isfendiyaroglu and Mahit Mehta
  * @version 2024-11-03
  */
 public class Database {
-	private static final ScheduledThreadPoolExecutor scheduler = new ScheduledThreadPoolExecutor(3);
+	private static final ScheduledThreadPoolExecutor SCHEDULER = new ScheduledThreadPoolExecutor(3);
 
-	private static final Object mainLock = new Object();
+	private static final Object MAIN_LOCK = new Object();
 
 	private static String userFileName = "users.txt";
 	private static String postFileName = "posts.txt";
@@ -27,7 +26,7 @@ public class Database {
 	private static PostCollection pc;
 	private static CommentCollection cc;
 
-	private static final AtomicBoolean hasBeenInitialized = new AtomicBoolean(false);
+	private static final AtomicBoolean HAS_BEEN_INITIALIZED = new AtomicBoolean(false);
 
 	public static void init(String userFile, String postFile, String commentFile) {
 		Database.userFileName = userFile;
@@ -38,12 +37,12 @@ public class Database {
 	}
 
 	public static void init() {
-		synchronized (mainLock) {
+		synchronized (MAIN_LOCK) {
 			if (uc == null) {
-				uc = new UserCollection(Collection.getCollectionAbsolutePath(Database.userFileName), scheduler);
-				pc = new PostCollection(Collection.getCollectionAbsolutePath(Database.postFileName), scheduler);
+				uc = new UserCollection(Collection.getCollectionAbsolutePath(Database.userFileName), SCHEDULER);
+				pc = new PostCollection(Collection.getCollectionAbsolutePath(Database.postFileName), SCHEDULER);
 				cc = new CommentCollection(Collection.getCollectionAbsolutePath(Database.commentFileName),
-						scheduler);
+						SCHEDULER);
 			}
 		}
 	}
@@ -51,7 +50,7 @@ public class Database {
 	public Database() {
 		init();
 
-		if (hasBeenInitialized.compareAndSet(false, true)) {
+		if (HAS_BEEN_INITIALIZED.compareAndSet(false, true)) {
 			Runtime.getRuntime().addShutdownHook((new Thread() {
 				public void run() {
 					System.out.println("Database: Saving data");

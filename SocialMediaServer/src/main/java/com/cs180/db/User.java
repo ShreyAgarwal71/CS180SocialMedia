@@ -9,8 +9,7 @@ import java.io.Serializable;
  * user contains a username, password, display name, and email.
  * 
  * 
- * @author Mahit Mehta
- * @author Shrey Agarwal
+ * @author Mahit Mehta and Shrey Agarwal
  * @version 2024-11-03
  * 
  */

@@ -11,8 +11,7 @@ import org.junit.jupiter.api.Test;
  * 
  * A class that provides test cases for the Post class.
  * 
- * @author Zayan
- * @author Mahit Mehta
+ * @author Zayan and Mahit Mehta
  * @version 2024-11-03
  */
 public class PostTest {
@@ -167,21 +166,6 @@ public class PostTest {
 	 */
 	@Test
 	public void testSetPostID() {
-		Post testPost = new Post("I love CS180!", "testUser", "12-12-24", 1234, 3,
-				"https://www.mahitm.com/cdn/v1/post/1234");
-
-		testPost.setPostId(9876);
-		assertEquals(
-				9876, testPost.getPostId(), "Ensure setPostID is correctly setting the post id");
-	}
-
-	/**
-	 * A test case for the Post constructor.
-	 * 
-	 * @see Post#Post(String, String, String, int, int, String)
-	 */
-	@Test
-	public void testSetPostIDTODO() {
 		Post testPost = new Post("I love CS180!", "testUser", "12-12-24", 1234, 3,
 				"https://www.mahitm.com/cdn/v1/post/1234");
 

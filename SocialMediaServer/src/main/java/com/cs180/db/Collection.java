@@ -15,13 +15,14 @@ import java.util.function.Predicate;
 import com.cs180.App;
 
 /**
+ * 
  * A Collection interface to help manage our program's database collections.
  * This interface provides methods to read and write data to and from the disk,
  * add, update, and remove elements from the collection, and find elements in
  * the collection that match a given predicate.
  * 
- * @author Mahit Mehta
- * @author Ates Isfendiyaroglu
+ * @param <T>
+ * @author Mahit Mehta and Ates Isfendiyaroglu
  * @version 2024-11-03
  */
 public interface Collection<T extends Serializable> {
@@ -40,7 +41,6 @@ public interface Collection<T extends Serializable> {
 
 		T[] data = null;
 		try (ObjectInputStream os = new ObjectInputStream(new FileInputStream(f))) {
-			// TODO: Perform this unchecked cast safely
 			data = (T[]) os.readObject();
 		} catch (FileNotFoundException e) {
 			System.out.println("Will create new file: " + fileName);

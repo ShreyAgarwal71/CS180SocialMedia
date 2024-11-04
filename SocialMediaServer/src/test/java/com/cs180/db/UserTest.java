@@ -12,8 +12,7 @@ import org.junit.jupiter.api.Test;
  * 
  * A class that provides test cases for the User class.
  * 
- * @author Zayan
- * @author Mahit Mehta
+ * @author Zayan and Mahit Mehta
  * @version 2024-11-03
  */
 public class UserTest {
