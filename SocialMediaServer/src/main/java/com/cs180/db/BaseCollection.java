@@ -72,6 +72,9 @@ abstract class BaseCollection<T extends Serializable> implements Collection<T> {
     public boolean addElement(T record) {
         boolean exitCode = false;
 
+        if (record == null)
+            return exitCode;
+
         this.records.lockWrite();
 
         if (this.indexOf(record) != -1) {
@@ -137,6 +140,15 @@ abstract class BaseCollection<T extends Serializable> implements Collection<T> {
         this.records.unlockRead();
 
         return size;
+    }
+
+    @Override
+    public void clear() {
+        this.records.lockWrite();
+        this.records.clear();
+        this.records.unlockWrite();
+
+        this.needWrite = true;
     }
 
     @Override

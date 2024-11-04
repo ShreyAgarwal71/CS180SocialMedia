@@ -149,6 +149,11 @@ public interface Collection<T extends Serializable> {
 	abstract int count();
 
 	/**
+	 * Clears the Collection's ArrayList.
+	 */
+	abstract void clear();
+
+	/**
 	 * Returns all the elements in the Collection that match the given predicate.
 	 *
 	 * @param predicate

@@ -76,7 +76,7 @@ public class Database {
 	public static void main(String[] args) {
 		// populateTest();
 		writeMultiThreadTest();
-		// deleteMultiThreadTest();
+		deleteMultiThreadTest();
 	}
 
 	/**
@@ -186,7 +186,7 @@ public class Database {
 		}
 
 		for (int i = 0; i < 3; i++) {
-			Comment u = new Comment("hello", new User("user" + i, "pass" + i, "username:" + i, "email" + i),
+			Comment u = new Comment("hello", "user",
 					"11/11/11", 1, 0, 0, new Comment[0]);
 			db.getCommentCollection().addElement(u);
 			System.out.println("comment added: " + u);

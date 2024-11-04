@@ -16,7 +16,7 @@ import java.io.Serializable;
  */
 public class Comment implements Serializable {
     private String messageComment;
-    private User user;
+    private String username;
     private String date;
     private int commentId;
     private int postId;
@@ -27,17 +27,17 @@ public class Comment implements Serializable {
      * Constructor for Comment
      * 
      * @param messageComment
-     * @param user
+     * @param username
      * @param date
      * @param commentId
      * @param postId
      * @param votes
      * @param comments
      */
-    public Comment(String messageComment, User user, String date, int commentId, int postId, int votes,
+    public Comment(String messageComment, String username, String date, int commentId, int postId, int votes,
             Comment[] comments) {
         this.messageComment = messageComment;
-        this.user = user;
+        this.username = username;
         this.date = date;
         this.postId = postId;
         this.commentId = commentId;
@@ -55,12 +55,12 @@ public class Comment implements Serializable {
     }
 
     /**
-     * Getter for user
+     * Getter for username
      * 
-     * @return user
+     * @return username
      */
-    public User getUser() {
-        return user;
+    public String getUsername() {
+        return username;
     }
 
     /**
@@ -127,12 +127,12 @@ public class Comment implements Serializable {
     }
 
     /**
-     * Setter for user
+     * Setter for username
      * 
-     * @param user
+     * @param username
      */
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(String username) {
+        this.username = username;
     }
 
     /**
@@ -142,6 +142,14 @@ public class Comment implements Serializable {
      */
     public void setDate(String date) {
         this.date = date;
+    }
+
+    /**
+     * 
+     * @param username
+     */
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     /**
@@ -182,7 +190,7 @@ public class Comment implements Serializable {
         if (!(obj instanceof Comment))
             return false;
         Comment c = (Comment) obj;
-        return c.messageComment.equals(messageComment) && c.user.equals(user) && c.date.equals(date)
+        return c.messageComment.equals(messageComment) && c.username.equals(username) && c.date.equals(date)
                 && c.commentId == commentId && c.postId == postId && c.votes == votes && c.comments.equals(comments);
     }
 
@@ -192,7 +200,8 @@ public class Comment implements Serializable {
      * @return String
      */
     public String toString() {
-        return messageComment + "," + user + "," + date + "," + commentId + "," + postId + "," + votes + "," + comments;
+        return messageComment + "," + username + "," + date + "," + commentId + "," + postId + "," + votes + ","
+                + comments;
     }
 
 }

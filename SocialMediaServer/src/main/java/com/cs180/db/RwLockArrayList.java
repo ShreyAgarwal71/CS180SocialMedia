@@ -14,6 +14,13 @@ public class RwLockArrayList<T extends Serializable> {
     public RwLockArrayList() {
     }
 
+    /**
+     * Constructs a new RwLockArrayList with the specified list.
+     * 
+     * @param arr
+     *            the list
+     * 
+     */
     public RwLockArrayList(List<T> arr) {
         writeLock.lock();
         try {
@@ -23,47 +30,119 @@ public class RwLockArrayList<T extends Serializable> {
         }
     }
 
+    /**
+     * Locks the read lock.
+     * 
+     */
     public void lockRead() {
         readLock.lock();
     }
 
+    /**
+     * Unlocks the read lock.
+     * 
+     */
     public void unlockRead() {
         readLock.unlock();
     }
 
+    /**
+     * Locks the write lock.
+     * 
+     */
     public void lockWrite() {
         writeLock.lock();
     }
 
+    /**
+     * Unlocks the write lock.
+     * 
+     */
     public void unlockWrite() {
         writeLock.unlock();
     }
 
+    /**
+     * Clears the list.
+     * 
+     */
     public int size() {
         return list.size();
     }
 
+    /**
+     * Converts the list to an array.
+     * 
+     * @param arr
+     *            the array
+     * 
+     */
     public void toArray(T[] arr) {
         list.toArray(arr);
     }
 
+    /**
+     * Sets the element at the specified index.
+     * 
+     * @param index
+     *            the index
+     * @param o
+     *            the element
+     * 
+     */
     public void set(int index, T o) {
         list.set(index, o);
     }
 
+    /**
+     * Removes the element at the specified index.
+     * 
+     * @param index
+     *            the index
+     * 
+     */
     public void remove(int index) {
         list.remove(index);
     }
 
+    /**
+     * Adds an item to the list.
+     * 
+     * @param item
+     *            the item to add
+     * 
+     */
     public void add(T item) {
         list.add(item);
     }
 
+    /**
+     * Gets the list.
+     * 
+     * @return the list
+     * 
+     */
     public List<T> getList() {
         return list;
     }
 
+    /**
+     * Gets the element at the specified index.
+     * 
+     * @param index
+     *            the index
+     * @return the element at the specified index
+     * 
+     */
     public T get(int index) {
         return list.get(index);
+    }
+
+    /**
+     * Clears the list.
+     * 
+     */
+    public void clear() {
+        list.clear();
     }
 }
