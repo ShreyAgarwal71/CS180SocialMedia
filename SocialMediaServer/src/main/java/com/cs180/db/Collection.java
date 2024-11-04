@@ -36,7 +36,7 @@ public interface Collection<T extends Serializable> {
 			// TODO: Perform this unchecked cast safely
 			data = (T[]) os.readObject();
 		} catch (FileNotFoundException e) {
-			System.out.println("Creating new file: " + fileName);
+			System.out.println("Will create new file: " + fileName);
 			return data;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -56,8 +56,25 @@ public interface Collection<T extends Serializable> {
 	 */
 	default boolean persistToDisk(String fileName, T[] data) {
 		boolean exitCode = true;
-		File f = new File(fileName);
-		try (ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(f))) {
+
+		File basePath = new File(BaseCollection.getOSDataBasePath().toString());
+		File path = null;
+
+		if (basePath.exists() == false) {
+			boolean success = basePath.mkdirs();
+			if (success == false) {
+				System.out.println("Failed to persist Database Collection.");
+				exitCode = false;
+
+				return exitCode;
+			}
+
+			path = new File(fileName);
+		} else {
+			path = new File(fileName);
+		}
+
+		try (ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(path))) {
 			os.writeObject(data);
 		} catch (Exception e) {
 			e.printStackTrace();

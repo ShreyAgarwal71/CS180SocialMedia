@@ -16,9 +16,9 @@ public class Database {
 
 	private static final Object mainLock = new Object();
 
-	private static String userFile = "users.txt";
-	private static String postFile = "posts.txt";
-	private static String commentFile = "comments.txt";
+	private static String userFileName = "users.txt";
+	private static String postFileName = "posts.txt";
+	private static String commentFileName = "comments.txt";
 
 	private static UserCollection uc;
 	private static PostCollection pc;
@@ -27,9 +27,9 @@ public class Database {
 	private static final AtomicBoolean hasBeenInitialized = new AtomicBoolean(false);
 
 	public static void init(String userFile, String postFile, String commentFile) {
-		Database.userFile = userFile;
-		Database.postFile = postFile;
-		Database.commentFile = commentFile;
+		Database.userFileName = userFile;
+		Database.postFileName = postFile;
+		Database.commentFileName = commentFile;
 
 		init();
 	}
@@ -37,9 +37,10 @@ public class Database {
 	public static void init() {
 		synchronized (mainLock) {
 			if (uc == null) {
-				uc = new UserCollection(Database.userFile, scheduler);
-				pc = new PostCollection(Database.postFile, scheduler);
-				cc = new CommentCollection(Database.commentFile, scheduler);
+				uc = new UserCollection(BaseCollection.getCollectionAbsolutePath(Database.userFileName), scheduler);
+				pc = new PostCollection(BaseCollection.getCollectionAbsolutePath(Database.postFileName), scheduler);
+				cc = new CommentCollection(BaseCollection.getCollectionAbsolutePath(Database.commentFileName),
+						scheduler);
 			}
 		}
 	}
