@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 /**
- * A Collection class to manage comments
+ * A Collection class to manage comments in the database. This class is
+ * responsible for reading and writing comment data to and from the disk. It
+ * also provides methods to find comments by their postID.
  * 
  * @author Ates Isfendiyaroglu and Mahit Mehta, L17
  *

@@ -7,12 +7,29 @@ import java.util.List;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.function.Predicate;
 
+/**
+ * BaseCollection
+ * 
+ * This class is the base class for all the collections in the database. It
+ * provides the basic functionality for adding, updating, removing, and finding
+ * elements in the collection.
+ * 
+ * @param <T>
+ * @version November 2nd, 2024
+ * 
+ */
 abstract class BaseCollection<T extends Serializable> implements Collection<T> {
     protected RwLockArrayList<T> records;
 
     private final ScheduledThreadPoolExecutor scheduler;
     private boolean needWrite = false;
 
+    /**
+     * Constructor for BaseCollection
+     * 
+     * @param fileName
+     * @param scheduler
+     */
     public BaseCollection(String fileName, ScheduledThreadPoolExecutor scheduler) {
         T[] arr = this.readData(fileName);
         if (arr == null) {

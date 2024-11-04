@@ -5,12 +5,28 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+/**
+ * A thread-safe ArrayList that uses a ReadWriteLock to manage access to the
+ * list. This class is used to store data in the database. It provides methods
+ * to add, remove, and get elements from the list. It also provides methods to
+ * lock and unlock the read and write locks. This class is used by the database
+ * to store user, post, and comment data. This class is a generic class. The
+ * type of the elements in the list is specified by the type parameter T.
+ * 
+ * @param <T> The type of the elements in the list
+ * 
+ * @version November 2nd, 2024
+ * 
+ */
 public class RwLockArrayList<T extends Serializable> {
     private final List<T> list = new ArrayList<>();
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
     private final ReentrantReadWriteLock.ReadLock readLock = lock.readLock();
     private final ReentrantReadWriteLock.WriteLock writeLock = lock.writeLock();
 
+    /**
+     * Constructor for RwLockArrayList
+     */
     public RwLockArrayList() {
     }
 
@@ -18,8 +34,6 @@ public class RwLockArrayList<T extends Serializable> {
      * Constructs a new RwLockArrayList with the specified list.
      * 
      * @param arr
-     *            the list
-     * 
      */
     public RwLockArrayList(List<T> arr) {
         writeLock.lock();
@@ -32,7 +46,7 @@ public class RwLockArrayList<T extends Serializable> {
 
     /**
      * Locks the read lock.
-     * 
+     *
      */
     public void lockRead() {
         readLock.lock();
@@ -40,7 +54,7 @@ public class RwLockArrayList<T extends Serializable> {
 
     /**
      * Unlocks the read lock.
-     * 
+     *
      */
     public void unlockRead() {
         readLock.unlock();
@@ -63,8 +77,9 @@ public class RwLockArrayList<T extends Serializable> {
     }
 
     /**
-     * Clears the list.
+     * Returns the size of the list
      * 
+     * @return size
      */
     public int size() {
         return list.size();
@@ -109,7 +124,6 @@ public class RwLockArrayList<T extends Serializable> {
      * Adds an item to the list.
      * 
      * @param item
-     *            the item to add
      * 
      */
     public void add(T item) {
@@ -130,7 +144,7 @@ public class RwLockArrayList<T extends Serializable> {
      * Gets the element at the specified index.
      * 
      * @param index
-     *            the index
+     *
      * @return the element at the specified index
      * 
      */

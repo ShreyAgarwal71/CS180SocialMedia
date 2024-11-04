@@ -3,7 +3,9 @@ package com.cs180.db;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 /**
- * A Collection class to manage users
+ * A Collection class to manage users in the database of our program. This class
+ * is responsible for reading and writing user data to and from the disk. It
+ * also provides methods to find users by their username.
  * 
  * @author Ates Isfendiyaroglu and Mahit Mehta, L17
  *

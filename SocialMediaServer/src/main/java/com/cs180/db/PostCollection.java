@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 /**
- * A Collection class to manage posts
+ * A Collection class to manage posts in the database. This class is responsible
+ * for reading and writing post data to and from the disk. It also provides
+ * methods to find posts by their postID.
  * 
  * @author Ates Isfendiyaroglu and Mahit Mehta, L17
  *
