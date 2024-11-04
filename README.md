@@ -17,7 +17,7 @@ CS180SocialMedia is a Java-based backend simulation for a simple social media pl
 - [Project Structure](#project-structure)
 - [Setup](#setup)
 - [Usage](#usage)
-- [Classes] (#classes)
+- [Classes](#classes)
 - [Data Storage](#data-storage)
 - [Testing](#testing)
 
