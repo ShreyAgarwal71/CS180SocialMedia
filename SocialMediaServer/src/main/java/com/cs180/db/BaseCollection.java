@@ -31,6 +31,16 @@ abstract class BaseCollection<T extends Serializable> implements Collection<T> {
         }, 0, Collection.ASYNC_WRITE_FREQ, java.util.concurrent.TimeUnit.SECONDS);
     }
 
+    /**
+     * Set the write flag to true
+     */
+    public void setWriteFlag(boolean value) {
+        this.needWrite = value;
+    }
+
+    /**
+     * Save the records to disk
+     */
     public void save() {
         if (!this.needWrite)
             return;
@@ -40,7 +50,7 @@ abstract class BaseCollection<T extends Serializable> implements Collection<T> {
     /**
      * Wrapper method for the Collection interface's persistToDisk method.
      * 
-     * @return exitCode
+     * @return true if the records were written to disk, false otherwise
      */
     abstract boolean writeRecords();
 
@@ -53,11 +63,22 @@ abstract class BaseCollection<T extends Serializable> implements Collection<T> {
      */
     abstract int indexOf(T record);
 
+    /**
+     * Add a record to the collection if it does not already exist
+     * 
+     * @return true if the record was added, false otherwise
+     */
     @Override
     public boolean addElement(T record) {
         boolean exitCode = false;
 
         this.records.lockWrite();
+
+        if (this.indexOf(record) != -1) {
+            this.records.unlockWrite();
+            return exitCode;
+        }
+
         this.records.add(record);
         this.records.unlockWrite();
 

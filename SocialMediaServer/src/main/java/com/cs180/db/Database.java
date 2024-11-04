@@ -140,12 +140,14 @@ public class Database {
 		ArrayList<Thread> threads = new ArrayList<>();
 
 		for (int i = 0; i < 10; i++) {
+			final int threadNum = i;
 			Thread t = new Thread(() -> {
 				Database db = new Database();
 
 				for (int j = 0; j < 1000; j++) {
 					db.getUserCollection()
-							.addElement(new User("user_" + j, "pass", "username_ " + j, "email_" + j));
+							.addElement(
+									new User("user_" + (j + threadNum * 1000), "pass", "username_ " + j, "email_" + j));
 				}
 			});
 			threads.add(t);
