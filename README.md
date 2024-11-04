@@ -104,6 +104,13 @@ CS180SocialMedia/
 - **User**: This class represents a user object that can be added to a user collection. A user has a username, password, display name, and email. The class defines all respective getter and setter methods, equals methods and a toString.
 - **Post**: This class represents a post object that can be added to a feed. A post has a message, a user, a date, a postID, and votes. The class defines all respective getter and setter methods, equals methods and a toString.
 - **Comment**: This class represents a comment object that can be added to a post or another comment. A comment contains a message, a user, a date, a commentID, votes, and comments. The class defines all respective getter and setter methods, equals methods and a toString.
+- **BaseCollection**: This class is the base class for all the collections in the database. It provides the basic functionality for adding, updating, removing, and finding elements in the collection.
+- **Collection**: A Collection interface to help manage our program's database collections. This interface provides methods to read and write data to and from the disk, add, update, and remove elements from the collection, and find elements in the collection that match a given predicate.
+- **UserCollection**: A Collection class to manage users in the database of our program. This class is responsible for reading and writing user data to and from the disk. It also provides methods to find users by their username.
+- **PostCollection**: A Collection class to manage posts in the database. This class is responsible for reading and writing post data to and from the disk. It also provides methods to find posts by their postID.
+- **CommentCollection**: A Collection class to manage comments in the database. This class is responsible for reading and writing comment data to and from the disk. It also provides methods to find comments by their postID.
+- **Database**: A Database class to manage the Collection singletons in the database. This class is responsible for reading and writing user, post, and comment data to and from the disk. It also provides methods to get the UserCollection, the PostCollection, and the CommentCollection. The Database class is a singleton class.
+- **RwLockArrayList**: A thread-safe ArrayList that uses a ReadWriteLock to manage access to the list. This class is used to store data in the database. It provides methods to add, remove, and get elements from the list. It also provides methods to lock and unlock the read and write locks. This class is used by the database to store user, post, and comment data. This class is a generic class. The type of the elements in the list is specified by the type parameter T.
 
 ---
 

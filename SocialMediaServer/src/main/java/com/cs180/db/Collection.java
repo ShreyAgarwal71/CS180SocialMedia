@@ -11,7 +11,10 @@ import java.util.List;
 import java.util.function.Predicate;
 
 /**
- * A Collection interface to help manage our program's database
+ * A Collection interface to help manage our program's database collections.
+ * This interface provides methods to read and write data to and from the disk,
+ * add, update, and remove elements from the collection, and find elements in
+ * the collection that match a given predicate.
  * 
  * @author Ates Isfendiyaroglu and Mahit Mehta, L17
  *
@@ -51,7 +54,7 @@ public interface Collection<T extends Serializable> {
 	 * Returns true if successfull, false if unsuccessfull.
 	 *
 	 * @param fileName,
-	 *            data
+	 *                  data
 	 * @return exitCode -> true = success, false = failure
 	 */
 	default boolean persistToDisk(String fileName, T[] data) {
@@ -82,7 +85,7 @@ public interface Collection<T extends Serializable> {
 	 * if the targeted Object doesn't exist in the Collection's ArrayList.
 	 *
 	 * @param target,
-	 *            newObj
+	 *                newObj
 	 * @return exitCode
 	 */
 	abstract boolean updateElement(T target, T newObj);

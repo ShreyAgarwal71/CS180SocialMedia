@@ -5,7 +5,11 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * A Database class to manage the Collection singletons
+ * A Database class to manage the Collection singletons in the database. This
+ * class is responsible for reading and writing user, post, and comment data to
+ * and from the disk. It also provides methods to get the UserCollection, the
+ * PostCollection, and the CommentCollection. The Database class is a singleton
+ * class.
  *
  * @author Ates Isfendiyaroglu and Mahit Mehta, L17
  *
