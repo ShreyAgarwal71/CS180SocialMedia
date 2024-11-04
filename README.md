@@ -1,6 +1,6 @@
 # CS180SocialMedia
 
-CS180SocialMedia is a Java-based backend simulation for a simple social media platform. The platform is a digital wall-writing app, essentially users will be able to join classes they are currently enrolled in and view posts that previous students have made. Plase 1 contains for basic user management, posting, and commenting, with data persistence through the use of a file storing system. This project is built with Maven and includes Java classes for users, posts, comments, and images.
+CS180SocialMedia is a Java-based backend simulation for a simple social media platform. The platform is a digital wall-writing app, essentially users will be able to join classes they are currently enrolled in and view posts that previous students have made. Plase 1 contains for basic user management, posting, and commenting, with data persistence through the use of a file storing system. This project is built with Maven and includes Java classes for users, posts and comments.
 
 **Class**: CS 180 
 **Group Names**:
@@ -28,7 +28,6 @@ CS180SocialMedia is a Java-based backend simulation for a simple social media pl
 
 - **User Management**: Create, update, retrieve, and delete user profiles.
 - **Posts and Comments**: Users can create posts and add comments to interact with one another.
-- **Image Collection**: Placeholder for image management, where users or posts may have associated images.
 - **File-based Storage**: Data is stored in text files (`users.txt`, `posts.txt`, and `comments.txt`) for persistence.
 
 ---
@@ -40,7 +39,6 @@ The main components of the project include:
 - **App.java**: The main entry point of the application, initializing and running the backend simulation.
 - **Database.java**: Manages reading from and writing to files, acting as a simple file-based database.
 - **User, Post, and Comment Classes**: Define the entities in the system, with `UserCollection`, `PostCollection`, and `CommentCollection` managing collections of these entities.
-- **ImageCollection.java**: Handles image data, if implemented for users or posts.
 
 ---
 
@@ -59,16 +57,21 @@ CS180SocialMedia/
 │       │       ├── App.java    # Main application entry point
 │       │       ├── db/         # Database and collection classes
 │       │           ├── User.java
+│       │           ├── BaseCollection.java
 │       │           ├── UserCollection.java
 │       │           ├── Post.java
 │       │           ├── PostCollection.java
 │       │           ├── Comment.java
+│       │           ├── RwLockArrayList.java
 │       │           ├── CommentCollection.java
-│       │           ├── ImageCollection.java
 │       │           └── Database.java
 │       └── test/
-│           └── java/com/cs180/
-│               └── AppTest.java  # Unit tests for core functionality
+│           └── java/com/cs180/db
+│               ├── CommentTest.java
+│               ├── DataBaseTest.java
+│               ├── PostTest.java
+│               └── UserTest.java
+│                 
 └── Data Files
     ├── users.txt               # Stores user data
     ├── posts.txt               # Stores post data
@@ -81,7 +84,7 @@ CS180SocialMedia/
 
 ### Prerequisites
 
-- **Java**: JDK 8 or higher
+- **Java**: JDK 23
 - **Maven**: For dependency management and building
 
 ---
@@ -172,7 +175,10 @@ CS180SocialMedia/
     - Test 10 Test setCommentDate
     - Test 11: Test setCommentID
     - Test 12: Test setCommentVotes
-    - Test 13: Test commentEquals  
+    - Test 13: Test commentEquals
+- **Multithread Testing**
+    - Verifies that multimple threads can write users to the database
+    - Verifies that multiple threads can delete users from the database
   
 ---
 
