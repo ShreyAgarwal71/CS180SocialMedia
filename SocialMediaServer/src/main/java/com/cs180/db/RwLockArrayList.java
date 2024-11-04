@@ -31,7 +31,7 @@ public class RwLockArrayList<T extends Serializable> {
     }
 
     /**
-     * Constructor for RwLockArrayList
+     * Constructs a new RwLockArrayList with the specified list.
      * 
      * @param arr
      */
@@ -45,28 +45,32 @@ public class RwLockArrayList<T extends Serializable> {
     }
 
     /**
-     * Locks the read lock
+     * Locks the read lock.
+     *
      */
     public void lockRead() {
         readLock.lock();
     }
 
     /**
-     * Unlocks the read lock
+     * Unlocks the read lock.
+     *
      */
     public void unlockRead() {
         readLock.unlock();
     }
 
     /**
-     * Locks the write lock
+     * Locks the write lock.
+     * 
      */
     public void lockWrite() {
         writeLock.lock();
     }
 
     /**
-     * Unlocks the write lock
+     * Unlocks the write lock.
+     * 
      */
     public void unlockWrite() {
         writeLock.unlock();
@@ -82,56 +86,77 @@ public class RwLockArrayList<T extends Serializable> {
     }
 
     /**
-     * Converts the list to an array
+     * Converts the list to an array.
      * 
      * @param arr
+     *            the array
+     * 
      */
     public void toArray(T[] arr) {
         list.toArray(arr);
     }
 
     /**
-     * Adds all elements in the list to the list
+     * Sets the element at the specified index.
      * 
-     * @param arr
+     * @param index
+     *            the index
+     * @param o
+     *            the element
+     * 
      */
     public void set(int index, T o) {
         list.set(index, o);
     }
 
     /**
-     * Adds all elements in the list to the list
+     * Removes the element at the specified index.
      * 
-     * @param arr
+     * @param index
+     *            the index
+     * 
      */
     public void remove(int index) {
         list.remove(index);
     }
 
     /**
-     * Adds all elements in the list to the list
+     * Adds an item to the list.
      * 
-     * @param arr
+     * @param item
+     * 
      */
     public void add(T item) {
         list.add(item);
     }
 
     /**
-     * Adds all elements in the list to the list
+     * Gets the list.
      * 
-     * @param arr
+     * @return the list
+     * 
      */
     public List<T> getList() {
         return list;
     }
 
     /**
-     * Adds all elements in the list to the list
+     * Gets the element at the specified index.
      * 
-     * @param arr
+     * @param index
+     *
+     * @return the element at the specified index
+     * 
      */
     public T get(int index) {
         return list.get(index);
+    }
+
+    /**
+     * Clears the list.
+     * 
+     */
+    public void clear() {
+        list.clear();
     }
 }

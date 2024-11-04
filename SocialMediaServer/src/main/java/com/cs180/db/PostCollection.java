@@ -47,8 +47,12 @@ public class PostCollection extends BaseCollection<Post> {
 	public int indexOf(Post post) {
 		int index = -1;
 
+		if (post == null) {
+			return index;
+		}
+
 		for (int i = 0; i < this.records.size(); i++) {
-			if (this.records.get(i).getPostID() == post.getPostID()) {
+			if (this.records.get(i).getPostId() == post.getPostId()) {
 				index = i;
 				break;
 			}

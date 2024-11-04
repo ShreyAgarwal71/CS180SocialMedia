@@ -1,5 +1,6 @@
 package com.cs180.db;
 
+import java.util.List;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 /**
@@ -45,13 +46,21 @@ public class CommentCollection extends BaseCollection<Comment> {
 	public int indexOf(Comment comment) {
 		int index = -1;
 
+		if (comment == null) {
+			return index;
+		}
+
 		for (int i = 0; i < this.records.size(); i++) {
-			if (this.records.get(i).getCommentID() == comment.getCommentID()) {
+			if (this.records.get(i).getCommentId() == comment.getCommentId()) {
 				index = i;
 				break;
 			}
 		}
 
 		return index;
+	}
+
+	public List<Comment> commentsByPostId(int postId) {
+		return this.findAll(c -> c.getPostId() == postId);
 	}
 }

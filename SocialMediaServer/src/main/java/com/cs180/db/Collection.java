@@ -7,8 +7,12 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.function.Predicate;
+
+import com.cs180.App;
 
 /**
  * A Collection interface to help manage our program's database collections.
@@ -39,13 +43,31 @@ public interface Collection<T extends Serializable> {
 			// TODO: Perform this unchecked cast safely
 			data = (T[]) os.readObject();
 		} catch (FileNotFoundException e) {
-			System.out.println("Creating new file: " + fileName);
+			System.out.println("Will create new file: " + fileName);
 			return data;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 		return data;
+	}
+
+	static Path getOSDataBasePath() {
+		String os = System.getProperty("os.name").toLowerCase();
+
+		if (os.contains("win")) {
+			return Paths.get(System.getenv("APPDATA"), App.ID);
+		} else if (os.contains("mac")) {
+			return Paths.get(System.getProperty("user.home"), "/Library/Application Support", App.ID);
+		} else if (os.contains("nix") || os.contains("nux")) {
+			return Paths.get(System.getProperty("user.home"), String.format(".%s", App.ID.toLowerCase()));
+		} else {
+			return Paths.get(System.getProperty("user.home"), App.ID);
+		}
+	}
+
+	static String getCollectionAbsolutePath(String fileName) {
+		return getOSDataBasePath().resolve(fileName).toString();
 	}
 
 	/**
@@ -59,8 +81,25 @@ public interface Collection<T extends Serializable> {
 	 */
 	default boolean persistToDisk(String fileName, T[] data) {
 		boolean exitCode = true;
-		File f = new File(fileName);
-		try (ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(f))) {
+
+		File basePath = new File(getOSDataBasePath().toString());
+		File path = null;
+
+		if (basePath.exists() == false) {
+			boolean success = basePath.mkdirs();
+			if (success == false) {
+				System.out.println("Failed to persist Database Collection.");
+				exitCode = false;
+
+				return exitCode;
+			}
+
+			path = new File(fileName);
+		} else {
+			path = new File(fileName);
+		}
+
+		try (ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(path))) {
 			os.writeObject(data);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -111,6 +150,11 @@ public interface Collection<T extends Serializable> {
 	 * @return count
 	 */
 	abstract int count();
+
+	/**
+	 * Clears the Collection's ArrayList.
+	 */
+	abstract void clear();
 
 	/**
 	 * Returns all the elements in the Collection that match the given predicate.

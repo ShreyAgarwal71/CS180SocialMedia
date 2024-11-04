@@ -18,17 +18,40 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Database {
 	private static final ScheduledThreadPoolExecutor scheduler = new ScheduledThreadPoolExecutor(3);
 
-	private static final String userFile = "users.txt";
-	private static final String postFile = "posts.txt";
-	private static final String commentFile = "comments.txt";
+	private static final Object mainLock = new Object();
 
-	private static final UserCollection uc = new UserCollection(userFile, scheduler);
-	private static final PostCollection pc = new PostCollection(postFile, scheduler);
-	private static final CommentCollection cc = new CommentCollection(commentFile, scheduler);
+	private static String userFileName = "users.txt";
+	private static String postFileName = "posts.txt";
+	private static String commentFileName = "comments.txt";
+
+	private static UserCollection uc;
+	private static PostCollection pc;
+	private static CommentCollection cc;
 
 	private static final AtomicBoolean hasBeenInitialized = new AtomicBoolean(false);
 
+	public static void init(String userFile, String postFile, String commentFile) {
+		Database.userFileName = userFile;
+		Database.postFileName = postFile;
+		Database.commentFileName = commentFile;
+
+		init();
+	}
+
+	public static void init() {
+		synchronized (mainLock) {
+			if (uc == null) {
+				uc = new UserCollection(Collection.getCollectionAbsolutePath(Database.userFileName), scheduler);
+				pc = new PostCollection(Collection.getCollectionAbsolutePath(Database.postFileName), scheduler);
+				cc = new CommentCollection(Collection.getCollectionAbsolutePath(Database.commentFileName),
+						scheduler);
+			}
+		}
+	}
+
 	public Database() {
+		init();
+
 		if (hasBeenInitialized.compareAndSet(false, true)) {
 			Runtime.getRuntime().addShutdownHook((new Thread() {
 				public void run() {
@@ -56,7 +79,7 @@ public class Database {
 
 	public static void main(String[] args) {
 		// populateTest();
-		// writeMultiThreadTest();
+		writeMultiThreadTest();
 		deleteMultiThreadTest();
 	}
 
@@ -121,12 +144,14 @@ public class Database {
 		ArrayList<Thread> threads = new ArrayList<>();
 
 		for (int i = 0; i < 10; i++) {
+			final int threadNum = i;
 			Thread t = new Thread(() -> {
 				Database db = new Database();
 
 				for (int j = 0; j < 1000; j++) {
 					db.getUserCollection()
-							.addElement(new User("user_" + j, "pass", "username_ " + j, "email_" + j));
+							.addElement(
+									new User("user_" + (j + threadNum * 1000), "pass", "username_ " + j, "email_" + j));
 				}
 			});
 			threads.add(t);
@@ -159,14 +184,14 @@ public class Database {
 		}
 
 		for (int i = 0; i < 3; i++) {
-			Post u = new Post("hello", "mahit", "11/11/11", 1, 0, "image", new Comment[0]);
+			Post u = new Post("hello", "mahit", "11/11/11", 1, 0, "image");
 			db.getPostCollection().addElement(u);
 			System.out.println("post added: " + u);
 		}
 
 		for (int i = 0; i < 3; i++) {
-			Comment u = new Comment("hello", new User("user" + i, "pass" + i, "username:" + i, "email" + i),
-					"11/11/11", 1, 0, new Comment[0]);
+			Comment u = new Comment("hello", "user",
+					"11/11/11", 1, 0, 0, new Comment[0]);
 			db.getCommentCollection().addElement(u);
 			System.out.println("comment added: " + u);
 		}
