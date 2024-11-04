@@ -147,6 +147,8 @@ public class DatabaseTest {
       assertEquals(0, db.getUserCollection().count());
    }
 
+   // ====================== End Multithreading Tests =====================
+
    // ================== Start -- PostCollection Tests ===================
 
    /**
@@ -401,4 +403,6 @@ public class DatabaseTest {
       assertEquals("testDisplayNameTwo", user.getDisplayName(), "Expected user display name to be updated");
       assertEquals("testEmailTwo", user.getEmail(), "Expected user email to be updated");
    }
+
+   // =============== End -- UserCollection Tests =================
 }
