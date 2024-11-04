@@ -18,6 +18,7 @@ CS180SocialMedia is a Java-based backend simulation for a simple social media pl
 - [Setup](#setup)
 - [Usage](#usage)
 - [Classes](#classes)
+- [ClassTesting](#class-testing)
 - [Data Storage](#data-storage)
 - [Testing](#testing)
 
@@ -117,24 +118,69 @@ CS180SocialMedia/
 ## Class Testing
 
 - **User**:
-  Test 1: Removing user test
-  Test 2:
-- **Post**: This class represents a post object that can be added to a feed. A post has a message, a user, a date, a postID, and votes. The class defines all respective getter and setter methods, equals methods and a toString.
-- **Comment**: This class represents a comment object that can be added to a post or another comment. A comment contains a message, a user, a date, a commentID, votes, and comments. The class defines all respective getter and setter methods, equals methods and a toString.
-- **BaseCollection**: This class is the base class for all the collections in the database. It provides the basic functionality for adding, updating, removing, and finding elements in the collection.
-- **Collection**: A Collection interface to help manage our program's database collections. This interface provides methods to read and write data to and from the disk, add, update, and remove elements from the collection, and find elements in the collection that match a given predicate.
-- **UserCollection**: A Collection class to manage users in the database of our program. This class is responsible for reading and writing user data to and from the disk. It also provides methods to find users by their username.
-- **PostCollection**: A Collection class to manage posts in the database. This class is responsible for reading and writing post data to and from the disk. It also provides methods to find posts by their postID.
-- **CommentCollection**: A Collection class to manage comments in the database. This class is responsible for reading and writing comment data to and from the disk. It also provides methods to find comments by their postID.
-- **Database**: A Database class to manage the Collection singletons in the database. This class is responsible for reading and writing user, post, and comment data to and from the disk. It also provides methods to get the UserCollection, the PostCollection, and the CommentCollection. The Database class is a singleton class.
-- **RwLockArrayList**: A thread-safe ArrayList that uses a ReadWriteLock to manage access to the list. This class is used to store data in the database. It provides methods to add, remove, and get elements from the list. It also provides methods to lock and unlock the read and write locks. This class is used by the database to store user, post, and comment data. This class is a generic class. The type of the elements in the list is specified by the type parameter T.
-
+  Tests constructor, and all methods located in the User class.
+  Test 1: Tests the user constructor
+  Test 2: Test getUsername
+  Test 3: Test getPassword
+  Test 4: Test getDisplayName
+  Test 5: Test getEmail
+  Test 6: Test setUsername
+  Test 7: Test getPassword
+  Test 8: Test setDisplayName
+  Test 9: Test setEmail
+  Test 10: Test the equals method
+  Test 11: Test the To String
+- **Post**:
+  Tests constructor, and all methods located in the Post class
+  Test 1: Tests the post constructor
+  Test 2: Test getMessagePost
+  Test 3: Test getPostUsername
+  Test 4: Test getPostDate
+  Test 5: test getPostID
+  Test 6: Test getPostVotes
+  Test 7: Test getPostImageURL
+  Test 8: Test setPostUsername
+  Test 9: Test setPostUsername
+  Test 10: Test setPostDate
+  Test 11: Test setpostID
+  Test 12: Test setPostIDTODO
+  Test 13: Test setPostVotes
+  Test 14: Test setPostImageURL
+  Test 14 Test testPostEquals
+- **Database**:
+  Test 1: Verifies that all posts for a given user are returned
+  Test 2: Verifies that a duplicate post is not added to the collection
+  Test 3: Verifies that a post is removed from the collection
+  Test 4: Verifies that a post is updated in the collection
+  Test 5: Verifies that duplicate comments are not added to the collection
+  Test 6: Verifies that a comment is removed from the collection
+  Test 7: Verifies that a comment is updated in the collection
+  Test 8: Verifies that a user can be found by username
+  Test 9: Verifies that a user is removed from the collection
+  Test 10: Verifies that a user is updated in the collection
+- **Comment**:
+  Tests constructor, and all methods located in the Comment class
+  Test 1: Tests the comment construtor
+  Test 2: Test getMessageComment
+  Test 3: Test getCommentUser
+  Test 4: test getCommentDate
+  Test 5: test getCommentID
+  Test 6: test getCommentVotes
+  Test 7: Test getCommentComments
+  Test 8: Test setMessageComment
+  Test 9: Test setCommentUser
+  Test 10 Test setCommentDate
+  Test 11: Test setCommentID
+  Test 12: Test setCommentVotes
+  Test 13: Test commentEquals  
+  
 ---
 
 ## Usage
 
 1. Run the application:
    ```bash
+   cd SocialMediaServer
    mvn exec:java -Dexec.mainClass="com.cs180.App"
    ```
 2. Interact with the program to create, view, and manage users, posts, and comments. The application saves data to text files for persistence.
@@ -158,6 +204,7 @@ These files are read and updated through the `Database.java` class, ensuring dat
 To run unit tests for this project:
 
 ```bash
+cd SocialMediaServer
 mvn test
 ```
 
