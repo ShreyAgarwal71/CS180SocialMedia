@@ -7,7 +7,19 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.Test;
 
+/**
+ * A class that provides test cases for the Comment class.
+ * 
+ * @author Zayan
+ * 
+ * @version November 2nd, 2024
+ */
 public class CommentTest {
+        /**
+         * A test case for the Comment constructor.
+         * 
+         * @see Comment#Comment(String, String, String, int, int, int, Comment[])
+         */
         @Test
         public void testCommentConstructor() {
                 Comment testComment = new Comment("This is a comment", "testUser", "11-3-24", 5678, 2, 1,
@@ -16,6 +28,11 @@ public class CommentTest {
                 assertNotNull(testComment, "Ensure the constructor is actually instantiating variables");
         }
 
+        /**
+         * A test case for the Comment constructor.
+         * 
+         * @see Comment#Comment(String, String, String, int, int, int, Comment[])
+         */
         @Test
         public void testGetMessageComment() {
                 Comment testComment = new Comment("This is a comment", "testUser", "11-3-24", 5678, 2, 1,
@@ -26,6 +43,11 @@ public class CommentTest {
                                 "Ensure getMessageComment is correctly getting the comment message");
         }
 
+        /**
+         * A test case for the Comment constructor.
+         * 
+         * @see Comment#Comment(String, String, String, int, int, int, Comment[])
+         */
         @Test
         public void testGetCommentUser() {
                 String testUser = "testUser";
@@ -36,6 +58,11 @@ public class CommentTest {
                                 "Ensure getUsername is correctly getting the comment username");
         }
 
+        /**
+         * A test case for the Comment constructor.
+         * 
+         * @see Comment#Comment(String, String, String, int, int, int, Comment[])
+         */
         @Test
         public void testGetCommentDate() {
                 Comment testComment = new Comment("This is a comment", "testUser", "11-3-24", 5678, 2, 1,
@@ -44,6 +71,11 @@ public class CommentTest {
                 assertEquals("11-3-24", testComment.getDate(), "Ensure getDate is correctly getting the comment date");
         }
 
+        /**
+         * A test case for the Comment constructor.
+         * 
+         * @see Comment#Comment(String, String, String, int, int, int, Comment[])
+         */
         @Test
         public void testGetCommentID() {
                 Comment testComment = new Comment("This is a comment", "testUser", "11-3-24", 5678, 2, 1,
@@ -53,6 +85,11 @@ public class CommentTest {
                                 "Ensure getCommentID is correctly getting the comment ID");
         }
 
+        /**
+         * A test case for the Comment constructor.
+         * 
+         * @see Comment#Comment(String, String, String, int, int, int, Comment[])
+         */
         @Test
         public void testGetCommentVotes() {
                 Comment testComment = new Comment("This is a comment", "testUser", "11-3-24", 5678, 2, 1,
@@ -61,6 +98,11 @@ public class CommentTest {
                 assertEquals(1, testComment.getVotes(), "Ensure getVotes is correctly getting the comment votes");
         }
 
+        /**
+         * A test case for the Comment constructor.
+         * 
+         * @see Comment#Comment(String, String, String, int, int, int, Comment[])
+         */
         @Test
         public void testGetCommentComments() {
                 Comment testComment = new Comment("This is a comment", "testUser", "11-3-24", 5678, 2, 1,
@@ -69,6 +111,11 @@ public class CommentTest {
                                 testComment.getComments(), "Ensure getComments is correctly getting the comment array");
         }
 
+        /**
+         * A test case for the Comment constructor.
+         * 
+         * @see Comment#Comment(String, String, String, int, int, int, Comment[])
+         */
         @Test
         public void testSetMessageComment() {
                 Comment testComment = new Comment("This is a comment", "testUser", "11-3-24", 5678, 2, 1,
@@ -79,6 +126,11 @@ public class CommentTest {
                                 "Ensure setMessageComment is correctly setting the comment message");
         }
 
+        /**
+         * A test case for the Comment constructor.
+         * 
+         * @see Comment#Comment(String, String, String, int, int, int, Comment[])
+         */
         @Test
         public void testSetCommentUser() {
                 Comment testComment = new Comment("This is a comment", "testUser", "11-3-24", 5678, 2, 1,
@@ -89,6 +141,11 @@ public class CommentTest {
                                 "Ensure setUsername is correctly setting the comment username");
         }
 
+        /**
+         * A test case for the Comment constructor.
+         * 
+         * @see Comment#Comment(String, String, String, int, int, int, Comment[])
+         */
         @Test
         public void testSetCommentDate() {
                 Comment testComment = new Comment("This is a comment", "testUsername", "11-3-24", 5678, 2, 1,
@@ -100,6 +157,11 @@ public class CommentTest {
                                 "Ensure setDate is correctly setting the comment date");
         }
 
+        /**
+         * A test case for the Comment constructor.
+         * 
+         * @see Comment#Comment(String, String, String, int, int, int, Comment[])
+         */
         @Test
         public void testSetCommentID() {
                 Comment testComment = new Comment("This is a comment", "testUsername", "11-3-24", 5678, 2, 1,
@@ -110,6 +172,11 @@ public class CommentTest {
                                 "Ensure setCommentID is correctly setting the commentId");
         }
 
+        /**
+         * A test case for the Comment constructor.
+         * 
+         * @see Comment#Comment(String, String, String, int, int, int, Comment[])
+         */
         @Test
         public void testSetCommentVotes() {
                 Comment testComment = new Comment("This is a comment", "testUsername", "11-3-24", 5678, 2, 1,
@@ -119,6 +186,11 @@ public class CommentTest {
                 assertEquals(10, testComment.getVotes(), "Ensure setVotes is correctly setting the comment votes");
         }
 
+        /**
+         * A test case for the Comment constructor.
+         * 
+         * @see Comment#Comment(String, String, String, int, int, int, Comment[])
+         */
         @Test
         public void testSetCommentComments() {
                 Comment testComment = new Comment("This is a comment", "testUsername", "11-3-24", 5678, 2, 1,
@@ -129,6 +201,11 @@ public class CommentTest {
                                 "Ensure setComments is correctly setting the comment array");
         }
 
+        /**
+         * A test case for the Comment constructor.
+         * 
+         * @see Comment#Comment(String, String, String, int, int, int, Comment[])
+         */
         @Test
         public void testCommentEquals() {
                 Comment testComment = new Comment("This is a comment", "testUsername", "11-3-24", 5678, 2, 1,
