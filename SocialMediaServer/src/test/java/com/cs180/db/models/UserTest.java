@@ -1,4 +1,4 @@
-package com.cs180.db;
+package com.cs180.db.models;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;

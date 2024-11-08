@@ -1,6 +1,4 @@
-package com.cs180.db;
-
-import java.io.Serializable;
+package com.cs180.db.models;
 
 /**
  * User
@@ -13,11 +11,13 @@ import java.io.Serializable;
  * @version 2024-11-03
  * 
  */
-public class User implements Serializable {
+public class User extends Model {
     private String username;
     private String password;
     private String displayName;
     private String email;
+    private String[] followers;
+    private String[] blockedUsers;
 
     /**
      * Constructor for User
@@ -32,6 +32,8 @@ public class User implements Serializable {
         this.password = password;
         this.displayName = displayName;
         this.email = email;
+        this.followers = new String[0];
+        this.blockedUsers = new String[0];
     }
 
     /**

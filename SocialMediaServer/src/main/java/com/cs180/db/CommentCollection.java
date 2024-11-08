@@ -1,12 +1,15 @@
 package com.cs180.db;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
+
+import com.cs180.db.models.Comment;
 
 /**
  * A Collection class to manage comments in the database. This class is
  * responsible for reading and writing comment data to and from the disk. It
- * also provides methods to find comments by their postID.
+ * also provides methods to find comments by their postId.
  * 
  * @author Ates Isfendiyaroglu and Mahit Mehta
  * @version 2024-11-03
@@ -50,7 +53,7 @@ public class CommentCollection extends BaseCollection<Comment> {
 		}
 
 		for (int i = 0; i < this.records.size(); i++) {
-			if (this.records.get(i).getCommentId() == comment.getCommentId()) {
+			if (this.records.get(i).getId() == comment.getId()) {
 				index = i;
 				break;
 			}
@@ -59,7 +62,7 @@ public class CommentCollection extends BaseCollection<Comment> {
 		return index;
 	}
 
-	public List<Comment> commentsByPostId(int postId) {
-		return this.findAll(c -> c.getPostId() == postId);
+	public List<Comment> commentsByPostId(UUID postId) {
+		return this.findAll(c -> c.getPostId().equals(postId));
 	}
 }

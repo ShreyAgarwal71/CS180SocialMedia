@@ -1,6 +1,6 @@
-package com.cs180.db;
+package com.cs180.db.models;
 
-import java.io.Serializable;
+import java.util.UUID;
 
 /**
  * Post
@@ -12,28 +12,26 @@ import java.io.Serializable;
  * @version 2024-11-03
  * 
  */
-public class Post implements Serializable {
+public class Post extends Model {
+    private UUID userId;
     private String messagePost;
-    private String username;
     private String date;
-    private int postId;
     private int votes;
     private String imageURL;
 
     /**
      * Constructor for Post
      * 
+     * @param userId
      * @param messagePost
-     * @param username
      * @param date
      * @param postId
      * @param votes
      */
-    public Post(String messagePost, String username, String date, int postId, int votes, String imageURL) {
+    public Post(UUID userId, String messagePost, String date, int votes, String imageURL) {
+        this.userId = userId;
         this.messagePost = messagePost;
-        this.username = username;
         this.date = date;
-        this.postId = postId;
         this.votes = votes;
         this.imageURL = imageURL;
     }
@@ -48,12 +46,12 @@ public class Post implements Serializable {
     }
 
     /**
-     * Getter for user
+     * Getter for userId
      * 
-     * @return user
+     * @return userId
      */
-    public String getUsername() {
-        return username;
+    public UUID getUserId() {
+        return userId;
     }
 
     /**
@@ -63,15 +61,6 @@ public class Post implements Serializable {
      */
     public String getDate() {
         return date;
-    }
-
-    /**
-     * Getter for postID
-     * 
-     * @return postID
-     */
-    public int getPostId() {
-        return postId;
     }
 
     /**
@@ -97,12 +86,12 @@ public class Post implements Serializable {
     }
 
     /**
-     * Setter for user
+     * Setter for userId
      * 
-     * @param user
+     * @param userId
      */
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserId(UUID userId) {
+        this.userId = userId;
     }
 
     /**
@@ -112,15 +101,6 @@ public class Post implements Serializable {
      */
     public void setDate(String date) {
         this.date = date;
-    }
-
-    /**
-     * Setter for postID
-     * 
-     * @param postID
-     */
-    public void setPostId(int postID) {
-        this.postId = postID;
     }
 
     /**
@@ -135,30 +115,4 @@ public class Post implements Serializable {
     public void setImageURL(String imageURL) {
         this.imageURL = imageURL;
     }
-
-    /**
-     * Equals method for Post
-     * 
-     * @param obj
-     * @return boolean
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof Post))
-            return false;
-        Post p = (Post) obj;
-        return p.messagePost.equals(messagePost) && p.username.equals(username) && p.date.equals(date)
-                && p.postId == postId
-                && p.votes == votes && p.imageURL.equals(imageURL);
-    }
-
-    /**
-     * toString method for Post
-     * 
-     * @return String
-     */
-    public String toString() {
-        return messagePost + "," + username + "," + date + "," + postId + "," + votes + "," + imageURL;
-    }
-
 }

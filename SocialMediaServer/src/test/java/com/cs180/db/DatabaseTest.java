@@ -3,16 +3,26 @@ package com.cs180.db;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import com.cs180.db.Collection;
+import com.cs180.db.Database;
+import com.cs180.db.PostCollection;
+import com.cs180.db.UserCollection;
+import com.cs180.db.models.Comment;
+import com.cs180.db.models.Post;
+import com.cs180.db.models.User;
 
 /**
  * DatabaseTest
@@ -136,7 +146,8 @@ public class DatabaseTest {
 
 				for (int j = 0; j < 1000; j++) {
 					db.getUserCollection()
-							.removeElement(db.getUserCollection().findByUsername("user_" + (j + threadNum * 1000)));
+							.removeElement(
+									db.getUserCollection().findByUsername("user_" + (j + threadNum * 1000)).getId());
 				}
 			});
 			threadsDelete.add(t);
@@ -162,23 +173,22 @@ public class DatabaseTest {
 	/**
 	 * Test primarily verifies that all posts for a given user are returned
 	 * 
-	 * {@link com.cs180.db.PostCollection#findByUsername(String)}
+	 * {@link com.cs180.db.PostCollection#findByUserId(UUID)}
 	 */
 	@Test
 	public void queryPostsByUsername() {
 		Database db = new Database();
 
-		String testUserName = "testUserName";
-		User testUser = new User(testUserName, "testPassword", "testDisplayName", "testEmail");
+		User testUser = new User("testUsername", "testPassword", "testDisplayName", "testEmail");
 		db.getUserCollection().addElement(testUser);
 
-		Post testPostOne = new Post("testMessageOne", testUserName, "testDateOne", 1, 0, "testImageURLOne");
-		Post testPostTwo = new Post("testMessageTwo", testUserName, "testDateTwo", 2, 0, "testImageURLTwo");
+		Post testPostOne = new Post(testUser.getId(), "testMessageOne", "testDateOne", 0, "testImageURLOne");
+		Post testPostTwo = new Post(testUser.getId(), "testMessageTwo", "testDateTwo", 0, "testImageURLTwo");
 
 		db.getPostCollection().addElement(testPostOne);
 		db.getPostCollection().addElement(testPostTwo);
 
-		List<Post> posts = db.getPostCollection().findByUsername(testUserName);
+		List<Post> posts = db.getPostCollection().findByUserId(testUser.getId());
 
 		assertEquals(2, posts.size(), "Expected 2 posts to be found");
 	}
@@ -188,16 +198,15 @@ public class DatabaseTest {
 	 * 
 	 */
 	@Test
-	public void preventsDuplicate() {
+	public void preventsDuplicatePosts() {
 		Database db = new Database();
 
-		String testUserName = "testUserName";
+		UUID userId = UUID.randomUUID();
 
-		Post testPostOne = new Post("testMessageOne", testUserName, "testDateOne", 1, 0, "testImageURLOne");
-		Post testPostDuplicate = new Post("testMessageTwo", testUserName, "testDateTwo", 1, 0, "testImageURLTwo");
+		Post testPostOne = new Post(userId, "testMessageOne", "testDateOne", 0, "testImageURLOne");
 
 		db.getPostCollection().addElement(testPostOne);
-		assertFalse(db.getPostCollection().addElement(testPostDuplicate), "Expected duplicate post to not be added");
+		assertFalse(db.getPostCollection().addElement(testPostOne), "Expected duplicate post to not be added");
 
 		int count = db.getPostCollection().count();
 
@@ -212,15 +221,15 @@ public class DatabaseTest {
 	public void removesPost() {
 		Database db = new Database();
 
-		String testUserName = "testUserName";
-		Post testPostOne = new Post("testMessageOne", testUserName, "testDateOne", 1, 0, "testImageURLOne");
+		UUID userId = UUID.randomUUID();
+		Post testPostOne = new Post(userId, "testMessageOne", "testDateOne", 0, "testImageURLOne");
 
 		db.getPostCollection().addElement(testPostOne);
 
 		int count = db.getPostCollection().count();
 		assertEquals(1, count, "Expected 1 post to be found");
 
-		db.getPostCollection().removeElement(testPostOne);
+		db.getPostCollection().removeElement(testPostOne.getId());
 		count = db.getPostCollection().count();
 		assertEquals(0, count, "Expected 0 posts to be found");
 	}
@@ -233,17 +242,17 @@ public class DatabaseTest {
 	public void updatesPost() {
 		Database db = new Database();
 
-		String testUserName = "testUserName";
-		Post testPostOne = new Post("testMessageOne", testUserName, "testDateOne", 1, 0, "testImageURLOne");
+		UUID userId = UUID.randomUUID();
+		Post testPostOne = new Post(userId, "testMessageOne", "testDateOne", 0, "testImageURLOne");
 
 		db.getPostCollection().addElement(testPostOne);
 
-		Post updatedPost = new Post("testMessageTwo", testUserName, "testDateTwo", 1, 0, "testImageURLTwo");
+		testPostOne.setImageURL("testImageURLTwo");
+		testPostOne.setMessagePost("testMessageTwo");
 
-		db.getPostCollection().updateElement(testPostOne, updatedPost);
+		db.getPostCollection().updateElement(testPostOne.getId(), testPostOne);
 
-		Post post = db.getPostCollection().findOne(p -> p.getPostId() == testPostOne.getPostId());
-
+		Post post = db.getPostCollection().findById(testPostOne.getId());
 		assertNotNull(post, "Expected post to be found");
 
 		assertEquals("testImageURLTwo", post.getImageURL(), "Expected post image URL to be updated");
@@ -258,12 +267,12 @@ public class DatabaseTest {
 	public void queryCommentsByPostId() {
 		Database db = new Database();
 
-		String testUserName = "testUserName";
-		int postId = 1;
+		UUID userId = UUID.randomUUID();
+		UUID postId = UUID.randomUUID();
 
-		Comment testCommentOne = new Comment("testCommentOne", testUserName, "testDateOne", 0, postId, 0,
+		Comment testCommentOne = new Comment(userId, postId, "testCommentOne", "testDateOne", 0,
 				new Comment[0]);
-		Comment testCommentTwo = new Comment("testCommentTwo", testUserName, "testDateTwo", 1, postId, 0,
+		Comment testCommentTwo = new Comment(userId, postId, "testCommentTwo", "testDateTwo", 1,
 				new Comment[0]);
 
 		db.getCommentCollection().addElement(testCommentOne);
@@ -278,20 +287,17 @@ public class DatabaseTest {
 	 * Test verifies that duplicate comments are not added to the collection
 	 */
 	@Test
-	public void preventsDuplicateComment() {
+	public void preventsDuplicateComments() {
 		Database db = new Database();
 
-		String testUserName = "testUserName";
-		int postId = 1;
-		int commentId = 1; // intentionally set to 1 to test duplicate
+		UUID userId = UUID.randomUUID();
+		UUID postId = UUID.randomUUID();
 
-		Comment testCommentOne = new Comment("testCommentOne", testUserName, "testDateOne", commentId, postId, 0,
-				new Comment[0]);
-		Comment testCommentDuplicate = new Comment("testCommentTwo", testUserName, "testDateTwo", commentId, postId, 0,
+		Comment testComment = new Comment(userId, postId, "testCommentOne", "testDateOne", 0,
 				new Comment[0]);
 
-		db.getCommentCollection().addElement(testCommentOne);
-		assertFalse(db.getCommentCollection().addElement(testCommentDuplicate),
+		db.getCommentCollection().addElement(testComment);
+		assertFalse(db.getCommentCollection().addElement(testComment),
 				"Expected duplicate comment to not be added");
 
 		int count = db.getCommentCollection().count();
@@ -306,18 +312,18 @@ public class DatabaseTest {
 	public void removesComment() {
 		Database db = new Database();
 
-		String testUserName = "testUserName";
-		int postId = 1;
+		UUID userId = UUID.randomUUID();
+		UUID postId = UUID.randomUUID();
 
-		Comment testCommentOne = new Comment("testCommentOne", testUserName, "testDateOne", 1, postId, 0,
+		Comment testComment = new Comment(userId, postId, "testCommentOne", "testDateOne", 1,
 				new Comment[0]);
 
-		db.getCommentCollection().addElement(testCommentOne);
+		db.getCommentCollection().addElement(testComment);
 
 		int count = db.getCommentCollection().count();
 		assertEquals(1, count, "Expected 1 comment to be found");
 
-		db.getCommentCollection().removeElement(testCommentOne);
+		db.getCommentCollection().removeElement(testComment.getId());
 		count = db.getCommentCollection().count();
 		assertEquals(0, count, "Expected 0 comments to be found");
 	}
@@ -329,21 +335,20 @@ public class DatabaseTest {
 	public void updatesComment() {
 		Database db = new Database();
 
-		String testUserName = "testUserName";
-		int postId = 1;
+		UUID userId = UUID.randomUUID();
+		UUID postId = UUID.randomUUID();
 
-		Comment testCommentOne = new Comment("testCommentOne", testUserName, "testDateOne", 1, postId, 0,
+		Comment testComment = new Comment(userId, postId, "testCommentOne", "testDateOne", 1,
 				new Comment[0]);
 
-		db.getCommentCollection().addElement(testCommentOne);
+		db.getCommentCollection().addElement(testComment);
 
-		Comment updatedComment = new Comment("testCommentTwo", testUserName, "testDateOne", 1, postId, 1,
-				new Comment[0]);
+		testComment.setMessageComment("testCommentTwo");
+		testComment.setVotes(1);
 
-		db.getCommentCollection().updateElement(testCommentOne, updatedComment);
+		db.getCommentCollection().updateElement(testComment.getId(), testComment);
 
-		Comment comment = db.getCommentCollection().findOne(c -> c.getCommentId() == testCommentOne.getCommentId());
-
+		Comment comment = db.getCommentCollection().findById(testComment.getId());
 		assertNotNull(comment, "Expected comment to be found");
 
 		assertEquals("testCommentTwo", comment.getMessageComment(), "Expected comment to be updated");
@@ -372,6 +377,28 @@ public class DatabaseTest {
 		assertNotNull(user, "Expected user to be found");
 	}
 
+	public void preventsDuplicateUsers() {
+		Database db = new Database();
+
+		String testUserName = "testUserName";
+		User testUser = new User(testUserName, "testPassword", "testDisplayName", "testEmail");
+
+		db.getUserCollection().addElement(testUser);
+		assertFalse(db.getUserCollection().addElement(testUser), "Expected duplicate user to not be added");
+
+		// Same username, different email
+		User testUserTwo = new User(testUserName, "testPassword", "testDisplayName", "testEmailTwo");
+		assertFalse(db.getUserCollection().addElement(testUserTwo), "Expected user with same username to not be added");
+
+		// Different username, same email
+		User testUserThree = new User("testUserNameTwo", "testPassword", "testDisplayName", "testEmail");
+		assertFalse(db.getUserCollection().addElement(testUserThree), "Expected user with same email to not be added");
+
+		int count = db.getUserCollection().count();
+
+		assertEquals(1, count, "Expected 1 user to be found");
+	}
+
 	/**
 	 * Test verifies that a user is removed from the collection
 	 */
@@ -387,7 +414,7 @@ public class DatabaseTest {
 		int count = db.getUserCollection().count();
 		assertEquals(1, count, "Expected 1 user to be found");
 
-		db.getUserCollection().removeElement(testUser);
+		db.getUserCollection().removeElement(testUser.getId());
 		count = db.getUserCollection().count();
 		assertEquals(0, count, "Expected 0 users to be found");
 	}
@@ -405,9 +432,10 @@ public class DatabaseTest {
 
 		db.getUserCollection().addElement(testUser);
 
-		User updatedUser = new User(testUserName, "testPassword", "testDisplayNameTwo", "testEmailTwo");
+		testUser.setDisplayName("testDisplayNameTwo");
+		testUser.setEmail("testEmailTwo");
 
-		db.getUserCollection().updateElement(testUser, updatedUser);
+		db.getUserCollection().updateElement(testUser.getId(), testUser);
 
 		User user = db.getUserCollection().findByUsername(testUserName);
 

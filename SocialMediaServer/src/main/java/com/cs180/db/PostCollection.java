@@ -1,7 +1,10 @@
 package com.cs180.db;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
+
+import com.cs180.db.models.Post;
 
 /**
  * A Collection class to manage posts in the database. This class is responsible
@@ -40,8 +43,8 @@ public class PostCollection extends BaseCollection<Post> {
 	 *
 	 * @param post
 	 * @return index
-	 *         Return the index of the post with the same postID
-	 *         Returns -1 if none of the posts have the same postID
+	 *         Return the index of the post with the same postId
+	 *         Returns -1 if none of the posts have the same postId
 	 */
 	@Override
 	public int indexOf(Post post) {
@@ -52,7 +55,7 @@ public class PostCollection extends BaseCollection<Post> {
 		}
 
 		for (int i = 0; i < this.records.size(); i++) {
-			if (this.records.get(i).getPostId() == post.getPostId()) {
+			if (this.records.get(i).getId() == post.getId()) {
 				index = i;
 				break;
 			}
@@ -62,12 +65,12 @@ public class PostCollection extends BaseCollection<Post> {
 	}
 
 	/**
-	 * Find all posts by a specific username
+	 * Find all posts by a specific userId
 	 * 
-	 * @param username
+	 * @param userId
 	 * @return List<Post>
 	 */
-	public List<Post> findByUsername(String username) {
-		return this.findAll(post -> post.getUsername().equals(username));
+	public List<Post> findByUserId(UUID userId) {
+		return this.findAll(post -> post.getUserId().equals(userId));
 	}
 }

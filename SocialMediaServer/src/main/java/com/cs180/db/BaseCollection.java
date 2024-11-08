@@ -1,11 +1,13 @@
 package com.cs180.db;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.function.Predicate;
+
+import com.cs180.db.models.Model;
 
 /**
  * BaseCollection
@@ -18,7 +20,7 @@ import java.util.function.Predicate;
  * @author Mahit Mehta
  * @version 2024-11-03
  */
-abstract class BaseCollection<T extends Serializable> implements Collection<T> {
+abstract class BaseCollection<T extends Model> implements Collection<T> {
     protected RwLockArrayList<T> records;
 
     private final ScheduledThreadPoolExecutor scheduler;
@@ -80,6 +82,18 @@ abstract class BaseCollection<T extends Serializable> implements Collection<T> {
      */
     abstract int indexOf(T record);
 
+    private int indexOf(UUID id) {
+        int index = -1;
+        for (int i = 0; i < this.records.size(); i++) {
+            if (this.records.get(i).getId().equals(id)) {
+                index = i;
+                break;
+            }
+        }
+
+        return index;
+    }
+
     /**
      * Add a record to the collection if it does not already exist
      * 
@@ -94,7 +108,7 @@ abstract class BaseCollection<T extends Serializable> implements Collection<T> {
 
         this.records.lockWrite();
 
-        if (this.indexOf(record) != -1) {
+        if (this.indexOf(record.getId()) != -1) {
             this.records.unlockWrite();
             return exitCode;
         }
@@ -109,12 +123,20 @@ abstract class BaseCollection<T extends Serializable> implements Collection<T> {
     }
 
     @Override
-    public boolean updateElement(T target, T record) {
+    public boolean updateElement(UUID id, T record) {
         boolean exitCode = false;
+
+        if (record == null)
+            return exitCode;
+
+        // If the id of the updated record doesn't match the id of the record to update
+        // return false
+        if (!id.equals(record.getId()))
+            return exitCode;
 
         this.records.lockWrite();
 
-        int index = this.indexOf(target);
+        int index = this.indexOf(id);
         if (index == -1) {
             this.records.unlockWrite();
             return exitCode;
@@ -130,12 +152,12 @@ abstract class BaseCollection<T extends Serializable> implements Collection<T> {
     }
 
     @Override
-    public boolean removeElement(T record) {
+    public boolean removeElement(UUID id) {
         boolean exitCode = false;
 
         this.records.lockWrite();
 
-        int index = this.indexOf(record);
+        int index = this.indexOf(id);
         if (index == -1) {
             this.records.unlockWrite();
             return exitCode;
@@ -211,5 +233,20 @@ abstract class BaseCollection<T extends Serializable> implements Collection<T> {
 
         this.records.unlockRead();
         return result;
+    }
+
+    @Override
+    public T findById(UUID id) {
+        this.records.lockRead();
+
+        for (T t : this.records.getList()) {
+            if (t.getId().equals(id)) {
+                this.records.unlockRead();
+                return t;
+            }
+        }
+
+        this.records.unlockRead();
+        return null;
     }
 }

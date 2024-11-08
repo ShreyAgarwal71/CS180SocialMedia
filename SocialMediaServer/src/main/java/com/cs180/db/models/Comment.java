@@ -1,6 +1,7 @@
-package com.cs180.db;
+package com.cs180.db.models;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 /**
  * Comment
@@ -13,33 +14,32 @@ import java.io.Serializable;
  * @version 2024-11-03
  * 
  */
-public class Comment implements Serializable {
+public class Comment extends Model {
+    private UUID userId;
+    private UUID postId;
     private String messageComment;
-    private String username;
     private String date;
-    private int commentId;
-    private int postId;
     private int votes;
     private Comment[] comments;
 
     /**
      * Constructor for Comment
      * 
-     * @param messageComment
-     * @param username
-     * @param date
-     * @param commentId
      * @param postId
+     * @param userId
+     * @param messageComment
+     * @param date
      * @param votes
      * @param comments
      */
-    public Comment(String messageComment, String username, String date, int commentId, int postId, int votes,
+    public Comment(UUID userId, UUID postId, String messageComment, String date, int votes,
             Comment[] comments) {
-        this.messageComment = messageComment;
-        this.username = username;
-        this.date = date;
+        super();
+
         this.postId = postId;
-        this.commentId = commentId;
+        this.userId = userId;
+        this.messageComment = messageComment;
+        this.date = date;
         this.votes = votes;
         this.comments = comments;
     }
@@ -54,12 +54,12 @@ public class Comment implements Serializable {
     }
 
     /**
-     * Getter for username
+     * Getter for userId
      * 
-     * @return username
+     * @return userId
      */
-    public String getUsername() {
-        return username;
+    public UUID getUserId() {
+        return userId;
     }
 
     /**
@@ -72,20 +72,11 @@ public class Comment implements Serializable {
     }
 
     /**
-     * Getter for commentID
-     * 
-     * @return commentID
-     */
-    public int getCommentId() {
-        return commentId;
-    }
-
-    /**
      * Getter for postId
      * 
      * @return postId
      */
-    public int getPostId() {
+    public UUID getPostId() {
         return postId;
     }
 
@@ -126,12 +117,12 @@ public class Comment implements Serializable {
     }
 
     /**
-     * Setter for username
+     * Setter for userId
      * 
-     * @param username
+     * @param userId
      */
-    public void setUser(String newUsername) {
-        this.username = newUsername;
+    public void setUserId(UUID userId) {
+        this.userId = userId;
     }
 
     /**
@@ -144,28 +135,11 @@ public class Comment implements Serializable {
     }
 
     /**
-     * 
-     * @param username
-     */
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    /**
-     * Setter for commentID
-     * 
-     * @param commentID
-     */
-    public void setCommentId(int commentId) {
-        this.commentId = commentId;
-    }
-
-    /**
      * Setter for postId
      * 
      * @param postId
      */
-    public void setPostId(int postId) {
+    public void setPostId(UUID postId) {
         this.postId = postId;
     }
 
@@ -177,30 +151,4 @@ public class Comment implements Serializable {
     public void setVotes(int votes) {
         this.votes = votes;
     }
-
-    /**
-     * Equals method for Comment
-     * 
-     * @param obj
-     * @return boolean
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof Comment))
-            return false;
-        Comment c = (Comment) obj;
-        return c.messageComment.equals(messageComment) && c.username.equals(username) && c.date.equals(date)
-                && c.commentId == commentId && c.postId == postId && c.votes == votes && c.comments.equals(comments);
-    }
-
-    /**
-     * toString method for Comment
-     * 
-     * @return String
-     */
-    public String toString() {
-        return messageComment + "," + username + "," + date + "," + commentId + "," + postId + "," + votes + ","
-                + comments;
-    }
-
 }

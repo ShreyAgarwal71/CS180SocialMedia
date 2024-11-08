@@ -6,13 +6,14 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.UUID;
 import java.util.function.Predicate;
 
-import com.cs180.App;
+import com.cs180.AppServer;
+import com.cs180.db.models.Model;
 
 /**
  * 
@@ -25,7 +26,7 @@ import com.cs180.App;
  * @author Mahit Mehta and Ates Isfendiyaroglu
  * @version 2024-11-03
  */
-public interface Collection<T extends Serializable> {
+public interface Collection<T extends Model> {
 	int ASYNC_WRITE_FREQ = 5; // seconds
 
 	/**
@@ -56,13 +57,13 @@ public interface Collection<T extends Serializable> {
 		String os = System.getProperty("os.name").toLowerCase();
 
 		if (os.contains("win")) {
-			return Paths.get(System.getenv("APPDATA"), App.ID);
+			return Paths.get(System.getenv("APPDATA"), AppServer.ID);
 		} else if (os.contains("mac")) {
-			return Paths.get(System.getProperty("user.home"), "/Library/Application Support", App.ID);
+			return Paths.get(System.getProperty("user.home"), "/Library/Application Support", AppServer.ID);
 		} else if (os.contains("nix") || os.contains("nux")) {
-			return Paths.get(System.getProperty("user.home"), String.format(".%s", App.ID.toLowerCase()));
+			return Paths.get(System.getProperty("user.home"), String.format(".%s", AppServer.ID.toLowerCase()));
 		} else {
-			return Paths.get(System.getProperty("user.home"), App.ID);
+			return Paths.get(System.getProperty("user.home"), AppServer.ID);
 		}
 	}
 
@@ -119,25 +120,21 @@ public interface Collection<T extends Serializable> {
 	abstract boolean addElement(T obj);
 
 	/**
-	 * Updates the targeted Object to match the newly given Object.
-	 * Returns false if the Object's type doesn't match the expected type or
-	 * if the targeted Object doesn't exist in the Collection's ArrayList.
+	 * Updates the Object with the given id in the Collection's ArrayList.
 	 *
 	 * @param target,
 	 *            newObj
 	 * @return exitCode
 	 */
-	abstract boolean updateElement(T target, T newObj);
+	abstract boolean updateElement(UUID id, T newObj);
 
 	/**
-	 * Deletes the specified Object from the Collection.
-	 * Returns false if the Object's type doesn't match the expected type or
-	 * if the targeted Object doesn't exist in the Collection's ArrayList.
+	 * Removes the Object with the given id from the Collection's ArrayList.
 	 *
-	 * @param obj
+	 * @param id
 	 * @return exitCode
 	 */
-	abstract boolean removeElement(T obj);
+	abstract boolean removeElement(UUID id);
 
 	/**
 	 * Saves the Collection's data to the file.
@@ -180,4 +177,12 @@ public interface Collection<T extends Serializable> {
 	 * @return data
 	 */
 	abstract T findOne(Predicate<T> predicate);
+
+	/**
+	 * Returns the index of the element with the given id.
+	 *
+	 * @param id
+	 * @return index
+	 */
+	abstract T findById(UUID id);
 }
