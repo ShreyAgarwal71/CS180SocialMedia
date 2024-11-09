@@ -6,12 +6,10 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.ConnectionPendingException;
 import java.nio.channels.SocketChannel;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.lang.reflect.ParameterizedType;
 
 import com.cs180.api.Request.EMethod;
 import com.google.gson.Gson;
