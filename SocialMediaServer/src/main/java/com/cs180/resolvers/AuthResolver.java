@@ -18,16 +18,16 @@ public class AuthResolver extends BaseResolver {
         new ResolverTools().super();
     }
 
-    @Endpoint(endpoint = "/login", method = EMethod.POST, requestBodyType = LoginDTO.class, responseBodyType = String.class)
-    public String signInWithEmailAndPassword(Request<LoginDTO> request) {
+    @Endpoint(endpoint = "/login", method = EMethod.POST, requestBodyType = LoginDTO.class, responseBodyType = AuthTokenDTO.class)
+    public AuthTokenDTO signInWithEmailAndPassword(Request<LoginDTO> request) {
         String email = request.getBody().getEmail();
         String password = request.getBody().getPassword();
 
         User user = authService.signInWithEmailAndPassword(email, password);
         if (user == null) {
-            return "Unable to find user.";
+            return new AuthTokenDTO("dummy_token_invalid");
         }
 
-        return "Successfully signed in.";
+        return new AuthTokenDTO("dummy_token");
     }
 }

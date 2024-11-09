@@ -59,9 +59,9 @@ public class App implements Runnable {
         javax.swing.JButton button = new javax.swing.JButton("Login");
         button.addActionListener(_ -> {
             try {
-                Connection.<LoginDTO, String>post("/auth/login", new LoginDTO("mahit.py@gmail.com", "1234"))
+                Connection.<LoginDTO, AuthTokenDTO>post("/auth/login", new LoginDTO("mahit.py@gmail.com", "1234"))
                         .thenAccept(response -> {
-                            System.out.println("Body: " + response.getBody());
+                            System.out.println("Body: " + response.getBody().getToken());
                         }).exceptionally(e -> {
                             e.printStackTrace();
                             System.out.println("Failed to process request.");

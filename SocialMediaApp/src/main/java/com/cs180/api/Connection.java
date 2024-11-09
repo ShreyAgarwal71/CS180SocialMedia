@@ -85,9 +85,11 @@ public class Connection {
 
                 buffer.flip();
                 String responseJSON = new String(buffer.array(), buffer.position(), buffer.limit());
-                System.out.println(responseJSON);
-
+                @SuppressWarnings("unchecked")
                 Response<ResponseBody> response = gson.fromJson(responseJSON, Response.class);
+                Class<?> clazz = Class.forName(response.getBodyType());
+                Type type = TypeToken.getParameterized(Response.class, clazz).getType();
+                response = gson.fromJson(responseJSON, type);
 
                 return response;
             } catch (IOException e) {

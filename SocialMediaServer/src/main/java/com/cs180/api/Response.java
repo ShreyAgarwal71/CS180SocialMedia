@@ -9,16 +9,22 @@ public class Response<Body> {
     private final String endpoint;
     private final Body body;
     private final EStatus status;
+    private final String bodyType;
 
     public Response(Request.EMethod method, String endpoint, Body body, EStatus status) {
         this.method = method;
         this.endpoint = endpoint;
         this.body = body;
         this.status = status;
+        this.bodyType = body.getClass().getName();
     }
 
     public Request.EMethod getMethod() {
         return method;
+    }
+
+    public String getBodyType() {
+        return bodyType;
     }
 
     public String getEndpoint() {
