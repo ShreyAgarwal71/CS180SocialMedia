@@ -71,7 +71,6 @@ public class Connection {
                 ByteBuffer buffer = ByteBuffer.allocate(1024);
 
                 String requestJSON = gson.toJson(request);
-                System.out.println(requestJSON);
                 buffer.put(requestJSON.getBytes());
                 buffer.flip();
 

@@ -6,8 +6,7 @@ public class Request<Body> {
     }
 
     private final EMethod method;
-    private Body body;
-    // TODO: Replace with enum
+    private final Body body;
     private final String endpoint;
 
     public Request(EMethod method, String endpoint, Body body) {
@@ -26,9 +25,5 @@ public class Request<Body> {
 
     public String getEndpoint() {
         return endpoint;
-    }
-
-    public void setBody(Body body) {
-        this.body = body;
     }
 }

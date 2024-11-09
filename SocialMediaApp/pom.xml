@@ -5,6 +5,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.cs180</groupId>
+  <parent>
+    <groupId>com.cs180</groupId>
+    <artifactId>SocialMedia</artifactId>
+    <version>1.0.0</version>
+  </parent>
   <artifactId>SocialMediaApp</artifactId>
   <version>1.0-SNAPSHOT</version>
 
@@ -30,6 +35,11 @@
   </dependencyManagement>
 
   <dependencies>
+    <dependency>
+      <groupId>com.cs180</groupId>
+      <artifactId>SocialMediaTypes</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
     <!-- https://mvnrepository.com/artifact/com.cloudinary/cloudinary-core -->
     <dependency>
       <groupId>com.cloudinary</groupId>

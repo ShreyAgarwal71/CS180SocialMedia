@@ -43,7 +43,7 @@ public class Worker implements Runnable {
                     Request<NullType> request = gson.fromJson(json, Request.class);
 
                     // temprorary logger
-                    System.out.printf("INFO %s -> %s -> %s\n", clientChannel.getRemoteAddress(), request.getMethod(),
+                    System.out.printf("[INFO] %s -> %s -> %s\n", clientChannel.getRemoteAddress(), request.getMethod(),
                             request.getEndpoint());
 
                     String response = ResolverTools.resolve(request, json);

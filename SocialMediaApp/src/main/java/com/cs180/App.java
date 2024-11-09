@@ -2,20 +2,15 @@ package com.cs180;
 
 import java.awt.BorderLayout;
 import java.io.IOException;
-import java.lang.reflect.Type;
-import java.util.Arrays;
 
-import javax.lang.model.type.NullType;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import com.cs180.api.Connection;
-import com.cs180.api.Response;
 import com.cs180.dtos.AuthTokenDTO;
 import com.cs180.dtos.LoginDTO;
 import com.formdev.flatlaf.util.SystemInfo;
-import com.google.gson.reflect.TypeToken;
 
 /**
  * AppClient is the main class for the Social Media App client.
