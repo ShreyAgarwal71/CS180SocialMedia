@@ -48,20 +48,7 @@ public class PostCollection extends BaseCollection<Post> {
 	 */
 	@Override
 	public int indexOf(Post post) {
-		int index = -1;
-
-		if (post == null) {
-			return index;
-		}
-
-		for (int i = 0; i < this.records.size(); i++) {
-			if (this.records.get(i).getId() == post.getId()) {
-				index = i;
-				break;
-			}
-		}
-
-		return index;
+		return super.indexOf(post.getId());
 	}
 
 	/**

@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
-import java.nio.channels.ConnectionPendingException;
 import java.nio.channels.SocketChannel;
 import java.util.HashMap;
 import java.util.concurrent.CompletableFuture;
@@ -12,6 +11,7 @@ import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import com.cs180.api.Request.EHeader;
 import com.cs180.api.Request.EMethod;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -48,20 +48,20 @@ public class Connection {
 
     public static <ResponseBody> CompletableFuture<Response<ResponseBody>> get(String endpoint) {
         if (serverChannel == null || !serverChannel.isConnected()) {
-            throw new ConnectionPendingException();
+            throw new CompletionException(new RuntimeException("Connection not established"));
         }
 
-        HashMap<String, String> headers = new HashMap<>();
+        HashMap<EHeader, String> headers = new HashMap<>();
         return request(new Request<>(EMethod.GET, endpoint, null, headers));
     }
 
     public static <RequestBody, ResponseBody> CompletableFuture<Response<ResponseBody>> post(String endpoint,
             RequestBody body) {
         if (serverChannel == null || !serverChannel.isConnected()) {
-            throw new ConnectionPendingException();
+            throw new CompletionException(new RuntimeException("Connection not established"));
         }
 
-        HashMap<String, String> headers = new HashMap<>();
+        HashMap<EHeader, String> headers = new HashMap<>();
         return request(new Request<>(EMethod.POST, endpoint, body, headers));
     }
 

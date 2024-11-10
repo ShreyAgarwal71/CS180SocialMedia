@@ -10,6 +10,7 @@ import java.lang.reflect.Type;
 
 import java.util.HashMap;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Processor;
@@ -26,12 +27,13 @@ import javax.tools.Diagnostic;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
-import com.cs180.api.InternalServerError;
 import com.cs180.api.Request;
 import com.cs180.api.Response;
+import com.cs180.api.Request.EHeader;
 import com.cs180.api.Request.EMethod;
 import com.cs180.api.Response.EStatus;
 import com.cs180.api.ServerException;
+import com.cs180.services.AuthService;
 import com.google.auto.service.AutoService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -168,10 +170,26 @@ public class ResolverTools {
             throws IllegalAccessException, IllegalArgumentException {
         BaseResolver resolver = ref.getResolver();
         Method m = ref.getMethod();
-        // Validate user authentication
-        // if (m.isAnnotationPresent(AuthGuard.class)) {
 
-        // }
+        // Validates request and attaches userId to request if AuthGuard is present
+        if (m.isAnnotationPresent(AuthGuard.class)) {
+            String accessToken = request.getHeaders().get(EHeader.ACCESS_TOKEN);
+            if (accessToken == null) {
+                Response<String> response = new Response<String>(request.getMethod(), request.getEndpoint(),
+                        "No Access Token Provided.", EStatus.UNAUTHORIZED);
+                return gson.toJson(response);
+            }
+
+            UUID userId = AuthService.validateAccessToken(accessToken);
+
+            if (userId == null) {
+                Response<String> response = new Response<String>(request.getMethod(), request.getEndpoint(),
+                        "Invalid Access Token.", EStatus.UNAUTHORIZED);
+                return gson.toJson(response);
+            }
+
+            request.setUserId(userId);
+        }
 
         Endpoint endpointAnnotation = m.getAnnotation(Endpoint.class);
         Class<?> requestBodyType = endpointAnnotation.requestBodyType();
@@ -230,9 +248,7 @@ public class ResolverTools {
         String path = request.getEndpoint();
         EndpointRef ref = endpointMap.get(path);
 
-        Endpoint endpointAnnotation = ref.getMethod().getAnnotation(Endpoint.class);
-
-        if (ref == null || endpointAnnotation.method() != request.getMethod()) {
+        if (ref == null || ref.getMethod().getAnnotation(Endpoint.class).method() != request.getMethod()) {
             Response<String> response = new Response<String>(request.getMethod(), request.getEndpoint(),
                     "Unknown Endpoint", EStatus.UNKNOWN_ENDPOINT);
             return gson.toJson(response);

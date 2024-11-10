@@ -6,6 +6,7 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.lang.model.type.NullType;
 
@@ -23,12 +24,17 @@ public class Worker implements Runnable {
     private static final Logger logger = LogManager.getLogger(Worker.class);
 
     private Selector selector;
+    private final int workerId;
 
     private static final GsonBuilder builder = new GsonBuilder();
     private static final Gson gson = builder.create();
 
+    private static final AtomicInteger workerCount = new AtomicInteger(0);
+
     public Worker(Selector selector) {
         this.selector = selector;
+
+        workerId = workerCount.getAndIncrement();
     }
 
     private void handleRead(SelectionKey key) {
@@ -47,10 +53,21 @@ public class Worker implements Runnable {
                     @SuppressWarnings("unchecked")
                     Request<NullType> request = gson.fromJson(json, Request.class);
 
-                    logger.info(String.format("%s -> %s -> %s", clientChannel.getRemoteAddress(), request.getMethod(),
-                            request.getEndpoint()));
+                    logger.info(
+                            String.format("[%s] %s -> %s -> %s", workerId, clientChannel.getRemoteAddress(),
+                                    request.getMethod(),
+                                    request.getEndpoint()));
 
                     String response = ResolverTools.resolve(request, json);
+
+                    // TODO: Super inefficient way of getting the status, pls fix :(
+                    @SuppressWarnings("unchecked")
+                    Response<NullType> responseObj = gson.fromJson(response, Response.class);
+                    logger.info(
+                            String.format("[%s] %s <- %s <- %s", workerId, clientChannel.getRemoteAddress(),
+                                    responseObj.getStatus().toString(),
+                                    request.getEndpoint()));
+
                     buffer.clear().put(response.getBytes());
                     buffer.flip();
 
@@ -58,8 +75,14 @@ public class Worker implements Runnable {
                 } catch (Exception e) {
                     logger.error("Unknown Exception", e);
 
-                    Response<String> response = new Response<>(EMethod.UNKNOWN, "unknown", "Unknown Exception",
+                    Response<String> response = new Response<>(EMethod.UNKNOWN, "Unknown Endpoint", "Unknown Exception",
                             Response.EStatus.SERVER_ERROR);
+
+                    logger.info(
+                            String.format("[%s] %s <- %s <- %s", workerId, clientChannel.getRemoteAddress(),
+                                    response.getStatus().toString(),
+                                    response.getEndpoint()));
+
                     String responseJSON = gson.toJson(response);
                     buffer.clear().put(responseJSON.getBytes());
                     buffer.flip();

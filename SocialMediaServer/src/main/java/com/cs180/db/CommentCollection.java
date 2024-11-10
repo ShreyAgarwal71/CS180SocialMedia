@@ -46,20 +46,7 @@ public class CommentCollection extends BaseCollection<Comment> {
 	 *         Returns -1 if none of the comments have the same commentID
 	 */
 	public int indexOf(Comment comment) {
-		int index = -1;
-
-		if (comment == null) {
-			return index;
-		}
-
-		for (int i = 0; i < this.records.size(); i++) {
-			if (this.records.get(i).getId() == comment.getId()) {
-				index = i;
-				break;
-			}
-		}
-
-		return index;
+		return super.indexOf(comment.getId());
 	}
 
 	public List<Comment> commentsByPostId(UUID postId) {

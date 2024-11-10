@@ -85,7 +85,8 @@ public class DatabaseTest {
 				for (int j = 0; j < 1000; j++) {
 					db.getUserCollection()
 							.addElement(
-									new User("user_" + (j + threadNum * 1000), "pass", "username_ " + j, "email_" + j));
+									new User("username_" + (j + threadNum * 1000), "pass", "displayName_ " + j,
+											"email_" + (j + threadNum * 1000)));
 				}
 			});
 			threads.add(t);
@@ -122,7 +123,8 @@ public class DatabaseTest {
 				for (int j = 0; j < 1000; j++) {
 					db.getUserCollection()
 							.addElement(
-									new User("user_" + (j + threadNum * 1000), "pass", "username_ " + j, "email_" + j));
+									new User("username_" + (j + threadNum * 1000), "pass", "displayName_ " + j,
+											"email_" + (j + threadNum * 1000)));
 				}
 			});
 			threadsAppend.add(t);
@@ -147,7 +149,8 @@ public class DatabaseTest {
 				for (int j = 0; j < 1000; j++) {
 					db.getUserCollection()
 							.removeElement(
-									db.getUserCollection().findByUsername("user_" + (j + threadNum * 1000)).getId());
+									db.getUserCollection().findByUsername("username_" + (j + threadNum * 1000))
+											.getId());
 				}
 			});
 			threadsDelete.add(t);
@@ -377,6 +380,11 @@ public class DatabaseTest {
 		assertNotNull(user, "Expected user to be found");
 	}
 
+	/**
+	 * Test ensures that a duplicate user (user with same email, username, or id) is
+	 * not added to the collection
+	 */
+	@Test
 	public void preventsDuplicateUsers() {
 		Database db = new Database();
 

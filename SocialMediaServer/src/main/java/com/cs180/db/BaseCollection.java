@@ -82,7 +82,7 @@ abstract class BaseCollection<T extends Model> implements Collection<T> {
      */
     abstract int indexOf(T record);
 
-    private int indexOf(UUID id) {
+    protected int indexOf(UUID id) {
         int index = -1;
         for (int i = 0; i < this.records.size(); i++) {
             if (this.records.get(i).getId().equals(id)) {
@@ -108,7 +108,7 @@ abstract class BaseCollection<T extends Model> implements Collection<T> {
 
         this.records.lockWrite();
 
-        if (this.indexOf(record.getId()) != -1) {
+        if (this.indexOf(record) != -1) {
             this.records.unlockWrite();
             return exitCode;
         }

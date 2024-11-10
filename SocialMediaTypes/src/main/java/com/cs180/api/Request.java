@@ -1,27 +1,34 @@
 package com.cs180.api;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 public class Request<Body> {
     public enum EMethod {
         GET, POST, UNKNOWN
     }
 
+    public enum EHeader {
+        ACCESS_TOKEN
+    }
+
     private final EMethod method;
     private final Body body;
     private final String endpoint;
     private final String bodyType;
-    private final HashMap<String, String> headers;
+    private final HashMap<EHeader, String> headers;
+    private UUID userId;
 
-    public Request(EMethod method, String endpoint, Body body, HashMap<String, String> headers) {
+    public Request(EMethod method, String endpoint, Body body, HashMap<EHeader, String> headers) {
         this.method = method;
         this.endpoint = endpoint;
         this.body = body;
         this.bodyType = body.getClass().getName();
         this.headers = headers;
+        this.userId = null;
     }
 
-    public HashMap<String, String> getHeaders() {
+    public HashMap<EHeader, String> getHeaders() {
         return headers;
     }
 
@@ -39,5 +46,13 @@ public class Request<Body> {
 
     public String getEndpoint() {
         return endpoint;
+    }
+
+    public UUID getUserId() {
+        return userId;
+    }
+
+    public void setUserId(UUID userId) {
+        this.userId = userId;
     }
 }
