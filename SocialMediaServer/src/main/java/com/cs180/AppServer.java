@@ -9,7 +9,14 @@ import java.nio.channels.SocketChannel;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.cs180.db.Database;
+import com.cs180.resolvers.AuthResolver;
+import com.cs180.resolvers.ResolverTools;
+import com.cs180.resolvers.RootResolver;
+import com.cs180.resolvers.UserResolver;
 
 /**
  * 
@@ -23,6 +30,8 @@ import com.cs180.db.Database;
  * 
  */
 public class AppServer {
+    private static final Logger logger = LogManager.getLogger(AppServer.class);
+
     private static final int PORT = 8080;
     private static final int PHYSICAL_THREAD_COUNT = 4;
 
@@ -33,6 +42,10 @@ public class AppServer {
 
     private void start() throws IOException {
         Database.init();
+        ResolverTools.init(
+                new RootResolver(),
+                new AuthResolver(),
+                new UserResolver());
 
         Selector connSelector = Selector.open();
         ServerSocketChannel serverChannel = ServerSocketChannel.open();
@@ -50,7 +63,7 @@ public class AppServer {
             workers.submit(new Worker(selectors[selectorIndex]));
         }
 
-        System.out.println("Server started on port " + PORT);
+        logger.info("Server started on port " + PORT);
 
         int nextSelector = 0;
         while (true) {
@@ -71,7 +84,7 @@ public class AppServer {
                     clientChannel.configureBlocking(false);
                     selectors[nextSelector].wakeup();
                     clientChannel.register(selectors[nextSelector], SelectionKey.OP_READ);
-                    System.out.println("Accepted new connection from " + clientChannel);
+                    logger.info("Accepted new connection from " + clientChannel);
 
                     // Perform round-robin selection of selectors
                     if (nextSelector == PHYSICAL_THREAD_COUNT - 1)

@@ -8,10 +8,12 @@ import com.cs180.db.models.User;
 public class UserService implements Service {
     private static final UserCollection users = db.getUserCollection();
 
-    public UserService() {
+    public static boolean follow(UUID userId, UUID followUserId) {
+        // TODO: Implement this method
+        return true;
     }
 
-    public boolean blockUserById(User user, String userId) {
+    public static boolean blockUserById(User user, String userId) {
         User userToBlock = users.findOne(u -> u.getId().equals(UUID.fromString(userId)));
         if (userToBlock == null) {
             return false;

@@ -12,8 +12,12 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Predicate;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.cs180.AppServer;
 import com.cs180.db.models.Model;
+import com.cs180.resolvers.ResolverTools;
 
 /**
  * 
@@ -27,6 +31,8 @@ import com.cs180.db.models.Model;
  * @version 2024-11-03
  */
 public interface Collection<T extends Model> {
+	static Logger logger = LogManager.getLogger(Collection.class);
+
 	int ASYNC_WRITE_FREQ = 5; // seconds
 
 	/**
@@ -44,10 +50,10 @@ public interface Collection<T extends Model> {
 		try (ObjectInputStream os = new ObjectInputStream(new FileInputStream(f))) {
 			data = (T[]) os.readObject();
 		} catch (FileNotFoundException e) {
-			System.out.println("Will create new file: " + fileName);
+			logger.debug("Will create new file: " + fileName);
 			return data;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Failed to read from db.", e);
 		}
 
 		return data;
@@ -89,7 +95,7 @@ public interface Collection<T extends Model> {
 		if (basePath.exists() == false) {
 			boolean success = basePath.mkdirs();
 			if (success == false) {
-				System.out.println("Failed to persist Database Collection.");
+				logger.error("Failed to persist Database Collection.");
 				exitCode = false;
 
 				return exitCode;
@@ -103,7 +109,7 @@ public interface Collection<T extends Model> {
 		try (ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(path))) {
 			os.writeObject(data);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Failed to write to db.", e);
 			exitCode = false;
 		}
 

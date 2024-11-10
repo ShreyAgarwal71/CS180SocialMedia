@@ -6,6 +6,7 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.ConnectionPendingException;
 import java.nio.channels.SocketChannel;
+import java.util.HashMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutorService;
@@ -45,27 +46,27 @@ public class Connection {
         return true;
     }
 
-    public static <ResponseBody> CompletableFuture<Response<ResponseBody>> get(String endpoint) throws IOException {
+    public static <ResponseBody> CompletableFuture<Response<ResponseBody>> get(String endpoint) {
         if (serverChannel == null || !serverChannel.isConnected()) {
             throw new ConnectionPendingException();
         }
 
-        return request(new Request<>(EMethod.GET, endpoint, null));
+        HashMap<String, String> headers = new HashMap<>();
+        return request(new Request<>(EMethod.GET, endpoint, null, headers));
     }
 
     public static <RequestBody, ResponseBody> CompletableFuture<Response<ResponseBody>> post(String endpoint,
-            RequestBody body)
-            throws IOException {
+            RequestBody body) {
         if (serverChannel == null || !serverChannel.isConnected()) {
             throw new ConnectionPendingException();
         }
 
-        return request(new Request<>(EMethod.POST, endpoint, body));
+        HashMap<String, String> headers = new HashMap<>();
+        return request(new Request<>(EMethod.POST, endpoint, body, headers));
     }
 
     private static <RequestBody, ResponseBody> CompletableFuture<Response<ResponseBody>> request(
-            Request<RequestBody> request)
-            throws IOException {
+            Request<RequestBody> request) {
         return CompletableFuture.supplyAsync(() -> {
             try {
                 ByteBuffer buffer = ByteBuffer.allocate(1024);
@@ -87,6 +88,10 @@ public class Connection {
                 Class<?> clazz = Class.forName(response.getBodyType());
                 Type type = TypeToken.getParameterized(Response.class, clazz).getType();
                 response = gson.fromJson(responseJSON, type);
+
+                if (response.getStatus() != Response.EStatus.OK) {
+                    throw new CompletionException(new RuntimeException(response.getBody().toString()));
+                }
 
                 return response;
             } catch (IOException e) {

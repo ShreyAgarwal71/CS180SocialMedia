@@ -9,6 +9,9 @@ import java.util.Iterator;
 
 import javax.lang.model.type.NullType;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.cs180.api.Request;
 import com.cs180.api.Response;
 import com.cs180.api.Request.EMethod;
@@ -17,6 +20,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 public class Worker implements Runnable {
+    private static final Logger logger = LogManager.getLogger(Worker.class);
+
     private Selector selector;
 
     private static final GsonBuilder builder = new GsonBuilder();
@@ -33,7 +38,7 @@ public class Worker implements Runnable {
         try {
             int bytesRead = clientChannel.read(buffer);
             if (bytesRead == -1) {
-                System.out.println("Client disconnected: " + clientChannel);
+                logger.info("Client disconnected: " + clientChannel);
                 clientChannel.close();
             } else {
                 buffer.flip();
@@ -42,9 +47,8 @@ public class Worker implements Runnable {
                     @SuppressWarnings("unchecked")
                     Request<NullType> request = gson.fromJson(json, Request.class);
 
-                    // temprorary logger
-                    System.out.printf("[INFO] %s -> %s -> %s\n", clientChannel.getRemoteAddress(), request.getMethod(),
-                            request.getEndpoint());
+                    logger.info(String.format("%s -> %s -> %s", clientChannel.getRemoteAddress(), request.getMethod(),
+                            request.getEndpoint()));
 
                     String response = ResolverTools.resolve(request, json);
                     buffer.clear().put(response.getBytes());
@@ -52,10 +56,10 @@ public class Worker implements Runnable {
 
                     clientChannel.write(buffer);
                 } catch (Exception e) {
-                    e.printStackTrace();
-                    System.out.println("Unknown Exception");
-                    Response<String> response = new Response<>(EMethod.UNKNOWN, "unknown", "Failed to parse JSON",
-                            Response.EStatus.BAD_REQUEST);
+                    logger.error("Unknown Exception", e);
+
+                    Response<String> response = new Response<>(EMethod.UNKNOWN, "unknown", "Unknown Exception",
+                            Response.EStatus.SERVER_ERROR);
                     String responseJSON = gson.toJson(response);
                     buffer.clear().put(responseJSON.getBytes());
                     buffer.flip();
@@ -64,11 +68,11 @@ public class Worker implements Runnable {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e);
             try {
                 clientChannel.close();
             } catch (IOException ex) {
-                ex.printStackTrace();
+                logger.error("Error Closing Client Channel", ex);
             }
         }
     }
@@ -92,7 +96,7 @@ public class Worker implements Runnable {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 }

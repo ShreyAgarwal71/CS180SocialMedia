@@ -53,18 +53,13 @@ public class App implements Runnable {
 
         javax.swing.JButton button = new javax.swing.JButton("Login");
         button.addActionListener(_ -> {
-            try {
-                Connection.<LoginDTO, AuthTokenDTO>post("/auth/login", new LoginDTO("mahit.py@gmail.com", "1234"))
-                        .thenAccept(response -> {
-                            System.out.println("Body: " + response.getBody().getToken());
-                        }).exceptionally(e -> {
-                            e.printStackTrace();
-                            System.out.println("Failed to process request.");
-                            return null;
-                        });
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            Connection.<LoginDTO, AuthTokenDTO>post("/auth/login", new LoginDTO("mahit.py@gmail.com", "1234"))
+                    .thenAccept(response -> {
+                        System.out.println("Body: " + response.getBody().getToken());
+                    }).exceptionally(e -> {
+                        System.out.println(e.getMessage());
+                        return null;
+                    });
         });
         button.setForeground(new java.awt.Color(255, 255, 255));
 

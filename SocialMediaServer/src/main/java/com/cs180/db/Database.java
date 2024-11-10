@@ -3,6 +3,9 @@ package com.cs180.db;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * A Database class to manage the Collection singletons in the database. This
  * class is responsible for reading and writing user, post, and comment data to
@@ -14,6 +17,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @version 2024-11-03
  */
 public class Database {
+	private static final Logger logger = LogManager.getLogger(Database.class);
+
 	private static final ScheduledThreadPoolExecutor SCHEDULER = new ScheduledThreadPoolExecutor(3);
 
 	private static final Object MAIN_LOCK = new Object();
@@ -53,11 +58,11 @@ public class Database {
 		if (HAS_BEEN_INITIALIZED.compareAndSet(false, true)) {
 			Runtime.getRuntime().addShutdownHook((new Thread() {
 				public void run() {
-					System.out.println("Database: Saving data");
+					logger.info("Database: Saving data");
 					Database.uc.save();
 					Database.pc.save();
 					Database.cc.save();
-					System.out.println("Database: Saved Data");
+					logger.info("Database: Saved Data");
 				}
 			}));
 		}
@@ -73,9 +78,5 @@ public class Database {
 
 	public CommentCollection getCommentCollection() {
 		return Database.cc;
-	}
-
-	public static void main(String[] args) {
-		System.out.println("Hello from Database!");
 	}
 }

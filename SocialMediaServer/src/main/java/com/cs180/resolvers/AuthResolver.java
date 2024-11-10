@@ -1,5 +1,6 @@
 package com.cs180.resolvers;
 
+import com.cs180.api.InternalServerError;
 import com.cs180.api.Request;
 import com.cs180.api.Request.EMethod;
 import com.cs180.db.models.User;
@@ -12,8 +13,6 @@ import com.cs180.services.AuthService;
 
 @Resolver(basePath = "/auth")
 public class AuthResolver extends BaseResolver {
-    private static final AuthService authService = new AuthService();
-
     public AuthResolver() {
         new ResolverTools().super();
     }
@@ -23,9 +22,10 @@ public class AuthResolver extends BaseResolver {
         String email = request.getBody().getEmail();
         String password = request.getBody().getPassword();
 
-        User user = authService.signInWithEmailAndPassword(email, password);
+        User user = AuthService.signInWithEmailAndPassword(email, password);
         if (user == null) {
-            return new AuthTokenDTO("dummy_token_invalid");
+            throw new InternalServerError("Failed to Get User");
+            // return new AuthTokenDTO(null);
         }
 
         return new AuthTokenDTO("dummy_token");

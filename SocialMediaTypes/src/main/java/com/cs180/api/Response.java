@@ -2,7 +2,7 @@ package com.cs180.api;
 
 public class Response<Body> {
     public enum EStatus {
-        OK, INTERNAL_SERVER_ERROR, ENDPOINT_NOT_FOUND, BAD_REQUEST, UNKNOWN_ENDPOINT
+        OK, INTERNAL_SERVER_ERROR, ENDPOINT_NOT_FOUND, BAD_REQUEST, UNKNOWN_ENDPOINT, SERVER_ERROR
     }
 
     private final Request.EMethod method;
