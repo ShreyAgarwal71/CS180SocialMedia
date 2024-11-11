@@ -8,6 +8,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.cs180.api.Connection;
 import com.cs180.dtos.AuthTokenDTO;
 import com.cs180.dtos.LoginDTO;
@@ -22,13 +25,11 @@ import com.formdev.flatlaf.util.SystemInfo;
  * 
  */
 public class App implements Runnable {
+    private static final Logger logger = LogManager.getLogger(App.class);
+
     private void start() {
-        try {
-            Connection.connect();
-        } catch (IOException e) {
-            System.out.println("Failed to connect to server");
-            e.printStackTrace();
-            return;
+        if (!Connection.connect()) {
+            logger.error("Initial Server Connection Failed");
         }
     }
 
@@ -59,9 +60,9 @@ public class App implements Runnable {
                     .<SignUpDTO, AuthTokenDTO>post("/auth/register",
                             new SignUpDTO("mahit.py@gmail.com", "1234", "mahitm"))
                     .thenAccept(response -> {
-                        System.out.println("Body: " + response.getBody().getToken());
+                        logger.debug("Body: " + response.getBody().getToken());
                     }).exceptionally(e -> {
-                        System.out.println(e.getMessage());
+                        logger.error(e.getMessage());
                         return null;
                     });
         });
@@ -70,9 +71,9 @@ public class App implements Runnable {
         loginButton.addActionListener(_ -> {
             Connection.<LoginDTO, AuthTokenDTO>post("/auth/login", new LoginDTO("mahit.py@gmail.com", "1234"))
                     .thenAccept(response -> {
-                        System.out.println("Body: " + response.getBody().getToken());
+                        logger.debug("Body: " + response.getBody().getToken());
                     }).exceptionally(e -> {
-                        System.out.println(e.getMessage());
+                        logger.error(e.getMessage());
                         return null;
                     });
         });
