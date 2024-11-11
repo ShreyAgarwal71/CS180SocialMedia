@@ -1,9 +1,10 @@
-package com.cs180.db;
+package com.cs180.db.collections;
 
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
+import com.cs180.db.helpers.BaseCollection;
 import com.cs180.db.models.Post;
 
 /**
@@ -36,19 +37,6 @@ public class PostCollection extends BaseCollection<Post> {
 		this.records.unlockRead();
 
 		return this.persistToDisk(fileName, arr);
-	}
-
-	/**
-	 * @implNote: Not Thread Safe, Needs Locking
-	 *
-	 * @param post
-	 * @return index
-	 *         Return the index of the post with the same postId
-	 *         Returns -1 if none of the posts have the same postId
-	 */
-	@Override
-	public int indexOf(Post post) {
-		return super.indexOf(post.getId());
 	}
 
 	/**

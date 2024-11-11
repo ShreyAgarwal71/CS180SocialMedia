@@ -1,4 +1,4 @@
-package com.cs180.db;
+package com.cs180.db.helpers;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,7 +20,7 @@ import com.cs180.db.models.Model;
  * @author Mahit Mehta
  * @version 2024-11-03
  */
-abstract class BaseCollection<T extends Model> implements Collection<T> {
+public abstract class BaseCollection<T extends Model> implements Collection<T> {
     protected RwLockArrayList<T> records;
 
     private final ScheduledThreadPoolExecutor scheduler;
@@ -71,18 +71,9 @@ abstract class BaseCollection<T extends Model> implements Collection<T> {
      * 
      * @return true if the records were written to disk, false otherwise
      */
-    abstract boolean writeRecords();
+    public abstract boolean writeRecords();
 
-    /**
-     * @implNote: Not Thread Safe, Needs Locking (Meant for internal use)
-     *
-     * @param T
-     * @return index
-     *         Return the index of the record if found, else -1
-     */
-    abstract int indexOf(T record);
-
-    protected int indexOf(UUID id) {
+    private int indexOf(UUID id) {
         int index = -1;
         for (int i = 0; i < this.records.size(); i++) {
             if (this.records.get(i).getId().equals(id)) {
@@ -94,13 +85,8 @@ abstract class BaseCollection<T extends Model> implements Collection<T> {
         return index;
     }
 
-    /**
-     * Add a record to the collection if it does not already exist
-     * 
-     * @return true if the record was added, false otherwise
-     */
     @Override
-    public boolean addElement(T record) {
+    public boolean addElement(T record, Predicate<T> dedupPredicate) {
         boolean exitCode = false;
 
         if (record == null)
@@ -108,9 +94,11 @@ abstract class BaseCollection<T extends Model> implements Collection<T> {
 
         this.records.lockWrite();
 
-        if (this.indexOf(record) != -1) {
-            this.records.unlockWrite();
-            return exitCode;
+        for (T t : this.records.getList()) {
+            if (dedupPredicate.test(t)) {
+                this.records.unlockWrite();
+                return exitCode;
+            }
         }
 
         this.records.add(record);
@@ -120,6 +108,16 @@ abstract class BaseCollection<T extends Model> implements Collection<T> {
         exitCode = true;
 
         return exitCode;
+    }
+
+    /**
+     * Add a record to the collection if it does not already exist
+     * 
+     * @return true if the record was added, false otherwise
+     */
+    @Override
+    public boolean addElement(T record) {
+        return this.addElement(record, (t) -> t.getId().equals(record.getId()));
     }
 
     @Override

@@ -2,7 +2,7 @@ package com.cs180.services;
 
 import java.util.UUID;
 
-import com.cs180.db.UserCollection;
+import com.cs180.db.collections.UserCollection;
 import com.cs180.db.models.User;
 
 public class UserService implements Service {

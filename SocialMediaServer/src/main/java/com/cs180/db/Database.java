@@ -6,6 +6,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.cs180.db.collections.CommentCollection;
+import com.cs180.db.collections.PostCollection;
+import com.cs180.db.collections.UserCollection;
+import com.cs180.db.helpers.Collection;
+
 /**
  * A Database class to manage the Collection singletons in the database. This
  * class is responsible for reading and writing user, post, and comment data to

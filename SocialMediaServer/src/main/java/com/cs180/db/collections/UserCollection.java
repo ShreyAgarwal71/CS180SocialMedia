@@ -1,7 +1,8 @@
-package com.cs180.db;
+package com.cs180.db.collections;
 
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
+import com.cs180.db.helpers.BaseCollection;
 import com.cs180.db.models.User;
 
 /**
@@ -38,32 +39,18 @@ public class UserCollection extends BaseCollection<User> {
     }
 
     /**
+     * Add a user to the collection while ensuring that the user is unique
+     * based on the username, email, and id
      * 
-     * @implNote: Not Thread Safe, Needs Locking (Meant for internal use)
-     *
-     * @param User
-     * @return index
-     *         Return the index of the user with the same username, email, or id
-     *         else return -1
+     * @param user
+     * @return
      */
-    @Override
-    public int indexOf(User user) {
-        int index = -1;
-
-        if (user == null) {
-            return index;
-        }
-
-        for (int i = 0; i < this.records.size(); i++) {
-            if (this.records.get(i).getUsername().equals(user.getUsername()) ||
-                    this.records.get(i).getEmail().equals(user.getEmail()) ||
-                    this.records.get(i).getId().equals(user.getId())) {
-                index = i;
-                break;
-            }
-        }
-
-        return index;
+    public boolean addUser(User user) {
+        return this.addElement(user, (u) -> {
+            return u.getUsername().equals(user.getUsername()) ||
+                    u.getEmail().equals(user.getEmail()) ||
+                    u.getId().equals(user.getId());
+        });
     }
 
     /**
