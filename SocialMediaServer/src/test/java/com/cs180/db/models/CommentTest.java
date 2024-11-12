@@ -61,7 +61,6 @@ public class CommentTest {
 		UUID userId = UUID.randomUUID();
 		UUID postId = UUID.randomUUID();
 
-		Comment[] comments = new Comment[2];
 		Comment testComment = new Comment(userId, postId, "This is a comment", "11-3-24", 0);
 
 		testComment.setMessageComment("This is a new comment");

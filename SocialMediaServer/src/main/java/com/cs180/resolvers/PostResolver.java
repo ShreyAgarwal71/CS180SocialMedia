@@ -16,11 +16,7 @@ import com.cs180.dtos.UnlikePostDTO;
 import com.cs180.dtos.LikePostDTO;
 
 @Resolver(basePath = "/post")
-public class PostResolver extends BaseResolver {
-    public PostResolver() {
-        new ResolverTools().super();
-    }
-
+public class PostResolver implements BaseResolver {
     @AuthGuard()
     @Endpoint(endpoint = "/create", method = Request.EMethod.POST, requestBodyType = CreatePostDTO.class)
     public void createPost(Request<CreatePostDTO> request) {

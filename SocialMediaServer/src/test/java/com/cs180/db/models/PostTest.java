@@ -8,8 +8,6 @@ import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 
-import com.cs180.db.models.Post;
-
 /**
  * PostTest
  * 

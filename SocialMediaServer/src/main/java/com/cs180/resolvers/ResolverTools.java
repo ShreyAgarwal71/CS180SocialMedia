@@ -160,7 +160,7 @@ public class ResolverTools {
         }
     }
 
-    public class BaseResolver {
+    public interface BaseResolver {
     }
 
     private static String resolveEndpoint(EndpointRef ref, Request<?> request, String rawRequest)

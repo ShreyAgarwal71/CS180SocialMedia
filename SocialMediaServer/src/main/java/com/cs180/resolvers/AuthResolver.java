@@ -13,10 +13,7 @@ import com.cs180.resolvers.ResolverTools.Resolver;
 import com.cs180.services.AuthService;
 
 @Resolver(basePath = "/auth")
-public class AuthResolver extends BaseResolver {
-    public AuthResolver() {
-        new ResolverTools().super();
-    }
+public class AuthResolver implements BaseResolver {
 
     @Endpoint(endpoint = "/register", method = EMethod.POST, requestBodyType = CreateUserDTO.class, responseBodyType = AuthTokenDTO.class)
     public AuthTokenDTO signUp(Request<CreateUserDTO> request) {
@@ -26,6 +23,7 @@ public class AuthResolver extends BaseResolver {
         String displayName = request.getBody().getDisplayName();
         String bio = request.getBody().getBio();
 
+        // TODO: Change db API to expose duplicate record (User) error
         User user = AuthService.signUp(username, password, displayName, bio, email);
         if (user == null) {
             return new AuthTokenDTO(null);

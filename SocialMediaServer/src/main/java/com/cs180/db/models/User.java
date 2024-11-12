@@ -278,21 +278,6 @@ public class User extends Model {
     }
 
     /**
-     * Equals method for User
-     * 
-     * @param obj
-     * @return boolean
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof User))
-            return false;
-        User u = (User) obj;
-        return u.username.equals(username) && u.password.equals(password) && u.displayName.equals(displayName)
-                && u.email.equals(email);
-    }
-
-    /**
      * toString method for User
      * 
      * @return String

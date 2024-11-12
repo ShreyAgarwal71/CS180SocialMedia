@@ -16,10 +16,7 @@ import com.cs180.dtos.UnlikeCommentDTO;
 import com.cs180.dtos.LikeCommentDTO;
 
 @Resolver(basePath = "/comment")
-public class CommentResolver extends BaseResolver {
-    public CommentResolver() {
-        new ResolverTools().super();
-    }
+public class CommentResolver implements BaseResolver {
 
     @AuthGuard()
     @Endpoint(endpoint = "/add", method = Request.EMethod.POST, requestBodyType = AddCommentDTO.class)

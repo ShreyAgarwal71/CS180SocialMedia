@@ -7,10 +7,7 @@ import com.cs180.resolvers.ResolverTools.Endpoint;
 import com.cs180.resolvers.ResolverTools.Resolver;
 
 @Resolver(basePath = "/")
-public class RootResolver extends BaseResolver {
-    public RootResolver() {
-        new ResolverTools().super();
-    }
+public class RootResolver implements BaseResolver {
 
     @Endpoint(endpoint = "/", method = EMethod.GET)
     public String root(Request<String> request) {

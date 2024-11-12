@@ -18,10 +18,7 @@ import com.cs180.dtos.FollowUserDTO;
 import com.cs180.dtos.UnfollowUserDTO;
 
 @Resolver(basePath = "/user")
-public class UserResolver extends BaseResolver {
-    public UserResolver() {
-        new ResolverTools().super();
-    }
+public class UserResolver implements BaseResolver {
 
     @AuthGuard()
     @Endpoint(endpoint = "/create", method = Request.EMethod.POST, requestBodyType = CreateUserDTO.class)

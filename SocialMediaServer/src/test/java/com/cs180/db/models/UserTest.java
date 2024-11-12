@@ -61,17 +61,4 @@ public class UserTest {
 		assertEquals(testUser.getBio(), "newBio", "Ensure the setter is working for bio");
 		assertEquals(testUser.getEmail(), "newEmail", "Ensure the setter is working for email");
 	}
-
-	/**
-	 * A test case for the User equals method.
-	 */
-	@Test
-	public void testEquals() {
-		User testUser = new User("username", "password", "displayName", "bio", "email");
-		User testUser2 = new User("username", "password", "displayName", "bio", "email");
-		User testUser3 = new User("username", "password", "displayName", "bio", "email2");
-
-		assertTrue(testUser.equals(testUser2), "Ensure the equals method is working for equal users");
-		assertFalse(testUser.equals(testUser3), "Ensure the equals method is working for unequal users");
-	}
 }
