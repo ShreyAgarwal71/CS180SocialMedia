@@ -3,7 +3,6 @@ package com.cs180.db;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -16,10 +15,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import com.cs180.db.Collection;
-import com.cs180.db.Database;
-import com.cs180.db.PostCollection;
-import com.cs180.db.UserCollection;
+import com.cs180.db.helpers.Collection;
 import com.cs180.db.models.Comment;
 import com.cs180.db.models.Post;
 import com.cs180.db.models.User;
@@ -84,7 +80,7 @@ public class DatabaseTest {
 
 				for (int j = 0; j < 1000; j++) {
 					db.getUserCollection()
-							.addElement(
+							.addUser(
 									new User("username_" + (j + threadNum * 1000), "pass", "displayName_ " + j,
 											"email_" + (j + threadNum * 1000)));
 				}
@@ -176,7 +172,7 @@ public class DatabaseTest {
 	/**
 	 * Test primarily verifies that all posts for a given user are returned
 	 * 
-	 * {@link com.cs180.db.PostCollection#findByUserId(UUID)}
+	 * {@link com.cs180.db.collections.PostCollection#findByUserId(UUID)}
 	 */
 	@Test
 	public void queryPostsByUsername() {
@@ -364,7 +360,7 @@ public class DatabaseTest {
 
 	/**
 	 * Test verifies that a user can be found by username
-	 * {@link com.cs180.db.UserCollection#findByUsername(String)}
+	 * {@link com.cs180.db.collections.UserCollection#findByUsername(String)}
 	 */
 	@Test
 	public void queryUserByUsername() {
@@ -391,16 +387,16 @@ public class DatabaseTest {
 		String testUserName = "testUserName";
 		User testUser = new User(testUserName, "testPassword", "testDisplayName", "testEmail");
 
-		db.getUserCollection().addElement(testUser);
-		assertFalse(db.getUserCollection().addElement(testUser), "Expected duplicate user to not be added");
+		db.getUserCollection().addUser(testUser);
+		assertFalse(db.getUserCollection().addUser(testUser), "Expected duplicate user to not be added");
 
 		// Same username, different email
 		User testUserTwo = new User(testUserName, "testPassword", "testDisplayName", "testEmailTwo");
-		assertFalse(db.getUserCollection().addElement(testUserTwo), "Expected user with same username to not be added");
+		assertFalse(db.getUserCollection().addUser(testUserTwo), "Expected user with same username to not be added");
 
 		// Different username, same email
 		User testUserThree = new User("testUserNameTwo", "testPassword", "testDisplayName", "testEmail");
-		assertFalse(db.getUserCollection().addElement(testUserThree), "Expected user with same email to not be added");
+		assertFalse(db.getUserCollection().addUser(testUserThree), "Expected user with same email to not be added");
 
 		int count = db.getUserCollection().count();
 

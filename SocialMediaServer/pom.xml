@@ -62,7 +62,7 @@
       <version>3.3.4</version>
     </dependency>
   </dependencies>
-  <build>
+  <!-- <build>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -71,13 +71,13 @@
         <configuration>
           <generatedSourcesDirectory>${project.build.directory}
             /generated-sources/</generatedSourcesDirectory>
-          <!-- <annotationProcessors>
+          <annotationProcessors>
             <annotationProcessor>
               com.cs180.resolvers.EndpointProcessor
             </annotationProcessor>
-          </annotationProcessors> -->
+          </annotationProcessors>
         </configuration>
       </plugin>
     </plugins>
-  </build>
+  </build> -->
 </project>

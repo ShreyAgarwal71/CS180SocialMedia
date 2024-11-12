@@ -1,9 +1,10 @@
-package com.cs180.db;
+package com.cs180.db.collections;
 
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
+import com.cs180.db.helpers.BaseCollection;
 import com.cs180.db.models.Comment;
 
 /**
@@ -35,18 +36,6 @@ public class CommentCollection extends BaseCollection<Comment> {
 		this.records.unlockRead();
 
 		return this.persistToDisk(fileName, arr);
-	}
-
-	/**
-	 * @implNote: Not Thread Safe, Needs Locking (Meant for internal use)
-	 *
-	 * @param Comment
-	 * @return index
-	 *         Return the index of the comment with the same commentID
-	 *         Returns -1 if none of the comments have the same commentID
-	 */
-	public int indexOf(Comment comment) {
-		return super.indexOf(comment.getId());
 	}
 
 	public List<Comment> commentsByPostId(UUID postId) {

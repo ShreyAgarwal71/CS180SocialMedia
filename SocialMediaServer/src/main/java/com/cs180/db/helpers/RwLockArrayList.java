@@ -1,4 +1,4 @@
-package com.cs180.db;
+package com.cs180.db.helpers;
 
 import java.io.Serializable;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.cs180.db;
+package com.cs180.db.helpers;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,7 +17,6 @@ import org.apache.logging.log4j.Logger;
 
 import com.cs180.AppServer;
 import com.cs180.db.models.Model;
-import com.cs180.resolvers.ResolverTools;
 
 /**
  * 
@@ -118,7 +117,17 @@ public interface Collection<T extends Model> {
 
 	/**
 	 * Adds the given Object to the Collection's ArrayList.
-	 * Returns false if the Object's type doesn't match the expected type.
+	 * Ensures that the object is not a duplicate based on the given predicate.
+	 * 
+	 * @param obj
+	 * @param dedupPredicate
+	 * @return
+	 */
+	abstract boolean addElement(T obj, Predicate<T> dedupPredicate);
+
+	/**
+	 * Adds the given Object to the Collection's ArrayList.
+	 * Ensures no other object with the same id exists in the collection.
 	 *
 	 * @param obj
 	 * @return exitCode

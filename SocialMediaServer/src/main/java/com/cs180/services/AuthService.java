@@ -14,7 +14,7 @@ import javax.crypto.spec.PBEKeySpec;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.cs180.db.UserCollection;
+import com.cs180.db.collections.UserCollection;
 import com.cs180.db.models.User;
 
 import io.jsonwebtoken.Claims;
@@ -46,7 +46,7 @@ public class AuthService implements Service {
         }
 
         User user = new User(username, hashedPassword, username, email);
-        if (!users.addElement(user)) {
+        if (!users.addUser(user)) {
             return null;
         }
 
