@@ -19,13 +19,14 @@ public class AuthResolver extends BaseResolver {
     }
 
     @Endpoint(endpoint = "/register", method = EMethod.POST, requestBodyType = CreateUserDTO.class, responseBodyType = AuthTokenDTO.class)
-    public AuthTokenDTO signUpWithEmailAndPassword(Request<CreateUserDTO> request) {
+    public AuthTokenDTO signUp(Request<CreateUserDTO> request) {
         String email = request.getBody().getEmail();
         String password = request.getBody().getPassword();
         String username = request.getBody().getUsername();
+        String displayName = request.getBody().getDisplayName();
+        String bio = request.getBody().getBio();
 
-        // TODO: Change db API to expose duplicate record (User) error
-        User user = AuthService.signUpWithEmailAndPassword(email, password, username);
+        User user = AuthService.signUp(username, password, displayName, bio, email);
         if (user == null) {
             return new AuthTokenDTO(null);
         }

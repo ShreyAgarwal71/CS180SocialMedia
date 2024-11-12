@@ -31,21 +31,13 @@ public class AuthService implements Service {
 
     private static final UserCollection users = db.getUserCollection();
 
-    /**
-     * Signs up the user with the given email, password, and username
-     * 
-     * @param email
-     * @param password
-     * @param username
-     * @return User if the user is signed up successfully, null otherwise
-     */
-    public static User signUpWithEmailAndPassword(String email, String password, String username) {
+    public static User signUp(String username, String password, String displayName, String bio, String email) {
         String hashedPassword = getHashedPassword(password);
         if (hashedPassword == null) {
             return null;
         }
 
-        User user = new User(username, hashedPassword, username, email);
+        User user = new User(username, hashedPassword, displayName, bio, email);
         if (!users.addUser(user)) {
             return null;
         }
