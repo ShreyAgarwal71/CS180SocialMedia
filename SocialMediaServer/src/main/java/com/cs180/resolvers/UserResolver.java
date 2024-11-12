@@ -22,18 +22,7 @@ public class UserResolver extends BaseResolver {
     @Endpoint(endpoint = "/follow", method = Request.EMethod.POST, requestBodyType = FollowUserDTO.class)
     public void followUser(Request<FollowUserDTO> request) {
         UUID followUserId = UUID.fromString(request.getBody().getFollowUserId());
-        UUID userId = UUID.randomUUID();
-
-        if (!UserService.follow(userId, followUserId)) {
-            throw new InternalServerError("Failed to Add User to Follow List");
-        }
-    }
-
-    @AuthGuard()
-    @Endpoint(endpoint = "/", method = Request.EMethod.POST, requestBodyType = FollowUserDTO.class)
-    public void followUser2(Request<FollowUserDTO> request) {
-        UUID followUserId = UUID.fromString(request.getBody().getFollowUserId());
-        UUID userId = UUID.randomUUID();
+        UUID userId = request.getUserId();
 
         if (!UserService.follow(userId, followUserId)) {
             throw new InternalServerError("Failed to Add User to Follow List");

@@ -94,10 +94,6 @@ public class ResolverTools {
         ResolverTools.resolvers = resolvers;
 
         predetermineEndpoints();
-
-        for (String path : endpointMap.keySet()) {
-            logger.debug("Registered Endpoint: " + path);
-        }
     }
 
     private static void predetermineEndpoints() {
@@ -127,6 +123,7 @@ public class ResolverTools {
                     }
 
                     endpointMap.put(fullPath, new EndpointRef(resolver, m));
+                    logger.debug("Registered Endpoint: " + fullPath);
                 }
             }
         }
@@ -176,7 +173,7 @@ public class ResolverTools {
             String accessToken = request.getHeaders().get(EHeader.ACCESS_TOKEN);
             if (accessToken == null) {
                 Response<String> response = new Response<String>(request.getMethod(), request.getEndpoint(),
-                        "No Access Token Provided.", EStatus.UNAUTHORIZED);
+                        "No Access Token Provided.", EStatus.UNAUTHORIZED, request.getRequestId());
                 return gson.toJson(response);
             }
 
@@ -184,7 +181,7 @@ public class ResolverTools {
 
             if (userId == null) {
                 Response<String> response = new Response<String>(request.getMethod(), request.getEndpoint(),
-                        "Invalid Access Token.", EStatus.UNAUTHORIZED);
+                        "Invalid Access Token.", EStatus.UNAUTHORIZED, request.getRequestId());
                 return gson.toJson(response);
             }
 
@@ -200,7 +197,7 @@ public class ResolverTools {
             request = gson.fromJson(rawRequest, requestType);
         } catch (Exception e) {
             Response<String> response = new Response<String>(request.getMethod(), request.getEndpoint(),
-                    "Bad Request", EStatus.BAD_REQUEST);
+                    "Bad Request", EStatus.BAD_REQUEST, request.getRequestId());
             return gson.toJson(response);
         }
 
@@ -209,7 +206,7 @@ public class ResolverTools {
             if (m.getReturnType().equals(Void.TYPE)) {
                 m.invoke(resolver, request);
                 Response<String> response = new Response<String>(request.getMethod(), request.getEndpoint(),
-                        "Success", EStatus.OK);
+                        "Success", EStatus.OK, request.getRequestId());
                 return gson.toJson(response);
             }
 
@@ -221,19 +218,19 @@ public class ResolverTools {
 
             Response<Object> response = new Response<>(request.getMethod(),
                     request.getEndpoint(),
-                    methodResponse, EStatus.OK);
+                    methodResponse, EStatus.OK, request.getRequestId());
             return gson.toJson(response, responseType);
         } catch (InvocationTargetException e) {
             Exception cause = (Exception) e.getCause();
 
             if (cause instanceof ServerException) {
                 Response<String> response = new Response<String>(request.getMethod(), request.getEndpoint(),
-                        cause.getMessage(), ((ServerException) cause).getStatus());
+                        cause.getMessage(), ((ServerException) cause).getStatus(), request.getRequestId());
                 return gson.toJson(response);
             }
 
             Response<String> response = new Response<String>(request.getMethod(), request.getEndpoint(),
-                    cause.getMessage(), EStatus.SERVER_ERROR);
+                    cause.getMessage(), EStatus.SERVER_ERROR, request.getRequestId());
             return gson.toJson(response);
         }
     }
@@ -250,7 +247,7 @@ public class ResolverTools {
 
         if (ref == null || ref.getMethod().getAnnotation(Endpoint.class).method() != request.getMethod()) {
             Response<String> response = new Response<String>(request.getMethod(), request.getEndpoint(),
-                    "Unknown Endpoint", EStatus.UNKNOWN_ENDPOINT);
+                    "Unknown Endpoint", EStatus.UNKNOWN_ENDPOINT, request.getRequestId());
             return gson.toJson(response);
         }
 
@@ -260,7 +257,7 @@ public class ResolverTools {
             logger.error("Internal Server Error", e);
 
             Response<String> response = new Response<String>(request.getMethod(), request.getEndpoint(),
-                    "Internal Server Error", EStatus.INTERNAL_SERVER_ERROR);
+                    "Internal Server Error", EStatus.INTERNAL_SERVER_ERROR, request.getRequestId());
             return gson.toJson(response);
         }
     }

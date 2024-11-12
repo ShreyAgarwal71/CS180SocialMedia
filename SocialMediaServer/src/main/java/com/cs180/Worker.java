@@ -76,7 +76,7 @@ public class Worker implements Runnable {
                     logger.error("Unknown Exception", e);
 
                     Response<String> response = new Response<>(EMethod.UNKNOWN, "Unknown Endpoint", "Unknown Exception",
-                            Response.EStatus.SERVER_ERROR);
+                            Response.EStatus.SERVER_ERROR, null);
 
                     logger.info(
                             String.format("[%s] %s <- %s <- %s", workerId, clientChannel.getRemoteAddress(),
