@@ -5,7 +5,7 @@ import com.cs180.api.Request;
 import com.cs180.api.Request.EMethod;
 import com.cs180.db.models.User;
 import com.cs180.dtos.LoginDTO;
-import com.cs180.dtos.SignUpDTO;
+import com.cs180.dtos.CreateUserDTO;
 import com.cs180.dtos.AuthTokenDTO;
 import com.cs180.resolvers.ResolverTools.BaseResolver;
 import com.cs180.resolvers.ResolverTools.Endpoint;
@@ -18,8 +18,8 @@ public class AuthResolver extends BaseResolver {
         new ResolverTools().super();
     }
 
-    @Endpoint(endpoint = "/register", method = EMethod.POST, requestBodyType = SignUpDTO.class, responseBodyType = AuthTokenDTO.class)
-    public AuthTokenDTO signUpWithEmailAndPassword(Request<SignUpDTO> request) {
+    @Endpoint(endpoint = "/register", method = EMethod.POST, requestBodyType = CreateUserDTO.class, responseBodyType = AuthTokenDTO.class)
+    public AuthTokenDTO signUpWithEmailAndPassword(Request<CreateUserDTO> request) {
         String email = request.getBody().getEmail();
         String password = request.getBody().getPassword();
         String username = request.getBody().getUsername();

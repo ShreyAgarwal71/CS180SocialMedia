@@ -10,6 +10,9 @@ import com.cs180.resolvers.ResolverTools.Endpoint;
 import com.cs180.resolvers.ResolverTools.Resolver;
 import com.cs180.services.PostService;
 
+import com.cs180.dtos.CreatePostDTO;
+import com.cs180.dtos.DeletePostDTO;
+import com.cs180.dtos.UnlikePostDTO;
 import com.cs180.dtos.LikePostDTO;
 
 @Resolver(basePath = "/post")
@@ -19,9 +22,9 @@ public class PostResolver extends BaseResolver {
     }
 
     @AuthGuard()
-    @Endpoint(endpoint = "/create", method = Request.EMethod.POST, requestBodyType = LikePostDTO.class)
-    public void createPost(Request<LikePostDTO> request) {
-        UUID userId = UUID.randomUUID();
+    @Endpoint(endpoint = "/create", method = Request.EMethod.POST, requestBodyType = CreatePostDTO.class)
+    public void createPost(Request<CreatePostDTO> request) {
+        UUID userId = request.getUserId();
         String messagePost = request.getBody().getMessagePost();
         String date = request.getBody().getDate();
         int likes = 0;
@@ -33,9 +36,9 @@ public class PostResolver extends BaseResolver {
     }
 
     @AuthGuard()
-    @Endpoint(endpoint = "/delete", method = Request.EMethod.POST, requestBodyType = LikePostDTO.class)
-    public void deletePost(Request<LikePostDTO> request) {
-        UUID postId = UUID.fromString(request.getBody().getPostId());
+    @Endpoint(endpoint = "/delete", method = Request.EMethod.POST, requestBodyType = DeletePostDTO.class)
+    public void deletePost(Request<DeletePostDTO> request) {
+        UUID postId = request.getBody().getPostId();
 
         if (!PostService.deletePost(postId)) {
             throw new InternalServerError("Failed to Delete Post");
@@ -45,7 +48,7 @@ public class PostResolver extends BaseResolver {
     @AuthGuard()
     @Endpoint(endpoint = "/like", method = Request.EMethod.POST, requestBodyType = LikePostDTO.class)
     public void likePost(Request<LikePostDTO> request) {
-        UUID postId = UUID.fromString(request.getBody().getPostId());
+        UUID postId = request.getBody().getPostId();
         UUID userId = UUID.randomUUID();
 
         if (!PostService.likePost(userId, postId)) {
@@ -54,9 +57,9 @@ public class PostResolver extends BaseResolver {
     }
 
     @AuthGuard()
-    @Endpoint(endpoint = "/unlike", method = Request.EMethod.POST, requestBodyType = LikePostDTO.class)
-    public void unlikePost(Request<LikePostDTO> request) {
-        UUID postId = UUID.fromString(request.getBody().getPostId());
+    @Endpoint(endpoint = "/unlike", method = Request.EMethod.POST, requestBodyType = UnlikePostDTO.class)
+    public void unlikePost(Request<UnlikePostDTO> request) {
+        UUID postId = request.getBody().getPostId();
         UUID userId = UUID.randomUUID();
 
         if (!PostService.unlikePost(userId, postId)) {

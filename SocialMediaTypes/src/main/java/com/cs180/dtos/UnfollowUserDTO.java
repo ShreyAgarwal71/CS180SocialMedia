@@ -2,10 +2,10 @@ package com.cs180.dtos;
 
 import java.util.UUID;
 
-public class FollowUserDTO {
+public class UnfollowUserDTO {
     private UUID followUserId;
 
-    public FollowUserDTO(UUID followUserId) {
+    public UnfollowUserDTO(UUID followUserId) {
         this.followUserId = followUserId;
     }
 

@@ -14,7 +14,7 @@ import org.apache.logging.log4j.Logger;
 import com.cs180.api.Connection;
 import com.cs180.dtos.AuthTokenDTO;
 import com.cs180.dtos.LoginDTO;
-import com.cs180.dtos.SignUpDTO;
+import com.cs180.dtos.CreateUserDTO;
 import com.formdev.flatlaf.util.SystemInfo;
 
 /**
@@ -57,8 +57,8 @@ public class App implements Runnable {
         JButton registerButton = new JButton("Register");
         registerButton.addActionListener(_ -> {
             Connection
-                    .<SignUpDTO, AuthTokenDTO>post("/auth/register",
-                            new SignUpDTO("mahit.py@gmail.com", "1234", "mahitm"))
+                    .<CreateUserDTO, AuthTokenDTO>post("/auth/register",
+                            new CreateUserDTO("mahitm", "1234", "Mahit Mehta", "I am a student", "mathit@gmail.com"))
                     .thenAccept(response -> {
                         logger.debug("Body: " + response.getBody().getToken());
                     }).exceptionally(e -> {

@@ -10,7 +10,12 @@ import com.cs180.resolvers.ResolverTools.Endpoint;
 import com.cs180.resolvers.ResolverTools.Resolver;
 import com.cs180.services.UserService;
 
+import com.cs180.dtos.CreateUserDTO;
+import com.cs180.dtos.DeleteUserDTO;
+import com.cs180.dtos.BlockUserDTO;
+import com.cs180.dtos.UnblockUserDTO;
 import com.cs180.dtos.FollowUserDTO;
+import com.cs180.dtos.UnfollowUserDTO;
 
 @Resolver(basePath = "/user")
 public class UserResolver extends BaseResolver {
@@ -19,8 +24,8 @@ public class UserResolver extends BaseResolver {
     }
 
     @AuthGuard()
-    @Endpoint(endpoint = "/create", method = Request.EMethod.POST, requestBodyType = FollowUserDTO.class)
-    public void createUser(Request<FollowUserDTO> request) {
+    @Endpoint(endpoint = "/create", method = Request.EMethod.POST, requestBodyType = CreateUserDTO.class)
+    public void createUser(Request<CreateUserDTO> request) {
         String username = request.getBody().getUsername();
         String password = request.getBody().getPassword();
         String displayName = request.getBody().getDisplayName();
@@ -33,9 +38,9 @@ public class UserResolver extends BaseResolver {
     }
 
     @AuthGuard()
-    @Endpoint(endpoint = "/delete", method = Request.EMethod.POST, requestBodyType = FollowUserDTO.class)
-    public void deleteUser(Request<FollowUserDTO> request) {
-        UUID userId = UUID.randomUUID();
+    @Endpoint(endpoint = "/delete", method = Request.EMethod.POST, requestBodyType = DeleteUserDTO.class)
+    public void deleteUser(Request<DeleteUserDTO> request) {
+        UUID userId = request.getBody().getUserId();
 
         if (!UserService.deleteUser(userId)) {
             throw new InternalServerError("Failed to Delete User");
@@ -45,8 +50,8 @@ public class UserResolver extends BaseResolver {
     @AuthGuard()
     @Endpoint(endpoint = "/follow", method = Request.EMethod.POST, requestBodyType = FollowUserDTO.class)
     public void followUser(Request<FollowUserDTO> request) {
-        UUID followUserId = UUID.fromString(request.getBody().getFollowUserId());
-        UUID userId = UUID.getUserId();
+        UUID followUserId = request.getBody().getFollowUserId();
+        UUID userId = request.getUserId();
 
         if (!UserService.follow(userId, followUserId)) {
             throw new InternalServerError("Failed to Add User to Follow List");
@@ -55,9 +60,9 @@ public class UserResolver extends BaseResolver {
 
     @AuthGuard()
     @Endpoint(endpoint = "/unfollow", method = Request.EMethod.POST, requestBodyType = UnfollowUserDTO.class)
-    public void followUser(Request<UnFollowUserDTO> request) {
-        UUID followUserId = UUID.fromString(request.getBody().getFollowUserId());
-        UUID userId = UUID.getUserId();
+    public void unfollowUser(Request<UnfollowUserDTO> request) {
+        UUID followUserId = request.getBody().getFollowUserId();
+        UUID userId = request.getUserId();
 
         if (!UserService.unfollow(userId, followUserId)) {
             throw new InternalServerError("Failed to Add User to Follow List");
@@ -66,9 +71,9 @@ public class UserResolver extends BaseResolver {
 
     @AuthGuard()
     @Endpoint(endpoint = "/block", method = Request.EMethod.POST, requestBodyType = BlockUserDTO.class)
-    public void followUser(Request<BlockUserDTO> request) {
-        UUID blockedUserId = UUID.fromString(request.getBody().getBlockedUserId());
-        UUID userId = UUID.getUserId();
+    public void blockUser(Request<BlockUserDTO> request) {
+        UUID blockedUserId = request.getBody().getBlockedUserId();
+        UUID userId = request.getUserId();
 
         if (!UserService.block(userId, blockedUserId)) {
             throw new InternalServerError("Failed to Add User to Blocked List");
@@ -77,9 +82,9 @@ public class UserResolver extends BaseResolver {
 
     @AuthGuard()
     @Endpoint(endpoint = "/unblock", method = Request.EMethod.POST, requestBodyType = UnblockUserDTO.class)
-    public void unblock(Request<UnblockUserDTO> request) {
-        UUID blockedUserId = UUID.fromString(request.getBody().getBlockedUserId());
-        UUID userId = UUID.getUserId();
+    public void unblockUser(Request<UnblockUserDTO> request) {
+        UUID blockedUserId = request.getBody().getUnblockedUserId();
+        UUID userId = request.getUserId();
 
         if (!UserService.unblock(userId, blockedUserId)) {
             throw new InternalServerError("Failed to Add User to Blocked List");
