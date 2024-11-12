@@ -12,143 +12,66 @@ import org.junit.jupiter.api.Test;
  * 
  * A class that provides test cases for the User class.
  * 
- * @author Zayan and Mahit Mehta
- * @version 2024-11-03
+ * @author Zayan and Mahit Mehta and Shrey Agarwal
+ * @version 11/12/2024
  */
 public class UserTest {
 	/**
 	 * A test case for the User constructor.
-	 * 
-	 * @see User#User(String, String, String, String)
+	 *
+	 * @see User#User(String, String, String, String, String)
 	 */
 	@Test
 	public void testUserConstructor() {
-		User testUser = new User("testUser", "password", "New User", "testUserEmail@email.com");
-		assertNotNull(testUser, "User Constructor is not instantiating variables properly.");
+		User testUser = new User("username", "password", "displayName", "bio", "email");
+
+		assertNotNull(testUser, "Ensure the constructor is actually instantiating variables");
 	}
 
 	/**
-	 * A test case for the User constructor.
-	 * 
-	 * @see User#User(String, String, String, String)
+	 * A test case for the User getters.
 	 */
 	@Test
-	public void testGetUsername() {
-		User testUser = new User("testUser", "password", "New User", "testUserEmail@email.com");
-		assertEquals("testUser", testUser.getUsername(), "Ensure getUsername is returning proper username.");
+	public void testGetters() {
+		User testUser = new User("username", "password", "displayName", "bio", "email");
+
+		assertEquals(testUser.getUsername(), "username", "Ensure the getter is working for username");
+		assertEquals(testUser.getPassword(), "password", "Ensure the getter is working for password");
+		assertEquals(testUser.getDisplayName(), "displayName", "Ensure the getter is working for display name");
+		assertEquals(testUser.getBio(), "bio", "Ensure the getter is working for bio");
+		assertEquals(testUser.getEmail(), "email", "Ensure the getter is working for email");
 	}
 
 	/**
-	 * A test case for the User constructor.
-	 * 
-	 * @see User#User(String, String, String, String)
+	 * A test case for the User setters.
 	 */
 	@Test
-	public void testGetPassword() {
-		User testUser = new User("testUser", "password", "New User", "testUserEmail@email.com");
-		assertEquals("password", testUser.getPassword(), "Ensure getPassword is returning proper password.");
-	}
+	public void testSetters() {
+		User testUser = new User("username", "password", "displayName", "bio", "email");
 
-	/**
-	 * A test case for the User constructor.
-	 * 
-	 * @see User#User(String, String, String, String)
-	 */
-	@Test
-	public void testGetDisplayName() {
-		User testUser = new User("testUser", "password", "New User", "testUserEmail@email.com");
-		assertEquals("New User",
-				testUser.getDisplayName(), "Ensure getDisplayName is returning proper display name.");
-	}
-
-	/**
-	 * A test case for the User constructor.
-	 * 
-	 * @see User#User(String, String, String, String)
-	 */
-	@Test
-	public void testGetEmail() {
-		User testUser = new User("testUser", "password", "New User", "testUserEmail@email.com");
-		assertEquals("testUserEmail@email.com", testUser.getEmail(), "Ensure getEmail is returning proper email.");
-	}
-
-	/**
-	 * A test case for the User constructor.
-	 * 
-	 * @see User#User(String, String, String, String)
-	 */
-	@Test
-	public void testSetUsername() {
-		User testUser = new User("testUser", "password", "New User", "testUserEmail@email.com");
 		testUser.setUsername("newUsername");
-		assertEquals("newUsername", testUser.getUsername(), "Ensure setUsername is properly setting new username.");
-	}
-
-	/**
-	 * A test case for the User constructor.
-	 * 
-	 * @see User#User(String, String, String, String)
-	 */
-	@Test
-	public void testPassword() {
-		User testUser = new User("testUser", "password", "New User", "testUserEmail@email.com");
 		testUser.setPassword("newPassword");
-		assertEquals("newPassword", testUser.getPassword(), "Ensure setPassword is properly setting new password.");
+		testUser.setDisplayName("newDisplayName");
+		testUser.setBio("newBio");
+		testUser.setEmail("newEmail");
+
+		assertEquals(testUser.getUsername(), "newUsername", "Ensure the setter is working for username");
+		assertEquals(testUser.getPassword(), "newPassword", "Ensure the setter is working for password");
+		assertEquals(testUser.getDisplayName(), "newDisplayName", "Ensure the setter is working for display name");
+		assertEquals(testUser.getBio(), "newBio", "Ensure the setter is working for bio");
+		assertEquals(testUser.getEmail(), "newEmail", "Ensure the setter is working for email");
 	}
 
 	/**
-	 * A test case for the User constructor.
-	 * 
-	 * @see User#User(String, String, String, String)
+	 * A test case for the User equals method.
 	 */
 	@Test
-	public void testSetDisplayName() {
-		User testUser = new User("testUser", "password", "New User", "testUserEmail@email.com");
-		testUser.setDisplayName("Old User");
-		assertEquals("Old User",
-				testUser.getDisplayName(), "Ensure setDisplayName is properly setting new display name.");
-	}
+	public void testEquals() {
+		User testUser = new User("username", "password", "displayName", "bio", "email");
+		User testUser2 = new User("username", "password", "displayName", "bio", "email");
+		User testUser3 = new User("username", "password", "displayName", "bio", "email2");
 
-	/**
-	 * A test case for the User constructor.
-	 * 
-	 * @see User#User(String, String, String, String)
-	 */
-	@Test
-	public void testSetEmail() {
-		User testUser = new User("testUser", "password", "New User", "testUserEmail@email.com");
-		testUser.setEmail("newEmail@gmail.com");
-		assertEquals("newEmail@gmail.com", testUser.getEmail(), "Ensure setEmail is properly setting new email.");
-	}
-
-	/**
-	 * A test case for the User constructor.
-	 * 
-	 * @see User#User(String, String, String, String)
-	 */
-	@Test
-	public void testUserEqualsMethod() {
-		User testUser = new User("testUser", "password", "New User", "testUserEmail@email.com");
-		User newTest = new User("testUser", "password", "New User", "testUserEmail@email.com");
-		User testThree = new User("", "", "", "");
-		assertTrue(
-				testUser.equals(newTest),
-				"Ensure the User equals method is returning true when comparing two identical User objects");
-		assertFalse(
-				testUser.equals(testThree),
-				"Ensure the User equals method is returning false when comparing two different User objects");
-	}
-
-	/**
-	 * A test case for the User constructor.
-	 * 
-	 * @see User#User(String, String, String, String)
-	 */
-	@Test
-	public void testUserToString() {
-		User testUser = new User("testUser", "password", "New User", "testUserEmail@email.com");
-		assertEquals(
-				"testUser,password,New User,testUserEmail@email.com", testUser.toString(),
-				"Ensure the User toString method is printing in the correct format");
+		assertTrue(testUser.equals(testUser2), "Ensure the equals method is working for equal users");
+		assertFalse(testUser.equals(testUser3), "Ensure the equals method is working for unequal users");
 	}
 }

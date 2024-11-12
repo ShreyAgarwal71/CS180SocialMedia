@@ -70,7 +70,7 @@ public class Post extends Model {
      * 
      * @return likes
      */
-    public int getlikes() {
+    public int getLikes() {
         return likes;
     }
 
@@ -124,7 +124,7 @@ public class Post extends Model {
      * 
      * @param likes
      */
-    public void setlikes(int likes) {
+    public void setLikes(int likes) {
         this.likes = likes;
     }
 

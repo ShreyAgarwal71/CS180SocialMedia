@@ -10,7 +10,7 @@ import java.util.UUID;
  * 
  * 
  * @author Shrey Agarwal and Mahit Mehta
- * @version 2024-11-03
+ * @version 11/12/2024
  * 
  */
 public class Comment extends Model {
@@ -85,7 +85,7 @@ public class Comment extends Model {
      * 
      * @return likes
      */
-    public int getlikes() {
+    public int getLikes() {
         return likes;
     }
 
@@ -157,7 +157,7 @@ public class Comment extends Model {
      * 
      * @param likes
      */
-    public void setlikes(int likes) {
+    public void setLikes(int likes) {
         this.likes = likes;
     }
 

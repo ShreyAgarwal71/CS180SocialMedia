@@ -15,8 +15,8 @@ import com.cs180.db.models.Post;
  * 
  * A class that provides test cases for the Post class.
  * 
- * @author Zayan and Mahit Mehta
- * @version 2024-11-03
+ * @author Zayan and Mahit Mehta and Shrey Agarwal
+ * @version 11/12/2024
  */
 public class PostTest {
 	/**
@@ -45,7 +45,7 @@ public class PostTest {
 		assertEquals(testPost.getImageURL(), "https://www.mahitm.com/cdn/v1/post/1234",
 				"Ensure the getter is working for imageURL");
 		assertEquals(testPost.getUserId(), userId, "Ensure the getter is working for userId");
-		assertEquals(testPost.getVotes(), 1234, "Ensure the getter is working for votes");
+		assertEquals(testPost.getLikes(), 1234, "Ensure the getter is working for votes");
 		assertEquals(testPost.getMessagePost(), "testMessage", "Ensure the getter is working for messagePost");
 	}
 
@@ -61,14 +61,14 @@ public class PostTest {
 		testPost.setDate("12-12-25");
 		testPost.setImageURL("https://www.mahitm.com/cdn/v1/post/1235");
 		testPost.setUserId(UUID.randomUUID());
-		testPost.setVotes(1235);
+		testPost.setLikes(1235);
 		testPost.setMessagePost("testMessage2");
 
 		assertEquals(testPost.getDate(), "12-12-25", "Ensure the setter is working for post date");
 		assertEquals(testPost.getImageURL(), "https://www.mahitm.com/cdn/v1/post/1235",
 				"Ensure the setter is working for imageURL");
 		assertFalse(testPost.getUserId().equals(userId), "Ensure the setter is working for userId");
-		assertEquals(testPost.getVotes(), 1235, "Ensure the setter is working for votes");
+		assertEquals(testPost.getLikes(), 1235, "Ensure the setter is working for votes");
 		assertEquals(testPost.getMessagePost(), "testMessage2", "Ensure the setter is working for messagePost");
 	}
 }

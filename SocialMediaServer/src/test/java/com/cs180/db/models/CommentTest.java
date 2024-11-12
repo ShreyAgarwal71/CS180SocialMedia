@@ -14,8 +14,8 @@ import org.junit.jupiter.api.Test;
  * 
  * A class that provides test cases for the Comment class.
  * 
- * @author Zayan and Mahit Mehta
- * @version 2024-11-03
+ * @author Zayan and Mahit Mehta and Shrey Agarwal
+ * @version 11/12/24
  */
 public class CommentTest {
 	/**
@@ -28,9 +28,7 @@ public class CommentTest {
 		UUID userId = UUID.randomUUID();
 		UUID postId = UUID.randomUUID();
 
-		Comment testComment = new Comment(userId, postId, "This is a comment", "11-3-24",
-				5678,
-				new Comment[2]);
+		Comment testComment = new Comment(userId, postId, "This is a comment", "11-3-24", 5678);
 
 		assertNotNull(testComment, "Ensure the constructor is actually instantiating variables");
 	}
@@ -44,16 +42,14 @@ public class CommentTest {
 		UUID postId = UUID.randomUUID();
 
 		Comment[] comments = new Comment[2];
-		Comment testComment = new Comment(userId, postId, "This is a comment", "11-3-24",
-				5678,
-				comments);
+		Comment testComment = new Comment(userId, postId, "This is a comment", "11-3-24", 0);
 
 		assertEquals(testComment.getMessageComment(), "This is a comment",
 				"Ensure the getter is working for message comment");
 		assertEquals(testComment.getDate(), "11-3-24", "Ensure the getter is working for comment date");
 		assertEquals(testComment.getPostId(), postId, "Ensure the getter is working for postId");
 		assertEquals(testComment.getUserId(), userId, "Ensure the getter is working for userId");
-		assertEquals(testComment.getVotes(), 5678, "Ensure the getter is working for votes");
+		assertEquals(testComment.getLikes(), 5678, "Ensure the getter is working for votes");
 		assertArrayEquals(testComment.getComments(), comments, "Ensure the getter is working for comments");
 	}
 
@@ -66,15 +62,13 @@ public class CommentTest {
 		UUID postId = UUID.randomUUID();
 
 		Comment[] comments = new Comment[2];
-		Comment testComment = new Comment(userId, postId, "This is a comment", "11-3-24",
-				5678,
-				comments);
+		Comment testComment = new Comment(userId, postId, "This is a comment", "11-3-24", 0);
 
 		testComment.setMessageComment("This is a new comment");
 		testComment.setDate("11-4-24");
 		testComment.setPostId(UUID.randomUUID());
 		testComment.setUserId(UUID.randomUUID());
-		testComment.setVotes(1234);
+		testComment.setLikes(1234);
 		testComment.setComments(new Comment[2]);
 
 		assertEquals(testComment.getMessageComment(), "This is a new comment",
@@ -82,7 +76,7 @@ public class CommentTest {
 		assertEquals(testComment.getDate(), "11-4-24", "Ensure the setter is working for comment date");
 		assertFalse(testComment.getPostId().equals(postId), "Ensure the setter is working for postId");
 		assertFalse(testComment.getUserId().equals(userId), "Ensure the setter is working for userId");
-		assertEquals(testComment.getVotes(), 1234, "Ensure the setter is working for votes");
+		assertEquals(testComment.getLikes(), 1234, "Ensure the setter is working for votes");
 		assertArrayEquals(testComment.getComments(), new Comment[2], "Ensure the setter is working for comments");
 	}
 }
