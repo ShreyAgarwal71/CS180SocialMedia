@@ -46,7 +46,7 @@ public class UserResolver extends BaseResolver {
     @Endpoint(endpoint = "/follow", method = Request.EMethod.POST, requestBodyType = FollowUserDTO.class)
     public void followUser(Request<FollowUserDTO> request) {
         UUID followUserId = UUID.fromString(request.getBody().getFollowUserId());
-        UUID userId = UUID.randomUUID();
+        UUID userId = UUID.getUserId();
 
         if (!UserService.follow(userId, followUserId)) {
             throw new InternalServerError("Failed to Add User to Follow List");
@@ -57,7 +57,7 @@ public class UserResolver extends BaseResolver {
     @Endpoint(endpoint = "/unfollow", method = Request.EMethod.POST, requestBodyType = UnfollowUserDTO.class)
     public void followUser(Request<UnFollowUserDTO> request) {
         UUID followUserId = UUID.fromString(request.getBody().getFollowUserId());
-        UUID userId = UUID.randomUUID();
+        UUID userId = UUID.getUserId();
 
         if (!UserService.unfollow(userId, followUserId)) {
             throw new InternalServerError("Failed to Add User to Follow List");
@@ -68,7 +68,7 @@ public class UserResolver extends BaseResolver {
     @Endpoint(endpoint = "/block", method = Request.EMethod.POST, requestBodyType = BlockUserDTO.class)
     public void followUser(Request<BlockUserDTO> request) {
         UUID blockedUserId = UUID.fromString(request.getBody().getBlockedUserId());
-        UUID userId = UUID.randomUUID();
+        UUID userId = UUID.getUserId();
 
         if (!UserService.block(userId, blockedUserId)) {
             throw new InternalServerError("Failed to Add User to Blocked List");
@@ -79,7 +79,7 @@ public class UserResolver extends BaseResolver {
     @Endpoint(endpoint = "/unblock", method = Request.EMethod.POST, requestBodyType = UnblockUserDTO.class)
     public void unblock(Request<UnblockUserDTO> request) {
         UUID blockedUserId = UUID.fromString(request.getBody().getBlockedUserId());
-        UUID userId = UUID.randomUUID();
+        UUID userId = UUID.getUserId();
 
         if (!UserService.unblock(userId, blockedUserId)) {
             throw new InternalServerError("Failed to Add User to Blocked List");
