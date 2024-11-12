@@ -15,6 +15,7 @@ public class User extends Model {
     private String username;
     private String password;
     private String displayName;
+    private String bio;
     private String email;
     private String[] followers;
     private String[] blockedUsers;
@@ -28,10 +29,11 @@ public class User extends Model {
      * @param displayName
      * @param email
      */
-    public User(String username, String password, String displayName, String email) {
+    public User(String username, String password, String displayName, String bio, String email) {
         this.username = username;
         this.password = password;
         this.displayName = displayName;
+        this.bio = bio;
         this.email = email;
         this.followers = new String[0];
         this.blockedUsers = new String[0];
@@ -63,6 +65,15 @@ public class User extends Model {
      */
     public String getDisplayName() {
         return displayName;
+    }
+
+    /**
+     * Getter for bio
+     * 
+     * @return bio
+     */
+    public String getBio() {
+        return bio;
     }
 
     /**
@@ -99,6 +110,15 @@ public class User extends Model {
      */
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
+    }
+
+    /**
+     * Setter for bio
+     * 
+     * @param bio
+     */
+    public void setBio(String bio) {
+        this.bio = bio;
     }
 
     /**

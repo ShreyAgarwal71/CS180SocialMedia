@@ -1,6 +1,5 @@
 package com.cs180.db.models;
 
-import java.io.Serializable;
 import java.util.UUID;
 
 /**
@@ -19,7 +18,8 @@ public class Comment extends Model {
     private UUID postId;
     private String messageComment;
     private String date;
-    private int votes;
+    private int likes;
+    private String[] likedBy;
     private Comment[] comments;
 
     /**
@@ -29,19 +29,19 @@ public class Comment extends Model {
      * @param userId
      * @param messageComment
      * @param date
-     * @param votes
+     * @param likes
      * @param comments
      */
-    public Comment(UUID userId, UUID postId, String messageComment, String date, int votes,
-            Comment[] comments) {
+    public Comment(UUID userId, UUID postId, String messageComment, String date, int likes) {
         super();
 
         this.postId = postId;
         this.userId = userId;
         this.messageComment = messageComment;
         this.date = date;
-        this.votes = votes;
-        this.comments = comments;
+        this.likes = likes;
+        this.likedBy = new String[0];
+        this.comments = new Comment[0];
     }
 
     /**
@@ -81,12 +81,12 @@ public class Comment extends Model {
     }
 
     /**
-     * Getter for votes
+     * Getter for likes
      * 
-     * @return votes
+     * @return likes
      */
-    public int getVotes() {
-        return votes;
+    public int getlikes() {
+        return likes;
     }
 
     /**
@@ -96,6 +96,15 @@ public class Comment extends Model {
      */
     public Comment[] getComments() {
         return comments;
+    }
+
+    /**
+     * Getter for likedBy
+     * 
+     * @return likedBy
+     */
+    public String[] getLikedBy() {
+        return likedBy;
     }
 
     /**
@@ -144,11 +153,54 @@ public class Comment extends Model {
     }
 
     /**
-     * Setter for votes
+     * Setter for likes
      * 
-     * @param votes
+     * @param likes
      */
-    public void setVotes(int votes) {
-        this.votes = votes;
+    public void setlikes(int likes) {
+        this.likes = likes;
     }
+
+    /**
+     * Setter for likedBy
+     * 
+     * @param likedBy
+     */
+    public void setLikedBy(String[] likedBy) {
+        this.likedBy = likedBy;
+    }
+
+    /**
+     * Add a like to the comment
+     * 
+     * @param userId
+     */
+    public void addLike(String userId) {
+        this.likes++;
+        String[] newLikedBy = new String[likedBy.length + 1];
+        for (int i = 0; i < likedBy.length; i++) {
+            newLikedBy[i] = likedBy[i];
+        }
+        newLikedBy[likedBy.length] = userId.toString();
+        likedBy = newLikedBy;
+    }
+
+    /**
+     * Remove a like from the comment
+     * 
+     * @param userId
+     */
+    public void removeLike(String userId) {
+        this.likes--;
+        String[] newLikedBy = new String[likedBy.length - 1];
+        int j = 0;
+        for (int i = 0; i < likedBy.length; i++) {
+            if (!likedBy[i].equals(userId.toString())) {
+                newLikedBy[j] = likedBy[i];
+                j++;
+            }
+        }
+        likedBy = newLikedBy;
+    }
+
 }

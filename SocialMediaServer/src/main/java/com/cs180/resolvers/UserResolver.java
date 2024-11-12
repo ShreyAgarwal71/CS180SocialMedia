@@ -19,6 +19,30 @@ public class UserResolver extends BaseResolver {
     }
 
     @AuthGuard()
+    @Endpoint(endpoint = "/create", method = Request.EMethod.POST, requestBodyType = FollowUserDTO.class)
+    public void createUser(Request<FollowUserDTO> request) {
+        String username = request.getBody().getUsername();
+        String password = request.getBody().getPassword();
+        String displayName = request.getBody().getDisplayName();
+        String bio = request.getBody().getBio();
+        String email = request.getBody().getEmail();
+
+        if (!UserService.createUser(username, password, displayName, bio, email)) {
+            throw new InternalServerError("Failed to Create User");
+        }
+    }
+
+    @AuthGuard()
+    @Endpoint(endpoint = "/delete", method = Request.EMethod.POST, requestBodyType = FollowUserDTO.class)
+    public void deleteUser(Request<FollowUserDTO> request) {
+        UUID userId = UUID.randomUUID();
+
+        if (!UserService.deleteUser(userId)) {
+            throw new InternalServerError("Failed to Delete User");
+        }
+    }
+
+    @AuthGuard()
     @Endpoint(endpoint = "/follow", method = Request.EMethod.POST, requestBodyType = FollowUserDTO.class)
     public void followUser(Request<FollowUserDTO> request) {
         UUID followUserId = UUID.fromString(request.getBody().getFollowUserId());

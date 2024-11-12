@@ -8,6 +8,15 @@ import com.cs180.db.models.User;
 public class UserService implements Service {
     private static final UserCollection users = db.getUserCollection();
 
+    public static boolean createUser(String username, String password, String displayName, String bio, String email) {
+        User user = new User(username, password, displayName, bio, email);
+        return users.addElement(user);
+    }
+
+    public static boolean deleteUser(UUID userId) {
+        return users.removeElement(userId);
+    }
+
     public static boolean follow(UUID userId, UUID followUserId) {
         User user = users.findOne(u -> u.getId().equals(userId));
         User userToFollow = users.findOne(u -> u.getId().equals(followUserId));
@@ -57,4 +66,27 @@ public class UserService implements Service {
 
         return users.updateElement(user.getId(), user);
     }
+
+    public static boolean updateProfileName(UUID userId, String name) {
+        User user = users.findOne(u -> u.getId().equals(userId));
+        if (user == null) {
+            return false;
+        }
+
+        user.setDisplayName(name);
+
+        return users.updateElement(user.getId(), user);
+    }
+
+    public static boolean updateProfileBio(UUID userId, String bio) {
+        User user = users.findOne(u -> u.getId().equals(userId));
+        if (user == null) {
+            return false;
+        }
+
+        user.setBio(bio);
+
+        return users.updateElement(user.getId(), user);
+    }
+
 }

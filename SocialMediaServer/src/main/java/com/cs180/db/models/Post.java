@@ -16,7 +16,8 @@ public class Post extends Model {
     private UUID userId;
     private String messagePost;
     private String date;
-    private int votes;
+    private int likes;
+    private String[] usersLiked;
     private String imageURL;
 
     /**
@@ -26,14 +27,15 @@ public class Post extends Model {
      * @param messagePost
      * @param date
      * @param postId
-     * @param votes
+     * @param likes
      */
-    public Post(UUID userId, String messagePost, String date, int votes, String imageURL) {
+    public Post(UUID userId, String messagePost, String date, int likes, String imageURL) {
         this.userId = userId;
         this.messagePost = messagePost;
         this.date = date;
-        this.votes = votes;
+        this.likes = likes;
         this.imageURL = imageURL;
+        this.usersLiked = new String[0];
     }
 
     /**
@@ -64,16 +66,30 @@ public class Post extends Model {
     }
 
     /**
-     * Getter for votes
+     * Getter for likes
      * 
-     * @return votes
+     * @return likes
      */
-    public int getVotes() {
-        return votes;
+    public int getlikes() {
+        return likes;
     }
 
+    /**
+     * getter for imageURL
+     * 
+     * @return imageURL
+     */
     public String getImageURL() {
         return imageURL;
+    }
+
+    /**
+     * Getter for usersLiked
+     * 
+     * @return usersLiked
+     */
+    public String[] getUsersLiked() {
+        return usersLiked;
     }
 
     /**
@@ -104,12 +120,50 @@ public class Post extends Model {
     }
 
     /**
-     * Setter for votes
+     * Setter for likes
      * 
-     * @param votes
+     * @param likes
      */
-    public void setVotes(int votes) {
-        this.votes = votes;
+    public void setlikes(int likes) {
+        this.likes = likes;
+    }
+
+    /**
+     * Setter for usersLiked
+     * 
+     * @param usersLiked
+     */
+    public void setUsersLiked(String[] usersLiked) {
+        this.usersLiked = usersLiked;
+    }
+
+    /**
+     * Add a like to the post
+     */
+    public void addLike(String userId) {
+        this.likes++;
+        String[] newUsersLiked = new String[usersLiked.length + 1];
+        for (int i = 0; i < usersLiked.length; i++) {
+            newUsersLiked[i] = usersLiked[i];
+        }
+        newUsersLiked[usersLiked.length] = userId;
+        usersLiked = newUsersLiked;
+    }
+
+    /**
+     * Remove a like from the post
+     */
+    public void removeLike(String userId) {
+        this.likes--;
+        String[] newUsersLiked = new String[usersLiked.length - 1];
+        int j = 0;
+        for (int i = 0; i < usersLiked.length; i++) {
+            if (!usersLiked[i].equals(userId)) {
+                newUsersLiked[j] = usersLiked[i];
+                j++;
+            }
+        }
+        usersLiked = newUsersLiked;
     }
 
     public void setImageURL(String imageURL) {
