@@ -12,6 +12,8 @@ public class Request<Body> {
         ACCESS_TOKEN
     }
 
+    private final UUID requestId;
+
     private final EMethod method;
     private final Body body;
     private final String endpoint;
@@ -20,6 +22,8 @@ public class Request<Body> {
     private UUID userId;
 
     public Request(EMethod method, String endpoint, Body body, HashMap<EHeader, String> headers) {
+        this.requestId = UUID.randomUUID();
+
         this.method = method;
         this.endpoint = endpoint;
         this.body = body;
@@ -30,6 +34,10 @@ public class Request<Body> {
 
     public HashMap<EHeader, String> getHeaders() {
         return headers;
+    }
+
+    public UUID getRequestId() {
+        return requestId;
     }
 
     public EMethod getMethod() {
