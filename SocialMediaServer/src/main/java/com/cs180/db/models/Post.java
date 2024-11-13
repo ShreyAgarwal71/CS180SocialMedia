@@ -169,4 +169,24 @@ public class Post extends Model {
     public void setImageURL(String imageURL) {
         this.imageURL = imageURL;
     }
+
+    /**
+     * equals method for Post
+     */
+    public boolean equals(Object obj) {
+        if (obj instanceof Post) {
+            Post post = (Post) obj;
+            return post.getUserId().equals(this.userId) && post.getMessagePost().equals(this.messagePost)
+                    && post.getDate().equals(this.date) && post.getLikes() == this.likes
+                    && post.getImageURL().equals(this.imageURL);
+        }
+        return false;
+    }
+
+    /**
+     * toString method for Post
+     */
+    public String toString() {
+        return "Post: " + messagePost + " by " + userId + " on " + date + " with " + likes + " likes";
+    }
 }

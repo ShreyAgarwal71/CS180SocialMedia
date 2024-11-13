@@ -203,4 +203,32 @@ public class Comment extends Model {
         likedBy = newLikedBy;
     }
 
+    /**
+     * Equals method for Comment
+     * 
+     * @param obj
+     * @return boolean
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Comment) {
+            Comment other = (Comment) obj;
+            return this.userId.equals(other.userId) && this.postId.equals(other.postId)
+                    && this.messageComment.equals(other.messageComment) && this.date.equals(other.date)
+                    && this.likes == other.likes;
+        }
+        return false;
+    }
+
+    /**
+     * toString method for Comment
+     * 
+     * @return String
+     */
+    @Override
+    public String toString() {
+        return "Commented by " + userId + " on post " + postId + " that said " + messageComment + " on " + date
+                + " with " + likes + " likes";
+    }
+
 }

@@ -81,7 +81,7 @@ public class DatabaseTest {
 				for (int j = 0; j < 1000; j++) {
 					db.getUserCollection()
 							.addUser(
-									new User("username_" + (j + threadNum * 1000), "pass", "displayName_ " + j,
+									new User("username_" + (j + threadNum * 1000), "pass", "displayName_ " + j, "bio",
 											"email_" + (j + threadNum * 1000)));
 				}
 			});
@@ -119,7 +119,7 @@ public class DatabaseTest {
 				for (int j = 0; j < 1000; j++) {
 					db.getUserCollection()
 							.addElement(
-									new User("username_" + (j + threadNum * 1000), "pass", "displayName_ " + j,
+									new User("username_" + (j + threadNum * 1000), "pass", "displayName_ " + j, "bio",
 											"email_" + (j + threadNum * 1000)));
 				}
 			});
@@ -178,7 +178,7 @@ public class DatabaseTest {
 	public void queryPostsByUsername() {
 		Database db = new Database();
 
-		User testUser = new User("testUsername", "testPassword", "testDisplayName", "testEmail");
+		User testUser = new User("testUsername", "testPassword", "testDisplayName", "bio", "testEmail");
 		db.getUserCollection().addElement(testUser);
 
 		Post testPostOne = new Post(testUser.getId(), "testMessageOne", "testDateOne", 0, "testImageURLOne");
@@ -269,10 +269,8 @@ public class DatabaseTest {
 		UUID userId = UUID.randomUUID();
 		UUID postId = UUID.randomUUID();
 
-		Comment testCommentOne = new Comment(userId, postId, "testCommentOne", "testDateOne", 0,
-				new Comment[0]);
-		Comment testCommentTwo = new Comment(userId, postId, "testCommentTwo", "testDateTwo", 1,
-				new Comment[0]);
+		Comment testCommentOne = new Comment(userId, postId, "testCommentOne", "testDateOne", 0);
+		Comment testCommentTwo = new Comment(userId, postId, "testCommentTwo", "testDateTwo", 1);
 
 		db.getCommentCollection().addElement(testCommentOne);
 		db.getCommentCollection().addElement(testCommentTwo);
@@ -292,8 +290,7 @@ public class DatabaseTest {
 		UUID userId = UUID.randomUUID();
 		UUID postId = UUID.randomUUID();
 
-		Comment testComment = new Comment(userId, postId, "testCommentOne", "testDateOne", 0,
-				new Comment[0]);
+		Comment testComment = new Comment(userId, postId, "testCommentOne", "testDateOne", 0);
 
 		db.getCommentCollection().addElement(testComment);
 		assertFalse(db.getCommentCollection().addElement(testComment),
@@ -314,8 +311,7 @@ public class DatabaseTest {
 		UUID userId = UUID.randomUUID();
 		UUID postId = UUID.randomUUID();
 
-		Comment testComment = new Comment(userId, postId, "testCommentOne", "testDateOne", 1,
-				new Comment[0]);
+		Comment testComment = new Comment(userId, postId, "testCommentOne", "testDateOne", 1);
 
 		db.getCommentCollection().addElement(testComment);
 
@@ -337,13 +333,12 @@ public class DatabaseTest {
 		UUID userId = UUID.randomUUID();
 		UUID postId = UUID.randomUUID();
 
-		Comment testComment = new Comment(userId, postId, "testCommentOne", "testDateOne", 1,
-				new Comment[0]);
+		Comment testComment = new Comment(userId, postId, "testCommentOne", "testDateOne", 1);
 
 		db.getCommentCollection().addElement(testComment);
 
 		testComment.setMessageComment("testCommentTwo");
-		testComment.setVotes(1);
+		testComment.setLikes(1);
 
 		db.getCommentCollection().updateElement(testComment.getId(), testComment);
 
@@ -351,7 +346,7 @@ public class DatabaseTest {
 		assertNotNull(comment, "Expected comment to be found");
 
 		assertEquals("testCommentTwo", comment.getMessageComment(), "Expected comment to be updated");
-		assertEquals(1, comment.getVotes(), "Expected comment votes to be updated");
+		assertEquals(1, comment.getLikes(), "Expected comment votes to be updated");
 	}
 
 	// =============== End -- CommentCollection Tests =================
@@ -367,7 +362,7 @@ public class DatabaseTest {
 		Database db = new Database();
 
 		String testUserName = "testUserName";
-		User testUser = new User(testUserName, "testPassword", "testDisplayName", "testEmail");
+		User testUser = new User(testUserName, "testPassword", "testDisplayName", "testbio", "testEmail");
 
 		db.getUserCollection().addElement(testUser);
 
@@ -385,17 +380,17 @@ public class DatabaseTest {
 		Database db = new Database();
 
 		String testUserName = "testUserName";
-		User testUser = new User(testUserName, "testPassword", "testDisplayName", "testEmail");
+		User testUser = new User(testUserName, "testPassword", "testDisplayName", "testbio", "testEmail");
 
 		db.getUserCollection().addUser(testUser);
 		assertFalse(db.getUserCollection().addUser(testUser), "Expected duplicate user to not be added");
 
 		// Same username, different email
-		User testUserTwo = new User(testUserName, "testPassword", "testDisplayName", "testEmailTwo");
+		User testUserTwo = new User(testUserName, "testPassword", "testDisplayName", "testbio", "testEmailTwo");
 		assertFalse(db.getUserCollection().addUser(testUserTwo), "Expected user with same username to not be added");
 
 		// Different username, same email
-		User testUserThree = new User("testUserNameTwo", "testPassword", "testDisplayName", "testEmail");
+		User testUserThree = new User("testUserNameTwo", "testPassword", "testDisplayName", "testbio", "testEmail");
 		assertFalse(db.getUserCollection().addUser(testUserThree), "Expected user with same email to not be added");
 
 		int count = db.getUserCollection().count();
@@ -411,7 +406,7 @@ public class DatabaseTest {
 		Database db = new Database();
 
 		String testUserName = "testUserName";
-		User testUser = new User(testUserName, "testPassword", "testDisplayName", "testEmail");
+		User testUser = new User(testUserName, "testPassword", "testDisplayName", "testbio", "testEmail");
 
 		db.getUserCollection().addElement(testUser);
 
@@ -432,7 +427,7 @@ public class DatabaseTest {
 		Database db = new Database();
 
 		String testUserName = "testUserName";
-		User testUser = new User(testUserName, "testPassword", "testDisplayName", "testEmail");
+		User testUser = new User(testUserName, "testPassword", "testDisplayName", "testbio", "testEmail");
 
 		db.getUserCollection().addElement(testUser);
 

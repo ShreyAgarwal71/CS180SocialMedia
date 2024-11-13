@@ -42,15 +42,17 @@ public class CommentTest {
 		UUID postId = UUID.randomUUID();
 
 		Comment[] comments = new Comment[2];
-		Comment testComment = new Comment(userId, postId, "This is a comment", "11-3-24", 0);
+		Comment testComment = new Comment(userId, postId, "This is a comment", "11-3-24", 300);
+		testComment.setComments(comments);
 
 		assertEquals(testComment.getMessageComment(), "This is a comment",
 				"Ensure the getter is working for message comment");
 		assertEquals(testComment.getDate(), "11-3-24", "Ensure the getter is working for comment date");
 		assertEquals(testComment.getPostId(), postId, "Ensure the getter is working for postId");
 		assertEquals(testComment.getUserId(), userId, "Ensure the getter is working for userId");
-		assertEquals(testComment.getLikes(), 5678, "Ensure the getter is working for votes");
+		assertEquals(testComment.getLikes(), 300, "Ensure the getter is working for votes");
 		assertArrayEquals(testComment.getComments(), comments, "Ensure the getter is working for comments");
+		assertNotNull(testComment.getLikedBy(), "Ensure the getter is working for likedBy");
 	}
 
 	/**
@@ -69,6 +71,7 @@ public class CommentTest {
 		testComment.setUserId(UUID.randomUUID());
 		testComment.setLikes(1234);
 		testComment.setComments(new Comment[2]);
+		testComment.setLikedBy(new String[2]);
 
 		assertEquals(testComment.getMessageComment(), "This is a new comment",
 				"Ensure the setter is working for comment");
@@ -77,5 +80,44 @@ public class CommentTest {
 		assertFalse(testComment.getUserId().equals(userId), "Ensure the setter is working for userId");
 		assertEquals(testComment.getLikes(), 1234, "Ensure the setter is working for votes");
 		assertArrayEquals(testComment.getComments(), new Comment[2], "Ensure the setter is working for comments");
+		assertArrayEquals(testComment.getLikedBy(), new String[2], "Ensure the setter is working for likedBy");
+
+	}
+
+	/**
+	 * A test case for the addLike and removeLike methods.
+	 */
+	@Test
+	public void testLikes() {
+		UUID userId = UUID.randomUUID();
+		UUID postId = UUID.randomUUID();
+
+		Comment testComment = new Comment(userId, postId, "This is a comment", "11-3-24", 0);
+
+		testComment.addLike("user1");
+		testComment.addLike("user2");
+		testComment.addLike("user3");
+
+		assertEquals(testComment.getLikes(), 3, "Ensure the addLike method is working");
+
+		testComment.removeLike("user2");
+
+		assertEquals(testComment.getLikes(), 2, "Ensure the removeLike method is working");
+	}
+
+	/**
+	 * A test case for the equals and toString methods.
+	 */
+	@Test
+	public void testEqualsAndToString() {
+		UUID userId = UUID.randomUUID();
+		UUID postId = UUID.randomUUID();
+
+		Comment testComment = new Comment(userId, postId, "This is a comment", "11-3-24", 0);
+		Comment testComment2 = new Comment(userId, postId, "This is a comment", "11-3-24", 0);
+
+		assertEquals(testComment, testComment2, "Ensure the equals method is working");
+
+		assertEquals(testComment.toString(), testComment2.toString(), "Ensure the toString method is working");
 	}
 }
