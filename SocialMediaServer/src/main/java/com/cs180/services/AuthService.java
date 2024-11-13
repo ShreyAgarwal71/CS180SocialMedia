@@ -37,6 +37,8 @@ public class AuthService implements Service {
             return null;
         }
 
+        System.out.println("Create email: " + email);
+        System.out.println("Create Password: " + hashedPassword);
         User user = new User(username, hashedPassword, displayName, bio, email);
         if (!users.addUser(user)) {
             return null;
@@ -57,6 +59,9 @@ public class AuthService implements Service {
         if (hashedPassword == null) {
             return null;
         }
+
+        System.out.println("Email: " + email);
+        System.out.println("Password: " + hashedPassword);
 
         return users.findOne(user -> {
             return user.getEmail().equals(email) &&

@@ -54,10 +54,10 @@ public class App implements Runnable {
         panel.setBackground(new java.awt.Color(11, 11, 11));
 
         JButton registerButton = new JButton("Register");
-        registerButton.addActionListener(_ -> {
+        registerButton.addActionListener(event -> {
             Connection
                     .<CreateUserDTO, AuthTokenDTO>post("/auth/register",
-                            new CreateUserDTO("mahitm", "1234", "Mahit Mehta", "I am a student", "mathit@gmail.com"))
+                            new CreateUserDTO("mahitm", "1234", "Mahit Mehta", "I am a student", "mahit.py@gmail.com"))
                     .thenAccept(response -> {
                         logger.debug("Body: " + response.getBody().getToken());
                     }).exceptionally(e -> {
@@ -67,7 +67,7 @@ public class App implements Runnable {
         });
 
         JButton loginButton = new javax.swing.JButton("Login");
-        loginButton.addActionListener(_ -> {
+        loginButton.addActionListener(event -> {
             Connection.<LoginDTO, AuthTokenDTO>post("/auth/login", new LoginDTO("mahit.py@gmail.com", "1234"))
                     .thenAccept(response -> {
                         logger.debug("Body: " + response.getBody().getToken());

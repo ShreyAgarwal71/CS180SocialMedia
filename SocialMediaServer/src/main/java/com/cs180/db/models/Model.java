@@ -14,7 +14,7 @@ public class Model implements Serializable {
         return id;
     }
 
-    public static UUID generateId() {
+    private static UUID generateId() {
         return UUID.randomUUID();
     }
 }

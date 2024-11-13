@@ -14,6 +14,8 @@ import org.apache.logging.log4j.Logger;
 
 import com.cs180.db.Database;
 import com.cs180.resolvers.AuthResolver;
+import com.cs180.resolvers.CommentResolver;
+import com.cs180.resolvers.PostResolver;
 import com.cs180.resolvers.ResolverTools;
 import com.cs180.resolvers.RootResolver;
 import com.cs180.resolvers.UserResolver;
@@ -45,7 +47,9 @@ public class AppServer {
         ResolverTools.init(
                 new RootResolver(),
                 new AuthResolver(),
-                new UserResolver());
+                new UserResolver(),
+                new CommentResolver(),
+                new PostResolver());
 
         Selector connSelector = Selector.open();
         ServerSocketChannel serverChannel = ServerSocketChannel.open();
