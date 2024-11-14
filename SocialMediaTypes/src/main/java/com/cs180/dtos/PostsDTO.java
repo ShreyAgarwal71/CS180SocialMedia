@@ -14,8 +14,4 @@ public class PostsDTO {
         return posts;
     }
 
-    public void setPosts(List<Post> posts) {
-        this.posts = posts;
-    }
-
 }

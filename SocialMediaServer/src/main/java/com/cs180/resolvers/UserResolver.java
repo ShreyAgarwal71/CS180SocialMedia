@@ -94,7 +94,7 @@ public class UserResolver implements BaseResolver {
 
     @AuthGuard()
     @Endpoint(endpoint = "/getPosts", method = Request.EMethod.GET, requestBodyType = UserPostsDTO.class, responseBodyType = PostsDTO.class)
-    public void getPosts(Request<UserPostsDTO> request) {
+    public PostsDTO getPosts(Request<UserPostsDTO> request) {
         UUID userId = request.getUserId();
 
         PostsDTO posts = new PostsDTO(UserService.getPosts(userId));
@@ -102,6 +102,7 @@ public class UserResolver implements BaseResolver {
             throw new InternalServerError("Failed to Add User to Blocked List");
         }
 
+        return posts;
     }
 
     @AuthGuard()
