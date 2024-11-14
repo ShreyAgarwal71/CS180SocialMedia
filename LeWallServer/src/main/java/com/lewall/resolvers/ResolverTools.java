@@ -9,20 +9,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
 import java.util.HashMap;
-import java.util.Set;
 import java.util.UUID;
-
-import javax.annotation.processing.AbstractProcessor;
-import javax.annotation.processing.Processor;
-import javax.annotation.processing.RoundEnvironment;
-import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.SourceVersion;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.TypeElement;
-import javax.tools.Diagnostic;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
@@ -34,7 +21,6 @@ import com.lewall.api.Request.EMethod;
 import com.lewall.api.Response.EStatus;
 import com.lewall.api.ServerException;
 import com.lewall.services.AuthService;
-import com.google.auto.service.AutoService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -137,27 +123,6 @@ public class ResolverTools {
         }
 
         return basePath + endpoint;
-    }
-
-    // TODO: Implement EndpointProcessor, currently validation is done at runtime
-    @SupportedAnnotationTypes("com.lewall.resolvers.ResolverTools.Endpoint")
-    @SupportedSourceVersion(SourceVersion.RELEASE_23)
-    @AutoService(Processor.class)
-    public class EndpointProcessor extends AbstractProcessor {
-        @Override
-        public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-            for (Element element : roundEnv.getElementsAnnotatedWith(Endpoint.class)) {
-                if (element.getKind() == ElementKind.METHOD) {
-                    ExecutableElement method = (ExecutableElement) element;
-                    if (method.getParameters().isEmpty()
-                            || !method.getParameters().get(0).asType().toString().equals(Request.class.getName())) {
-                        processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
-                                "Method annotated with @Endpoint must accept a Request parameter", method);
-                    }
-                }
-            }
-            return true;
-        }
     }
 
     public interface BaseResolver {

@@ -1,12 +1,16 @@
 package com.lewall.services;
 
 import java.util.UUID;
+import java.util.List;
 
+import com.lewall.db.collections.PostCollection;
 import com.lewall.db.collections.UserCollection;
+import com.lewall.db.models.Post;
 import com.lewall.db.models.User;
 
 public class UserService implements Service {
     private static final UserCollection users = db.getUserCollection();
+    private static final PostCollection posts = db.getPostCollection();
 
     public static boolean createUser(String username, String password, String displayName, String bio, String email) {
         User user = new User(username, password, displayName, bio, email);
@@ -24,10 +28,8 @@ public class UserService implements Service {
             return false;
         }
 
-        userToFollow.addFollower(user.getId().toString());
-        user.followUser(followUserId.toString());
-
-        return users.updateElement(user.getId(), user);
+        return userToFollow.addFollower(user.getId().toString()) && user.followUser(followUserId.toString())
+                && users.updateElement(user.getId(), user);
     }
 
     public static boolean unfollow(UUID userId, UUID unfollowUserId) {
@@ -37,10 +39,8 @@ public class UserService implements Service {
             return false;
         }
 
-        userToUnfollow.removeFollower(user.getId().toString());
-        user.unfollowUser(unfollowUserId.toString());
-
-        return users.updateElement(user.getId(), user);
+        return userToUnfollow.removeFollower(user.getId().toString()) && user.unfollowUser(unfollowUserId.toString())
+                && users.updateElement(user.getId(), user);
     }
 
     public static boolean block(UUID userId, UUID blockUserID) {
@@ -50,9 +50,7 @@ public class UserService implements Service {
             return false;
         }
 
-        user.addBlockedUser(blockUserID.toString());
-
-        return users.updateElement(user.getId(), user);
+        return user.addBlockedUser(blockUserID.toString()) && users.updateElement(user.getId(), user);
     }
 
     public static boolean unblock(UUID userId, UUID unblockUserID) {
@@ -62,9 +60,7 @@ public class UserService implements Service {
             return false;
         }
 
-        user.removeBlockedUser(unblockUserID.toString());
-
-        return users.updateElement(user.getId(), user);
+        return user.removeBlockedUser(unblockUserID.toString()) && users.updateElement(user.getId(), user);
     }
 
     public static boolean updateProfileName(UUID userId, String name) {
@@ -87,6 +83,16 @@ public class UserService implements Service {
         user.setBio(bio);
 
         return users.updateElement(user.getId(), user);
+    }
+
+    public static List<Post> getPosts(UUID userId) {
+        User user = users.findOne(u -> u.getId().equals(userId));
+        if (user == null) {
+            return null;
+        }
+        List<Post> posts1 = posts.findByUserId(userId);
+
+        return posts1;
     }
 
 }

@@ -7,16 +7,14 @@
 <!-- ====================================================================== -->
 <!-- ====================================================================== -->
 <!--                                                                        -->
-<!-- Effective POM for project 'com.lewall:LeWallTypes:jar:1.0-SNAPSHOT'   -->
+<!-- Effective POM for project 'com.lewall:LeWallTypes:jar:1.0-SNAPSHOT'    -->
 <!--                                                                        -->
 <!-- ====================================================================== -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.lewall</groupId>
-    <artifactId>SocialMedia</artifactId>
+    <artifactId>LeWall</artifactId>
     <version>1.0.0</version>
   </parent>
   <groupId>com.lewall</groupId>
@@ -264,8 +262,7 @@
               <goal>site</goal>
             </goals>
             <configuration>
-              <outputDirectory>
-                /Users/mahitmehta/Desktop/Career/Purdue/CS180/CS180SocialMedia/LeWallTypes/target/site</outputDirectory>
+              <outputDirectory>/Users/mahitmehta/Desktop/Career/Purdue/CS180/CS180SocialMedia/LeWallTypes/target/site</outputDirectory>
               <reportPlugins>
                 <reportPlugin>
                   <groupId>org.apache.maven.plugins</groupId>
@@ -281,8 +278,7 @@
               <goal>deploy</goal>
             </goals>
             <configuration>
-              <outputDirectory>
-                /Users/mahitmehta/Desktop/Career/Purdue/CS180/CS180SocialMedia/LeWallTypes/target/site</outputDirectory>
+              <outputDirectory>/Users/mahitmehta/Desktop/Career/Purdue/CS180/CS180SocialMedia/LeWallTypes/target/site</outputDirectory>
               <reportPlugins>
                 <reportPlugin>
                   <groupId>org.apache.maven.plugins</groupId>
@@ -293,8 +289,7 @@
           </execution>
         </executions>
         <configuration>
-          <outputDirectory>
-            /Users/mahitmehta/Desktop/Career/Purdue/CS180/CS180SocialMedia/LeWallTypes/target/site</outputDirectory>
+          <outputDirectory>/Users/mahitmehta/Desktop/Career/Purdue/CS180/CS180SocialMedia/LeWallTypes/target/site</outputDirectory>
           <reportPlugins>
             <reportPlugin>
               <groupId>org.apache.maven.plugins</groupId>

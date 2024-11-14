@@ -15,7 +15,10 @@ import com.lewall.dtos.DeleteUserDTO;
 import com.lewall.dtos.BlockUserDTO;
 import com.lewall.dtos.UnblockUserDTO;
 import com.lewall.dtos.FollowUserDTO;
+import com.lewall.dtos.PostsDTO;
+import com.lewall.dtos.ProfileNameDTO;
 import com.lewall.dtos.UnfollowUserDTO;
+import com.lewall.dtos.UserPostsDTO;
 
 @Resolver(basePath = "/user")
 public class UserResolver implements BaseResolver {
@@ -88,19 +91,26 @@ public class UserResolver implements BaseResolver {
         }
     }
 
-    /*
-     * @AuthGuard()
-     * 
-     * @Endpoint(endpoint = "/changedisplayname", method = Request.EMethod.POST,
-     * requestBodyType = nameUserDTO.class)
-     * public void changeName(Request<nameUserDTO> request) {
-     * UUID userId = UUID.randomUUID();
-     * //String newName = request.getBody().getFollowUserId();
-     * 
-     * if (!UserService.changeDisplayName(userId, newName)) {
-     * throw new InternalServerError("Failed to Change Display Name");
-     * }
-     * }
-     */
+    @AuthGuard()
+    @Endpoint(endpoint = "/getPosts", method = Request.EMethod.GET, requestBodyType = UserPostsDTO.class, responseBodyType = PostsDTO.class)
+    public void getPosts(Request<UserPostsDTO> request) {
+        UUID userId = request.getUserId();
+
+        PostsDTO posts = new PostsDTO(UserService.getPosts(userId));
+        if (UserService.getPosts(userId) == null) {
+            throw new InternalServerError("Failed to Add User to Blocked List");
+        }
+    }
+
+    @AuthGuard()
+    @Endpoint(endpoint = "/updateProfileName", method = Request.EMethod.POST, requestBodyType = ProfileNameDTO.class)
+    public void updateProfileName(Request<ProfileNameDTO> request) {
+        UUID userId = request.getUserId();
+        String name = request.getBody().getName();
+
+        if (!UserService.updateProfileName(userId, name)) {
+            throw new InternalServerError("Failed to Update Profile Name");
+        }
+    }
 
 }
