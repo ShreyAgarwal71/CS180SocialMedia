@@ -5,16 +5,16 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.Arrays;
-
+import java.util.HashSet;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 /**
  * UserTest
- * 
+ *
  * A class that provides test cases for the User class.
- * 
- * @author Zayan and Mahit Mehta and Shrey Agarwal
+ *
+ * @author Shrey Agarwal and Mahit Mehta
  * @version 11/12/2024
  */
 public class UserTest {
@@ -26,7 +26,6 @@ public class UserTest {
 	@Test
 	public void testUserConstructor() {
 		User testUser = new User("username", "password", "displayName", "bio", "email");
-
 		assertNotNull(testUser, "Ensure the constructor is actually instantiating variables");
 	}
 
@@ -36,25 +35,31 @@ public class UserTest {
 	@Test
 	public void testGetters() {
 		User testUser = new User("username", "password", "displayName", "bio", "email");
-		testUser.setFollowers(new String[] { "follower1", "follower2" });
-		testUser.setBlockedUsers(new String[] { "blockedUser1", "blockedUser2" });
-		testUser.setFollowing(new String[] { "following1", "following2" });
 
-		assertEquals(testUser.getUsername(), "username", "Ensure the getter is working for username");
-		assertEquals(testUser.getPassword(), "password", "Ensure the getter is working for password");
-		assertEquals(testUser.getDisplayName(), "displayName", "Ensure the getter is working for display name");
-		assertEquals(testUser.getBio(), "bio", "Ensure the getter is working for bio");
-		assertEquals(testUser.getEmail(), "email", "Ensure the getter is working for email");
-		assertEquals(Arrays.toString(testUser.getFollowers()),
-				Arrays.toString(new String[] { "follower1", "follower2" }),
-				"Ensure the getter is working for followers");
-		assertEquals(Arrays.toString(testUser.getBlockedUsers()),
-				Arrays.toString(new String[] { "blockedUser1", "blockedUser2" }),
-				"Ensure the getter is working for blocked users");
-		assertEquals(Arrays.toString(testUser.getFollowing()),
-				Arrays.toString(new String[] { "following1", "following2" }),
-				"Ensure the getter is working for following");
+		Set<String> followers = new HashSet<>();
+		followers.add("follower1");
+		followers.add("follower2");
 
+		Set<String> blockedUsers = new HashSet<>();
+		blockedUsers.add("blockedUser1");
+		blockedUsers.add("blockedUser2");
+
+		Set<String> following = new HashSet<>();
+		following.add("following1");
+		following.add("following2");
+
+		testUser.setFollowers(followers);
+		testUser.setBlockedUsers(blockedUsers);
+		testUser.setFollowing(following);
+
+		assertEquals("username", testUser.getUsername(), "Ensure the getter is working for username");
+		assertEquals("password", testUser.getPassword(), "Ensure the getter is working for password");
+		assertEquals("displayName", testUser.getDisplayName(), "Ensure the getter is working for display name");
+		assertEquals("bio", testUser.getBio(), "Ensure the getter is working for bio");
+		assertEquals("email", testUser.getEmail(), "Ensure the getter is working for email");
+		assertEquals(followers, testUser.getFollowers(), "Ensure the getter is working for followers");
+		assertEquals(blockedUsers, testUser.getBlockedUsers(), "Ensure the getter is working for blocked users");
+		assertEquals(following, testUser.getFollowing(), "Ensure the getter is working for following");
 	}
 
 	/**
@@ -63,23 +68,22 @@ public class UserTest {
 	@Test
 	public void testSetters() {
 		User testUser = new User("username", "password", "displayName", "bio", "email");
-
 		testUser.setUsername("newUsername");
 		testUser.setPassword("newPassword");
 		testUser.setDisplayName("newDisplayName");
 		testUser.setBio("newBio");
 		testUser.setEmail("newEmail");
 
-		assertEquals(testUser.getUsername(), "newUsername", "Ensure the setter is working for username");
-		assertEquals(testUser.getPassword(), "newPassword", "Ensure the setter is working for password");
-		assertEquals(testUser.getDisplayName(), "newDisplayName", "Ensure the setter is working for display name");
-		assertEquals(testUser.getBio(), "newBio", "Ensure the setter is working for bio");
-		assertEquals(testUser.getEmail(), "newEmail", "Ensure the setter is working for email");
+		assertEquals("newUsername", testUser.getUsername(), "Ensure the setter is working for username");
+		assertEquals("newPassword", testUser.getPassword(), "Ensure the setter is working for password");
+		assertEquals("newDisplayName", testUser.getDisplayName(), "Ensure the setter is working for display name");
+		assertEquals("newBio", testUser.getBio(), "Ensure the setter is working for bio");
+		assertEquals("newEmail", testUser.getEmail(), "Ensure the setter is working for email");
 	}
 
 	/**
-	 * A test case for the User addFollower, removeFollower, followUser and
-	 * unfollowUser method.
+	 * A test case for the User addFollower, removeFollower, followUser, and
+	 * unfollowUser methods.
 	 */
 	@Test
 	public void testFollowers() {
@@ -87,29 +91,27 @@ public class UserTest {
 
 		testUser.addFollower("follower1");
 		testUser.addFollower("follower2");
-
-		assertEquals(Arrays.toString(testUser.getFollowers()),
-				Arrays.toString(new String[] { "follower1", "follower2" }),
-				"Ensure the addFollower method is working");
+		Set<String> expectedFollowers = new HashSet<>();
+		expectedFollowers.add("follower1");
+		expectedFollowers.add("follower2");
+		assertEquals(expectedFollowers, testUser.getFollowers(), "Ensure the addFollower method is working");
 
 		testUser.removeFollower("follower1");
-
-		assertEquals(Arrays.toString(testUser.getFollowers()), Arrays.toString(new String[] { "follower2" }),
-				"Ensure the removeFollower method is working");
+		expectedFollowers.remove("follower1");
+		assertEquals(expectedFollowers, testUser.getFollowers(), "Ensure the removeFollower method is working");
 
 		testUser.followUser("following1");
-
-		assertEquals(Arrays.toString(testUser.getFollowing()), Arrays.toString(new String[] { "following1" }),
-				"Ensure the followUser method is working");
+		Set<String> expectedFollowing = new HashSet<>();
+		expectedFollowing.add("following1");
+		assertEquals(expectedFollowing, testUser.getFollowing(), "Ensure the followUser method is working");
 
 		testUser.unfollowUser("following1");
-
-		assertEquals(Arrays.toString(testUser.getFollowing()), Arrays.toString(new String[] {}),
-				"Ensure the unfollowUser method is working");
+		expectedFollowing.remove("following1");
+		assertEquals(expectedFollowing, testUser.getFollowing(), "Ensure the unfollowUser method is working");
 	}
 
 	/**
-	 * A test case for the User addBlockedUser and removeBlockedUser method.
+	 * A test case for the User addBlockedUser and removeBlockedUser methods.
 	 */
 	@Test
 	public void testBlockedUsers() {
@@ -117,14 +119,14 @@ public class UserTest {
 
 		testUser.addBlockedUser("blockedUser1");
 		testUser.addBlockedUser("blockedUser2");
-
-		assertEquals(Arrays.toString(testUser.getBlockedUsers()),
-				Arrays.toString(new String[] { "blockedUser1", "blockedUser2" }),
-				"Ensure the addBlockedUser method is working");
+		Set<String> expectedBlockedUsers = new HashSet<>();
+		expectedBlockedUsers.add("blockedUser1");
+		expectedBlockedUsers.add("blockedUser2");
+		assertEquals(expectedBlockedUsers, testUser.getBlockedUsers(), "Ensure the addBlockedUser method is working");
 
 		testUser.removeBlockedUser("blockedUser1");
-
-		assertEquals(Arrays.toString(testUser.getBlockedUsers()), Arrays.toString(new String[] { "blockedUser2" }),
+		expectedBlockedUsers.remove("blockedUser1");
+		assertEquals(expectedBlockedUsers, testUser.getBlockedUsers(),
 				"Ensure the removeBlockedUser method is working");
 	}
 
@@ -139,9 +141,7 @@ public class UserTest {
 
 		assertTrue(testUser.equals(testUser2), "Ensure the equals method is working");
 		assertFalse(testUser.equals(testUser3), "Ensure the equals method is working");
-
-		assertEquals(testUser.toString(),
-				"username,password,displayName,email",
+		assertEquals("username,password,displayName,email", testUser.toString(),
 				"Ensure the toString method is working");
 	}
 }

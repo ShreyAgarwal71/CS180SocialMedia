@@ -4,12 +4,16 @@ import java.util.UUID;
 
 import com.cs180.api.InternalServerError;
 import com.cs180.api.Request;
+import com.cs180.db.models.Post;
 import com.cs180.resolvers.ResolverTools.AuthGuard;
 import com.cs180.resolvers.ResolverTools.BaseResolver;
 import com.cs180.resolvers.ResolverTools.Endpoint;
 import com.cs180.resolvers.ResolverTools.Resolver;
 import com.cs180.services.UserService;
 
+import com.cs180.dtos.PostsDTO;
+import com.cs180.dtos.ProfileNameDTO;
+import com.cs180.dtos.UserPostsDTO;
 import com.cs180.dtos.CreateUserDTO;
 import com.cs180.dtos.DeleteUserDTO;
 import com.cs180.dtos.BlockUserDTO;
@@ -88,19 +92,27 @@ public class UserResolver implements BaseResolver {
         }
     }
 
-    /*
-     * @AuthGuard()
-     * 
-     * @Endpoint(endpoint = "/changedisplayname", method = Request.EMethod.POST,
-     * requestBodyType = nameUserDTO.class)
-     * public void changeName(Request<nameUserDTO> request) {
-     * UUID userId = UUID.randomUUID();
-     * //String newName = request.getBody().getFollowUserId();
-     * 
-     * if (!UserService.changeDisplayName(userId, newName)) {
-     * throw new InternalServerError("Failed to Change Display Name");
-     * }
-     * }
-     */
+    @AuthGuard()
+    @Endpoint(endpoint = "/getPosts", method = Request.EMethod.GET, requestBodyType = UserPostsDTO.class, responseBodyType = PostsDTO.class)
+    public void getPosts(Request<UserPostsDTO> request) {
+        UUID userId = request.getUserId();
+
+        PostsDTO posts = new PostsDTO(UserService.getPosts(userId));
+        if (UserService.getPosts(userId) == null) {
+            throw new InternalServerError("Failed to Add User to Blocked List");
+        }
+
+    }
+
+    @AuthGuard()
+    @Endpoint(endpoint = "/updateProfileName", method = Request.EMethod.POST, requestBodyType = ProfileNameDTO.class)
+    public void updateProfileName(Request<ProfileNameDTO> request) {
+        UUID userId = request.getUserId();
+        String name = request.getBody().getName();
+
+        if (!UserService.updateProfileName(userId, name)) {
+            throw new InternalServerError("Failed to Update Profile Name");
+        }
+    }
 
 }

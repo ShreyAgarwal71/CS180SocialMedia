@@ -1,5 +1,8 @@
 package com.cs180.db.models;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * User
  * 
@@ -17,9 +20,9 @@ public class User extends Model {
     private String displayName;
     private String bio;
     private String email;
-    private String[] followers;
-    private String[] blockedUsers;
-    private String[] following;
+    private Set<String> followers;
+    private Set<String> blockedUsers;
+    private Set<String> following;
 
     /**
      * Constructor for User
@@ -35,9 +38,9 @@ public class User extends Model {
         this.displayName = displayName;
         this.bio = bio;
         this.email = email;
-        this.followers = new String[0];
-        this.blockedUsers = new String[0];
-        this.following = new String[0];
+        this.followers = new HashSet<>();
+        this.blockedUsers = new HashSet<>();
+        this.following = new HashSet<>();
     }
 
     /**
@@ -135,7 +138,7 @@ public class User extends Model {
      * 
      * @return followers
      */
-    public String[] getFollowers() {
+    public Set<String> getFollowers() {
         return followers;
     }
 
@@ -144,7 +147,7 @@ public class User extends Model {
      * 
      * @param followers
      */
-    public void setFollowers(String[] followers) {
+    public void setFollowers(Set<String> followers) {
         this.followers = followers;
     }
 
@@ -153,7 +156,7 @@ public class User extends Model {
      * 
      * @return blockedUsers
      */
-    public String[] getBlockedUsers() {
+    public Set<String> getBlockedUsers() {
         return blockedUsers;
     }
 
@@ -162,7 +165,7 @@ public class User extends Model {
      * 
      * @param blockedUsers
      */
-    public void setBlockedUsers(String[] blockedUsers) {
+    public void setBlockedUsers(Set<String> blockedUsers) {
         this.blockedUsers = blockedUsers;
     }
 
@@ -171,7 +174,7 @@ public class User extends Model {
      * 
      * @return following
      */
-    public String[] getFollowing() {
+    public Set<String> getFollowing() {
         return following;
     }
 
@@ -180,7 +183,7 @@ public class User extends Model {
      * 
      * @param following
      */
-    public void setFollowing(String[] following) {
+    public void setFollowing(Set<String> following) {
         this.following = following;
     }
 
@@ -188,45 +191,42 @@ public class User extends Model {
      * Follow a user
      * 
      * @param follower
+     * @return boolean
      */
-    public void followUser(String follower) {
-        String[] newFollowing = new String[following.length + 1];
-        for (int i = 0; i < following.length; i++) {
-            newFollowing[i] = following[i];
+    public boolean followUser(String follower) {
+        if (following.contains(follower)) {
+            return false;
         }
-        newFollowing[following.length] = follower;
-        following = newFollowing;
+        following.add(follower);
+        return true;
     }
 
     /**
      * Unfollow a user
      * 
      * @param followingUser
+     * @return boolean
      */
-    public void unfollowUser(String followingUser) {
-        String[] newFollowing = new String[following.length - 1];
-        int j = 0;
-        for (int i = 0; i < following.length; i++) {
-            if (!following[i].equals(followingUser)) {
-                newFollowing[j] = following[i];
-                j++;
-            }
+    public boolean unfollowUser(String followingUser) {
+        if (!following.contains(followingUser)) {
+            return false;
         }
-        following = newFollowing;
+        following.remove(followingUser);
+        return true;
     }
 
     /**
      * Add a follower to the user
      * 
      * @param follower
+     * @return boolean
      */
-    public void addFollower(String follower) {
-        String[] newFollowers = new String[followers.length + 1];
-        for (int i = 0; i < followers.length; i++) {
-            newFollowers[i] = followers[i];
+    public boolean addFollower(String follower) {
+        if (followers.contains(follower)) {
+            return false;
         }
-        newFollowers[followers.length] = follower;
-        followers = newFollowers;
+        followers.add(follower);
+        return true;
     }
 
     /**
@@ -234,16 +234,12 @@ public class User extends Model {
      * 
      * @param follower
      */
-    public void removeFollower(String follower) {
-        String[] newFollowers = new String[followers.length - 1];
-        int j = 0;
-        for (int i = 0; i < followers.length; i++) {
-            if (!followers[i].equals(follower)) {
-                newFollowers[j] = followers[i];
-                j++;
-            }
+    public boolean removeFollower(String follower) {
+        if (!followers.contains(follower)) {
+            return false;
         }
-        followers = newFollowers;
+        followers.remove(follower);
+        return true;
     }
 
     /**
@@ -251,13 +247,12 @@ public class User extends Model {
      * 
      * @param blockedUser
      */
-    public void addBlockedUser(String blockedUser) {
-        String[] newBlockedUsers = new String[blockedUsers.length + 1];
-        for (int i = 0; i < blockedUsers.length; i++) {
-            newBlockedUsers[i] = blockedUsers[i];
+    public boolean addBlockedUser(String blockedUser) {
+        if (blockedUsers.contains(blockedUser)) {
+            return false;
         }
-        newBlockedUsers[blockedUsers.length] = blockedUser;
-        blockedUsers = newBlockedUsers;
+        blockedUsers.add(blockedUser);
+        return true;
     }
 
     /**
@@ -265,16 +260,12 @@ public class User extends Model {
      * 
      * @param blockedUser
      */
-    public void removeBlockedUser(String blockedUser) {
-        String[] newBlockedUsers = new String[blockedUsers.length - 1];
-        int j = 0;
-        for (int i = 0; i < blockedUsers.length; i++) {
-            if (!blockedUsers[i].equals(blockedUser)) {
-                newBlockedUsers[j] = blockedUsers[i];
-                j++;
-            }
+    public boolean removeBlockedUser(String blockedUser) {
+        if (!blockedUsers.contains(blockedUser)) {
+            return false;
         }
-        blockedUsers = newBlockedUsers;
+        blockedUsers.remove(blockedUser);
+        return true;
     }
 
     /**
