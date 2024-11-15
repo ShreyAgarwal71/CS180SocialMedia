@@ -9,11 +9,12 @@ import com.lewall.resolvers.ResolverTools.BaseResolver;
 import com.lewall.resolvers.ResolverTools.Endpoint;
 import com.lewall.resolvers.ResolverTools.Resolver;
 import com.lewall.services.PostService;
-
 import com.lewall.dtos.CreatePostDTO;
 import com.lewall.dtos.DeletePostDTO;
 import com.lewall.dtos.UnlikePostDTO;
 import com.lewall.dtos.LikePostDTO;
+import com.lewall.dtos.CommentsDTO;
+import com.lewall.dtos.PostCommentsDTO;
 
 @Resolver(basePath = "/post")
 public class PostResolver implements BaseResolver {
@@ -45,7 +46,7 @@ public class PostResolver implements BaseResolver {
     @Endpoint(endpoint = "/like", method = Request.EMethod.POST, requestBodyType = LikePostDTO.class)
     public void likePost(Request<LikePostDTO> request) {
         UUID postId = request.getBody().getPostId();
-        UUID userId = UUID.randomUUID();
+        UUID userId = request.getUserId();
 
         if (!PostService.likePost(userId, postId)) {
             throw new InternalServerError("Failed to Like Post");
@@ -56,10 +57,23 @@ public class PostResolver implements BaseResolver {
     @Endpoint(endpoint = "/unlike", method = Request.EMethod.POST, requestBodyType = UnlikePostDTO.class)
     public void unlikePost(Request<UnlikePostDTO> request) {
         UUID postId = request.getBody().getPostId();
-        UUID userId = UUID.randomUUID();
+        UUID userId = request.getUserId();
 
         if (!PostService.unlikePost(userId, postId)) {
             throw new InternalServerError("Failed to Unlike Post");
         }
+    }
+
+    @AuthGuard()
+    @Endpoint(endpoint = "/getComments", method = Request.EMethod.GET, requestBodyType = PostCommentsDTO.class, responseBodyType = CommentsDTO.class)
+    public CommentsDTO getPosts(Request<PostCommentsDTO> request) {
+        UUID postId = request.getBody().getPostId();
+
+        CommentsDTO comments = new CommentsDTO(PostService.getComments(postId));
+        if (PostService.getComments(postId) == null) {
+            throw new InternalServerError("Failed to get Comments");
+        }
+
+        return comments;
     }
 }

@@ -1,6 +1,7 @@
 package com.lewall.services;
 
 import java.util.UUID;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.lewall.db.collections.PostCollection;
@@ -91,6 +92,23 @@ public class UserService implements Service {
             return null;
         }
         List<Post> posts1 = posts.findByUserId(userId);
+
+        return posts1;
+    }
+
+    public static List<List<Post>> getFollowingPosts(UUID userId) {
+        User user = users.findOne(u -> u.getId().equals(userId));
+        if (user == null) {
+            return null;
+        }
+        List<UUID> following = new ArrayList<>();
+        List<List<Post>> posts1 = new ArrayList<>();
+        for (String followerId : user.getFollowing()) {
+            following.add(UUID.fromString(followerId));
+        }
+        for (UUID follower : following) {
+            posts1.add(posts.findByUserId(follower));
+        }
 
         return posts1;
     }
