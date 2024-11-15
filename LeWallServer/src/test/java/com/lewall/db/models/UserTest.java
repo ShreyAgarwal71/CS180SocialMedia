@@ -9,8 +9,6 @@ import java.util.HashSet;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 
-import com.lewall.db.models.User;
-
 /**
  * UserTest
  *
