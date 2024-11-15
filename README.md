@@ -1,6 +1,6 @@
-# CS180SocialMedia
+# LeWall
 
-CS180SocialMedia is a Java-based backend simulation for a simple social media platform. The platform is a digital wall-writing app, essentially users will be able to join classes they are currently enrolled in and view posts that previous students have made. Plase 1 contains for basic user management, posting, and commenting, with data persistence through the use of a file storing system. This project is built with Maven and includes Java classes for users, posts and comments.
+LeWall is a modern, Java-based, social media application. The platform is a digital wall-writing app, essentially users will be able to join classes they are currently enrolled in and view posts that previous students have made. Plase 1 contains for basic user management, posting, and commenting, with data persistence through the use of a file storing system. This project is built with Maven and includes Java classes for users, posts and comments.
 
 **Class**: CS 180
 **Group Names**:
@@ -45,7 +45,7 @@ The main components of the project include:
 ### Directory Layout
 
 ```plaintext
-CS180SocialMedia/
+LeWall/
 ├── README.md
 ├── .gitignore
 ├── eclipse-formatter.xml
@@ -53,7 +53,7 @@ CS180SocialMedia/
 │   ├── pom.xml                 # Maven configuration file
 │   └── src/
 │       ├── main/
-│       │   └── java/com/cs180/
+│       │   └── java/com/lewall/
 │       │       ├── App.java    # Main application entry point
 │       │       ├── db/         # Database and collection classes
 │       │           ├── User.java
@@ -66,7 +66,7 @@ CS180SocialMedia/
 │       │           ├── CommentCollection.java
 │       │           └── Database.java
 │       └── test/
-│           └── java/com/cs180/db
+│           └── java/com/lewall/db
 │               ├── CommentTest.java
 │               ├── DataBaseTest.java
 │               ├── PostTest.java
@@ -93,8 +93,8 @@ CS180SocialMedia/
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/ShreyAgarwal71/CS180SocialMedia.git
-   cd CS180SocialMedia/LeWallServer
+   git clone https://github.com/ShreyAgarwal71/LeWall.git
+   cd LeWall
    ```
 2. Build the project with Maven:
    ```bash
@@ -184,11 +184,7 @@ CS180SocialMedia/
 
 ## Usage
 
-1. Run the application:
-   ```bash
-   cd LeWallServer
-   mvn exec:java -Dexec.mainClass="com.lewall.App"
-   ```
+1. View application specific `README.md`
 2. Interact with the program to create, view, and manage users, posts, and comments. The application saves data to text files for persistence.
 
 ---
@@ -210,10 +206,9 @@ These files are read and updated through the `Database.java` class, ensuring dat
 To run unit tests for this project:
 
 ```bash
-cd LeWallServer
 mvn test
 ```
 
-Tests are located in the `AppTest.java` file within the `test` directory, this covers the main functionalities of user and post management.
+Tests are located in the `test` directory, this covers the main functionalities of user and post management.
 
 ---
