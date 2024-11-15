@@ -35,7 +35,7 @@ public class ClientSideStorage {
 	 * @return exitCode
 	 */
 	@SuppressWarnings("unchecked")
-	public boolean readFromDisk() {
+	public static boolean readFromDisk() {
 		String path = getOSDataBasePath().toString();
 		
 		File f = new File(path);
@@ -88,12 +88,31 @@ public class ClientSideStorage {
 
 		return true;
 	}
-	
+
 	/*
-	 * Fetches the requested data from the storage HasMap in JSON format
+	 * Adds the inputted key-value pair to the storage HasMap
 	 *
 	 * @param key
-	 * @return val
+	 * @param val
+	 */
+	public static void add(String key, String val) {
+		storage.put(key, val);
+	}
+
+	/*
+	 * Fethes the requested data from the storage HashMap
+	 *
+	 * @return value
+	 */
+	public static String get(String key) {
+		return storage.get(key);
+	}
+	
+	/*
+	 * Fetches the requested data from the storage HashMap in JSON format
+	 *
+	 * @param key
+	 * @return value
 	 */
 	public static String asJson(String key) {
 		String val = storage.get(key);
