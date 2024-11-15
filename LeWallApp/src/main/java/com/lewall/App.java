@@ -3,6 +3,7 @@ package com.lewall;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.lewall.api.ClientSideStorage;
 import com.lewall.api.Connection;
 import com.lewall.dtos.AuthTokenDTO;
 import com.lewall.dtos.LoginDTO;
@@ -122,6 +123,7 @@ public class App extends Application {
                     email, password))
                     .thenAccept(response -> {
                         logger.debug("Body: " + response.getBody().getToken());
+						ClientSideStorage.add("Token", response.getBody().getToken());
                     }).exceptionally(ex -> {
                         logger.error("Error Message: " + ex.getMessage());
                         return null;
@@ -169,6 +171,8 @@ public class App extends Application {
         if (!Connection.connect()) {
             logger.error("Initial Server Connection Failed");
         }
+
+		ClientSideStorage.readFromDisk();
 
         stage.setScene(new Scene(createContent(), 650, 450, Color.BLACK));
         stage.setTitle("LeWall");
