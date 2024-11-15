@@ -1,5 +1,7 @@
 package com.lewall;
 
+import java.util.Stack;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -21,7 +23,10 @@ import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -148,18 +153,38 @@ public class App extends Application {
         registerButton.getStyleClass().add("text-button");
         VBox.setMargin(registerButton, new Insets(5, 0, 20, 0));
 
-        loginForm.getChildren().add(title);
-        loginForm.getChildren().add(subTitle);
-        loginForm.getChildren().add(emailField);
-        loginForm.getChildren().add(passwordField);
-        loginForm.getChildren().add(loginButton);
-        loginForm.getChildren().add(signWithGoogleButton);
-        loginForm.getChildren().add(registerButton);
+        loginForm.getChildren().addAll(
+                title,
+                subTitle,
+                emailField,
+                passwordField,
+                loginButton,
+                signWithGoogleButton,
+                registerButton);
 
         stackPane.getChildren().add(loginForm);
 
         flowPane.getChildren().add(stackPane);
-        root.getChildren().add(flowPane);
+
+        StackPane mainStack = new StackPane();
+        mainStack.getChildren().add(flowPane);
+
+        HBox bottomRow = new HBox(10);
+        Text bottomLabel = new Text("© 2024 Purdue LeWall");
+        Text bottomLabelVersion = new Text("Build [ v0.0.1 ]");
+        bottomLabel.getStyleClass().add("bottom-label");
+        bottomLabelVersion.getStyleClass().add("bottom-label");
+
+        Region spacer = new Region();
+        bottomRow.setMaxHeight(15);
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+        bottomRow.getChildren().addAll(bottomLabelVersion, spacer, bottomLabel);
+        bottomRow.setPadding(new Insets(0, 10, 10, 10));
+
+        StackPane.setAlignment(bottomRow, Pos.BOTTOM_CENTER);
+        mainStack.getChildren().add(bottomRow);
+
+        root.getChildren().add(mainStack);
 
         return root;
     }

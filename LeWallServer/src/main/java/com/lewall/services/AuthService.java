@@ -58,9 +58,6 @@ public class AuthService implements Service {
             return null;
         }
 
-        System.out.println("Email: " + email);
-        System.out.println("Password: " + hashedPassword);
-
         return users.findOne(user -> {
             return user.getEmail().equals(email) &&
                     user.getPassword().equals(hashedPassword);

@@ -5,8 +5,8 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.lewall</groupId>
   <artifactId>LeWall</artifactId>
-  <version>1.0.0</version>
   <packaging>pom</packaging>
+  <version>0.0.1</version>
   <modules>
     <module>LeWallTypes</module>
     <module>LeWallApp</module>
@@ -17,7 +17,7 @@
       <dependency>
         <groupId>com.lewall</groupId>
         <artifactId>LeWallTypes</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>${parent.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.logging.log4j</groupId>
