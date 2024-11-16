@@ -37,7 +37,6 @@ public class Login extends Pane {
         super();
 
         this.getStyleClass().add("root");
-        this.getStylesheets().add("css/global.css");
 
         FlowPane flowPane = new FlowPane(10, 10);
         flowPane.setPrefSize(650, 450);
