@@ -2,10 +2,10 @@ package com.lewall.dtos;
 
 import java.util.UUID;
 
-public class UserPostsDTO {
+public class UserFollowingPostsDTO {
     private UUID userId;
 
-    public UserPostsDTO(UUID userId) {
+    public UserFollowingPostsDTO(UUID userId) {
         this.userId = userId;
     }
 

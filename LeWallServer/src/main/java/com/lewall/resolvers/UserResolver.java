@@ -19,6 +19,8 @@ import com.lewall.dtos.PostsDTO;
 import com.lewall.dtos.ProfileNameDTO;
 import com.lewall.dtos.UnfollowUserDTO;
 import com.lewall.dtos.UserPostsDTO;
+import com.lewall.dtos.UserFollowingPostsDTO;
+import com.lewall.dtos.FollowingPostsDTO;
 
 @Resolver(basePath = "/user")
 public class UserResolver implements BaseResolver {
@@ -98,7 +100,7 @@ public class UserResolver implements BaseResolver {
 
         PostsDTO posts = new PostsDTO(UserService.getPosts(userId));
         if (UserService.getPosts(userId) == null) {
-            throw new InternalServerError("Failed to Add User to Blocked List");
+            throw new InternalServerError("Failed to get Posts");
         }
 
         return posts;
@@ -113,6 +115,19 @@ public class UserResolver implements BaseResolver {
         if (!UserService.updateProfileName(userId, name)) {
             throw new InternalServerError("Failed to Update Profile Name");
         }
+    }
+
+    @AuthGuard()
+    @Endpoint(endpoint = "/getFollowerPosts", method = Request.EMethod.GET, requestBodyType = UserFollowingPostsDTO.class, responseBodyType = FollowingPostsDTO.class)
+    public FollowingPostsDTO getFollowerPosts(Request<UserFollowingPostsDTO> request) {
+        UUID userId = request.getUserId();
+
+        FollowingPostsDTO posts = new FollowingPostsDTO(UserService.getFollowingPosts(userId));
+        if (UserService.getFollowingPosts(userId) == null) {
+            throw new InternalServerError("Failed to get Following Posts");
+        }
+
+        return posts;
     }
 
 }

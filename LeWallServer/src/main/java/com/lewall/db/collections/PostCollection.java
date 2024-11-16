@@ -13,7 +13,7 @@ import com.lewall.db.models.Post;
  * methods to find posts by their postID.
  * 
  * @author Ates Isfendiyaroglu and Mahit Mehta
- * @version 2024-11-03
+ * @version 11/15/2024
  * 
  */
 public class PostCollection extends BaseCollection<Post> {
