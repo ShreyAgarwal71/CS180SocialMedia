@@ -3,7 +3,7 @@ package com.lewall;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.lewall.api.ClientSideStorage;
+import com.lewall.api.LocalStorage;
 import com.lewall.api.Connection;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -19,16 +19,22 @@ public class App extends Application {
             logger.error("Initial Server Connection Failed");
         }
 
-        ClientSideStorage.readFromDisk();
+        LocalStorage.init();
 
         Navigator.setStage(stage);
-        Navigator.navigateTo(Navigator.EPage.LOGIN);
 
         stage.setTitle("LeWall");
-        stage.setWidth(640);
+        stage.setWidth(650);
         stage.setHeight(480);
         stage.setResizable(false);
 
+        if (LocalStorage.get("token") != null) {
+            Navigator.navigateTo(Navigator.EPage.HOME);
+            stage.show();
+            return;
+        }
+
+        Navigator.navigateTo(Navigator.EPage.LOGIN);
         stage.show();
     }
 

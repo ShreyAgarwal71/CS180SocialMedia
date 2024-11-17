@@ -6,10 +6,10 @@ import org.apache.logging.log4j.Logger;
 import com.lewall.Navigator;
 import com.lewall.api.Connection;
 import com.lewall.api.LocalStorage;
-import com.lewall.dtos.AuthTokenDTO;
-import com.lewall.dtos.LoginDTO;
 import com.lewall.components.Footer;
 import com.lewall.components.PasswordField;
+import com.lewall.dtos.AuthTokenDTO;
+import com.lewall.dtos.CreateUserDTO;
 
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -31,10 +31,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
-public class Login extends Pane {
-    private static final Logger logger = LogManager.getLogger(Login.class);
+public class Register extends Pane {
+    private static final Logger logger = LogManager.getLogger(Register.class);
 
-    public Login() {
+    public Register() {
         this.getStyleClass().add("primary-bg");
 
         FlowPane flowPane = new FlowPane(10, 10);
@@ -46,12 +46,12 @@ public class Login extends Pane {
         StackPane stackPane = new StackPane();
         stackPane.setAlignment(Pos.CENTER);
 
-        Rectangle loginBox = new Rectangle(235, 300);
-        loginBox.setFill(new Color(0, 0, 0, 0));
-        loginBox.setStroke(Color.rgb(255, 255, 255, 0.05));
-        loginBox.setStrokeWidth(1);
-        loginBox.setArcWidth(10);
-        loginBox.setArcHeight(10);
+        Rectangle registerBox = new Rectangle(235, 300);
+        registerBox.setFill(new Color(0, 0, 0, 0));
+        registerBox.setStroke(Color.rgb(255, 255, 255, 0.05));
+        registerBox.setStrokeWidth(1);
+        registerBox.setArcWidth(10);
+        registerBox.setArcHeight(10);
 
         DropShadow shadow = new DropShadow();
         shadow.setColor(Color.BLACK);
@@ -69,13 +69,13 @@ public class Login extends Pane {
 
         Group group = new Group();
         group.setEffect(shadow);
-        group.getChildren().add(loginBox);
+        group.getChildren().add(registerBox);
 
         stackPane.getChildren().add(blurLayer);
         stackPane.getChildren().add(group);
 
-        VBox loginForm = new VBox(10);
-        loginForm.setAlignment(Pos.CENTER);
+        VBox registerForm = new VBox(10);
+        registerForm.setAlignment(Pos.CENTER);
 
         Text title = new Text("LeWall");
         title.getStyleClass().add("brand-title");
@@ -92,38 +92,37 @@ public class Login extends Pane {
 
         PasswordField passwordField = new PasswordField();
 
-        Button loginButton = new Button("Login");
-        loginButton.setOnAction(event -> {
+        Button registerButton = new Button("Register");
+        registerButton.setOnAction(event -> {
             String email = emailField.getText();
             String password = passwordField.getPassword();
+            String username = email;
 
-            System.out.println("Email: " + email);
-            System.out.println("Password: " + password);
-
-            Connection.<LoginDTO, AuthTokenDTO>post("/auth/login", new LoginDTO(
-                    email, password))
+            Connection.<CreateUserDTO, AuthTokenDTO>post("/auth/register", new CreateUserDTO(
+                    username, password, "", "", email))
                     .thenAccept(response -> {
                         String token = response.getBody().getToken();
                         if (token != null) {
-                            logger.debug("Login Successful");
+                            logger.debug("Registration Successful");
                             LocalStorage.set("token", token);
+
                             Platform.runLater(() -> {
                                 Navigator.navigateTo(Navigator.EPage.HOME);
                             });
                         } else {
-                            logger.debug("Login Failed");
+                            logger.debug("Registration Failed");
                         }
                     }).exceptionally(ex -> {
                         logger.error("Error Message: " + ex.getMessage());
                         return null;
                     });
         });
-        loginButton.setMinSize(200, 30);
-        loginButton.getStyleClass().add("brand-button");
+        registerButton.setMinSize(200, 30);
+        registerButton.getStyleClass().add("brand-button");
 
-        Button signWithGoogleButton = new Button("Sign in with Google");
+        Button signWithGoogleButton = new Button("Sign up with Google");
         signWithGoogleButton.setOnAction(e -> {
-            logger.debug("Sign in with Google");
+            logger.debug("Sign up with Google");
         });
         signWithGoogleButton.setMinSize(200, 30);
         signWithGoogleButton.getStyleClass().add("brand-button");
@@ -135,23 +134,23 @@ public class Login extends Pane {
         googleImageView.setFitHeight(16);
         signWithGoogleButton.setGraphic(googleImageView);
 
-        Button registerButton = new Button("Create Account");
-        registerButton.setOnAction(e -> {
-            Navigator.navigateTo(Navigator.EPage.REGISTER);
+        Button loginButton = new Button("Already Have an Account? Login");
+        loginButton.setOnAction(e -> {
+            Navigator.navigateTo(Navigator.EPage.LOGIN);
         });
-        registerButton.getStyleClass().add("brand-text-button");
-        VBox.setMargin(registerButton, new Insets(5, 0, 20, 0));
+        loginButton.getStyleClass().add("brand-text-button");
+        VBox.setMargin(loginButton, new Insets(5, 0, 20, 0));
 
-        loginForm.getChildren().addAll(
+        registerForm.getChildren().addAll(
                 title,
                 subTitle,
                 emailField,
                 passwordField,
-                loginButton,
+                registerButton,
                 signWithGoogleButton,
-                registerButton);
+                loginButton);
 
-        stackPane.getChildren().add(loginForm);
+        stackPane.getChildren().add(registerForm);
 
         flowPane.getChildren().add(stackPane);
 

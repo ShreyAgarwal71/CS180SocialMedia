@@ -63,11 +63,11 @@ public class Database {
 		if (HAS_BEEN_INITIALIZED.compareAndSet(false, true)) {
 			Runtime.getRuntime().addShutdownHook((new Thread() {
 				public void run() {
-					logger.info("Database: Saving data");
+					logger.info("Saving data");
 					Database.uc.save();
 					Database.pc.save();
 					Database.cc.save();
-					logger.info("Database: Saved Data");
+					logger.info("Saved Data");
 				}
 			}));
 		}

@@ -5,7 +5,9 @@ import java.util.Stack;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.lewall.pages.Home;
 import com.lewall.pages.Login;
+import com.lewall.pages.Register;
 
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
@@ -19,7 +21,7 @@ public class Navigator {
     private static Stage stage;
 
     public enum EPage {
-        LOGIN, SIGNUP
+        LOGIN, REGISTER, HOME
     }
 
     public static void setStage(Stage stage) {
@@ -56,6 +58,14 @@ public class Navigator {
                 scene = new Scene(new Login());
                 history.push(scene);
             }
+            case REGISTER -> {
+                scene = new Scene(new Register());
+                history.push(scene);
+            }
+            case HOME -> {
+                scene = new Scene(new Home());
+                history.push(scene);
+            }
             default -> {
                 logger.error("Unimplemented Page: " + page);
                 return false;
@@ -70,6 +80,7 @@ public class Navigator {
     }
 
     private static void updateScene() {
-        stage.setScene(history.peek());
+        final Scene scene = history.peek();
+        stage.setScene(scene);
     }
 }

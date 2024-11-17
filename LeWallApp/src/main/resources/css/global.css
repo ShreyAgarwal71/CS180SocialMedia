@@ -1,19 +1,19 @@
-.root {
+.primary-bg {
     -fx-background-color: radial-gradient(center 50% 50%, radius 75%, rgb(25, 18, 38), black);
 }
 
-.login-title {
+.brand-title {
     -fx-font-size: 24;
     -fx-text-fill: white;
     -fx-font-weight: bold;
 }
 
-.login-subtitle {
+.brand-subtitle {
     -fx-font-size: 12;
     -fx-fill: rgba(255, 255, 255, 0.5);
 }
 
-.login-button {
+.brand-button {
     -fx-background-color: black;
     -fx-background-radius: 5;
     -fx-background-insets: 0;
@@ -27,7 +27,16 @@
     transition: all 175ms ease;
 }
 
-.login-field {
+.brand-button:hover {
+    -fx-background-color: rgba(0, 0, 0, 0.5);
+    -fx-border-color: rgba(255, 255, 255, 0.05);
+    -fx-cursor: hand;
+
+    transition: all 175ms ease;
+}
+
+
+.brand-field {
     -fx-background-color: rgba(255, 255, 255, 0.05);
     -fx-background-radius: 5;
     -fx-background-insets: 0;
@@ -37,23 +46,22 @@
     -fx-border-radius: 5;
     -fx-border-width: 1;
     -fx-border-color: rgba(255, 255, 255, 0.1);
-
-    transition: all 175ms ease;
 }
 
-.text-button {
+.brand-text-button {
     -fx-background-color: transparent;
     -fx-border-color: transparent;    
     -fx-text-fill: rgba(255, 255, 255, 0.5);             
     -fx-font-size: 12px;             
     -fx-padding: 0;                 
     -fx-effect: null;                   
+
+    transition: all 175ms ease;
 }
 
-.login-button:hover {
-    -fx-background-color: rgba(0, 0, 0, 0.5);
-    -fx-border-color: rgba(255, 255, 255, 0.05);
-    transition: all 175ms ease;
+.brand-text-button:hover {
+    -fx-text-fill: rgba(255, 255, 255, 0.3);      
+    -fx-cursor: hand;
 }
 
 .bottom-label {
