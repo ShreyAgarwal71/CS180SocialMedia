@@ -29,7 +29,7 @@ public class AuthResolverTest {
 	 */
 	@BeforeAll
 	public static void createTestDB() {
-		Database.init("tmp_users.txt", "tmp_posts.txt", "tmp_comments.txt");
+		Database.init("temp_users.txt", "temp_posts.txt", "temp_comments.txt");
 	}
 
 	/**
@@ -37,7 +37,7 @@ public class AuthResolverTest {
 	 */
 	@AfterAll
 	public static void cleanupTestDB() {
-		Database.cleanup();
+		Database.cleanup("temp_users.txt", "temp_posts.txt", "temp_comments.txt");
 	}
 
 	/**

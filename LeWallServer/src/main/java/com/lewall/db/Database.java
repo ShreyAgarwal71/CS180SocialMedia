@@ -1,5 +1,7 @@
 package com.lewall.db;
 
+import java.io.File;
+import java.nio.file.Path;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -60,8 +62,18 @@ public class Database {
 	/**
 	 * This should be called after tests to cleanup the test database
 	 */
-	public static void cleanup() {
+	public static void cleanup(String userFile, String postFile, String commentFile) {
 		synchronized (MAIN_LOCK) {
+			Path dataPath = Collection.getOSDataBasePath();
+
+			File uf = new File(dataPath.resolve(userFile).toString());
+			File pf = new File(dataPath.resolve(postFile).toString());
+			File cf = new File(dataPath.resolve(commentFile).toString());
+
+			uf.delete();
+			pf.delete();
+			cf.delete();
+
 			if (uc != null) {
 				uc = new UserCollection(Collection.getCollectionAbsolutePath(Database.userFileName), SCHEDULER);
 				pc = new PostCollection(Collection.getCollectionAbsolutePath(Database.postFileName), SCHEDULER);

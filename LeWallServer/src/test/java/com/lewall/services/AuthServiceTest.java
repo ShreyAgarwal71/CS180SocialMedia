@@ -25,7 +25,7 @@ public class AuthServiceTest {
 	 */
 	@BeforeAll
 	public static void createTestDB() {
-		Database.init("tmp_users.txt", "tmp_posts.txt", "tmp_comments.txt");
+		Database.init("temp-users.txt", "temp-posts.txt", "temp-comments.txt");
 	}
 
 	/**
@@ -33,7 +33,7 @@ public class AuthServiceTest {
 	 */
 	@AfterAll
 	public static void cleanupTestDB() {
-		Database.cleanup();
+		Database.cleanup("temp-users.txt", "temp-posts.txt", "temp-comments.txt");
 	}
 
 	/**
@@ -85,7 +85,7 @@ public class AuthServiceTest {
 	 */
 	@Test
 	public void validateAccessTokenTest() {
-		String token = AuthService.generateAccessToken("messi");
+		String token = AuthService.generateAccessToken(UUID.randomUUID().toString());
 		assertNotNull(AuthService.validateAccessToken(token));
 	}
 }
