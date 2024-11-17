@@ -70,9 +70,9 @@ public class Database {
 			File pf = new File(dataPath.resolve(postFile).toString());
 			File cf = new File(dataPath.resolve(commentFile).toString());
 
-			uf.delete();
-			pf.delete();
-			cf.delete();
+			uf.deleteOnExit();
+			pf.deleteOnExit();
+			cf.deleteOnExit();
 
 			if (uc != null) {
 				uc = new UserCollection(Collection.getCollectionAbsolutePath(Database.userFileName), SCHEDULER);

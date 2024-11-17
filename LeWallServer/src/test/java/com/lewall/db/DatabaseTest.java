@@ -60,9 +60,9 @@ public class DatabaseTest {
 		File postFile = new File(dataPath.resolve(tempPostFile).toString());
 		File commentFile = new File(dataPath.resolve(tempCommentFile).toString());
 
-		userFile.delete();
-		postFile.delete();
-		commentFile.delete();
+		userFile.deleteOnExit();
+		postFile.deleteOnExit();
+		commentFile.deleteOnExit();
 	}
 
 	// ======================= Multithreading Tests =======================
