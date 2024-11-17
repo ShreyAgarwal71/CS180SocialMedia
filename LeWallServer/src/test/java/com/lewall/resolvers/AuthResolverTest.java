@@ -1,10 +1,14 @@
 package com.lewall.resolvers;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import com.lewall.api.Request;
 import com.lewall.api.Request.EMethod;
+import com.lewall.db.Database;
 import com.lewall.dtos.AuthTokenDTO;
 import com.lewall.dtos.CreateUserDTO;
 import com.lewall.dtos.LoginDTO;
@@ -16,6 +20,22 @@ import com.lewall.dtos.LoginDTO;
  * @version 16 November 2024
  */
 public class AuthResolverTest {
+
+	/**
+	 * Initializes a temporary database to not mess up the production database files
+	 */
+	@BeforeAll
+	public static void createTestDB() {
+		Database.init("temp-users.txt", "temp-posts.txt", "temp-comments.txt");
+	}
+
+	/**
+	 * Cleans up the test database 
+	 */
+	@AfterAll
+	public static void cleanupTestDB() {
+		Database.cleanup();
+	}
 
 	/**
 	 * Tests the signUp() method
