@@ -1,12 +1,15 @@
 package com.lewall.resolvers;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 import com.lewall.api.Request;
+import com.lewall.api.BadRequest;
 import com.lewall.api.Request.EMethod;
 import com.lewall.db.Database;
 import com.lewall.dtos.AuthTokenDTO;
@@ -42,6 +45,7 @@ public class AuthResolverTest {
 	 */
 	@Test
 	public void signUpTest() {
+		// Valid user
 		CreateUserDTO user = new CreateUserDTO(
 												"Alice", "patsoburger19", 
 												"alice_2", "bio", "foo@bar.com");
@@ -52,6 +56,32 @@ public class AuthResolverTest {
 		AuthTokenDTO token = ar.signUp(req);
 
 		assertNotNull(token, "Ensure this is a token");
+
+		// Null fields
+		Executable e = new Executable() {
+			@Override
+			public void execute() throws Throwable {
+				ar.signUp(new Request<CreateUserDTO>(
+													EMethod.POST, "/auth/register", 
+													new CreateUserDTO(null, null, 
+																		null, null, null),
+													 null));
+			}
+		};
+		assertThrows(BadRequest.class, e);
+
+		// Empty fields
+		e = new Executable() {
+			@Override
+			public void execute() throws Throwable {
+				ar.signUp(new Request<CreateUserDTO>(
+													EMethod.POST, "/auth/register", 
+													new CreateUserDTO("", "", 
+																		"", "", ""),
+													null));
+			}
+		};
+		assertThrows(BadRequest.class, e);
 	}
 
 	/**
@@ -59,6 +89,7 @@ public class AuthResolverTest {
 	 */
 	@Test
 	public void signInWithEmailAndPasswordTest() {
+		// Valid sign in
 		LoginDTO body = new LoginDTO("foo@bar.com", "recep-ivedik-31");
 
 		Request<LoginDTO> req = new Request<LoginDTO>(
@@ -67,5 +98,26 @@ public class AuthResolverTest {
 		AuthResolver ar = new AuthResolver();
 		AuthTokenDTO token = ar.signInWithEmailAndPassword(req);
 		assertNotNull(token, "Ensure this is a token");
+		
+		// Null fields
+		Executable e = new Executable() {
+			@Override
+			public void execute() throws Throwable {
+				ar.signInWithEmailAndPassword(new Request<LoginDTO>(
+													EMethod.POST, "/auth/login", 
+													new LoginDTO(null, null), null));
+			}
+		};
+		assertThrows(BadRequest.class, e);
+		// Empty fields
+		e = new Executable() {
+			@Override
+			public void execute() throws Throwable {
+				ar.signInWithEmailAndPassword(new Request<LoginDTO>(
+													EMethod.POST, "/auth/login", 
+													new LoginDTO("", ""), null));
+			}
+		};
+		assertThrows(BadRequest.class, e);
 	}
 }
