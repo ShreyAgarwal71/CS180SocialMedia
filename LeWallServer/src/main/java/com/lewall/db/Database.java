@@ -19,7 +19,7 @@ import com.lewall.db.helpers.Collection;
  * class.
  *
  * @author Ates Isfendiyaroglu and Mahit Mehta
- * @version 2024-11-03
+ * @version 2024-11-17
  */
 public class Database {
 	private static final Logger logger = LogManager.getLogger(Database.class);
@@ -49,6 +49,20 @@ public class Database {
 	public static void init() {
 		synchronized (MAIN_LOCK) {
 			if (uc == null) {
+				uc = new UserCollection(Collection.getCollectionAbsolutePath(Database.userFileName), SCHEDULER);
+				pc = new PostCollection(Collection.getCollectionAbsolutePath(Database.postFileName), SCHEDULER);
+				cc = new CommentCollection(Collection.getCollectionAbsolutePath(Database.commentFileName),
+						SCHEDULER);
+			}
+		}
+	}
+
+	/**
+	 * This should be called after tests to cleanup the test database
+	 */
+	public static void cleanup() {
+		synchronized (MAIN_LOCK) {
+			if (uc != null) {
 				uc = new UserCollection(Collection.getCollectionAbsolutePath(Database.userFileName), SCHEDULER);
 				pc = new PostCollection(Collection.getCollectionAbsolutePath(Database.postFileName), SCHEDULER);
 				cc = new CommentCollection(Collection.getCollectionAbsolutePath(Database.commentFileName),

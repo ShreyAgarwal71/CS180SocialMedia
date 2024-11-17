@@ -3,6 +3,10 @@ package com.lewall.services;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.UUID;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import com.lewall.db.Database;
@@ -15,6 +19,23 @@ import com.lewall.db.models.User;
  * @version 16 November 2024
  */
 public class AuthServiceTest {
+
+	/**
+	 * Initializes a temporary database to not mess up the production database files
+	 */
+	@BeforeAll
+	public static void createTestDB() {
+		Database.init("temp-users.txt", "temp-posts.txt", "temp-comments.txt");
+	}
+
+	/**
+	 * Cleans up the test database 
+	 */
+	@AfterAll
+	public static void cleanupTestDB() {
+		Database.cleanup();
+	}
+
 	/**
 	 * Tests the signUp() method
 	 */
@@ -56,7 +77,7 @@ public class AuthServiceTest {
 	 */
 	@Test
 	public void generateAccessTokenTest() {
-		assertNotNull(AuthService.generateAccessToken("messi"));
+		assertNotNull(AuthService.generateAccessToken(UUID.randomUUID().toString()));
 	}
 
 	/**
