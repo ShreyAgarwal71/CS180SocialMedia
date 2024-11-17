@@ -15,7 +15,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import com.lewall.db.Database;
 import com.lewall.db.helpers.Collection;
 import com.lewall.db.models.Comment;
 import com.lewall.db.models.Post;
@@ -182,8 +181,10 @@ public class DatabaseTest {
 		User testUser = new User("testUsername", "testPassword", "testDisplayName", "bio", "testEmail");
 		db.getUserCollection().addElement(testUser);
 
-		Post testPostOne = new Post(testUser.getId(), "testMessageOne", "testDateOne", 0, "testImageURLOne");
-		Post testPostTwo = new Post(testUser.getId(), "testMessageTwo", "testDateTwo", 0, "testImageURLTwo");
+		Post testPostOne = new Post(testUser.getId(), "testMessageOne", "testDateOne", 0, "testImageURLOne",
+				UUID.randomUUID());
+		Post testPostTwo = new Post(testUser.getId(), "testMessageTwo", "testDateTwo", 0, "testImageURLTwo",
+				UUID.randomUUID());
 
 		db.getPostCollection().addElement(testPostOne);
 		db.getPostCollection().addElement(testPostTwo);
@@ -203,7 +204,7 @@ public class DatabaseTest {
 
 		UUID userId = UUID.randomUUID();
 
-		Post testPostOne = new Post(userId, "testMessageOne", "testDateOne", 0, "testImageURLOne");
+		Post testPostOne = new Post(userId, "testMessageOne", "testDateOne", 0, "testImageURLOne", UUID.randomUUID());
 
 		db.getPostCollection().addElement(testPostOne);
 		assertFalse(db.getPostCollection().addElement(testPostOne), "Expected duplicate post to not be added");
@@ -222,7 +223,8 @@ public class DatabaseTest {
 		Database db = new Database();
 
 		UUID userId = UUID.randomUUID();
-		Post testPostOne = new Post(userId, "testMessageOne", "testDateOne", 0, "testImageURLOne");
+		Post testPostOne = new Post(userId, "testMessageOne", "testDateOne", 0, "testImageURLOne",
+				UUID.randomUUID());
 
 		db.getPostCollection().addElement(testPostOne);
 
@@ -243,7 +245,7 @@ public class DatabaseTest {
 		Database db = new Database();
 
 		UUID userId = UUID.randomUUID();
-		Post testPostOne = new Post(userId, "testMessageOne", "testDateOne", 0, "testImageURLOne");
+		Post testPostOne = new Post(userId, "testMessageOne", "testDateOne", 0, "testImageURLOne", UUID.randomUUID());
 
 		db.getPostCollection().addElement(testPostOne);
 

@@ -82,7 +82,7 @@ public interface Collection<T extends Model> {
 	 * Returns true if successfull, false if unsuccessfull.
 	 *
 	 * @param fileName,
-	 *            data
+	 *                  data
 	 * @return exitCode -> true = success, false = failure
 	 */
 	default boolean persistToDisk(String fileName, T[] data) {
@@ -138,7 +138,7 @@ public interface Collection<T extends Model> {
 	 * Updates the Object with the given id in the Collection's ArrayList.
 	 *
 	 * @param target,
-	 *            newObj
+	 *                newObj
 	 * @return exitCode
 	 */
 	abstract boolean updateElement(UUID id, T newObj);

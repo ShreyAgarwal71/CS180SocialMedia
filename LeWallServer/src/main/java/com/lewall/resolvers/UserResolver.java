@@ -21,6 +21,8 @@ import com.lewall.dtos.UnfollowUserDTO;
 import com.lewall.dtos.UserPostsDTO;
 import com.lewall.dtos.UserFollowingPostsDTO;
 import com.lewall.dtos.FollowingPostsDTO;
+import com.lewall.dtos.ClassPostsDTO;
+import com.lewall.dtos.ClassFeedDTO;
 
 @Resolver(basePath = "/user")
 public class UserResolver implements BaseResolver {
@@ -121,10 +123,25 @@ public class UserResolver implements BaseResolver {
     @Endpoint(endpoint = "/getFollowerPosts", method = Request.EMethod.GET, requestBodyType = UserFollowingPostsDTO.class, responseBodyType = FollowingPostsDTO.class)
     public FollowingPostsDTO getFollowerPosts(Request<UserFollowingPostsDTO> request) {
         UUID userId = request.getUserId();
+        UUID classId = request.getBody().getClassId();
 
-        FollowingPostsDTO posts = new FollowingPostsDTO(UserService.getFollowingPosts(userId));
-        if (UserService.getFollowingPosts(userId) == null) {
+        FollowingPostsDTO posts = new FollowingPostsDTO(UserService.getFollowingPosts(userId, classId));
+        if (UserService.getFollowingPosts(userId, classId) == null) {
             throw new InternalServerError("Failed to get Following Posts");
+        }
+
+        return posts;
+    }
+
+    @AuthGuard()
+    @Endpoint(endpoint = "/getMainFeed", method = Request.EMethod.GET, requestBodyType = ClassPostsDTO.class, responseBodyType = ClassFeedDTO.class)
+    public ClassFeedDTO getMainFeed(Request<ClassPostsDTO> request) {
+        UUID userId = request.getUserId();
+        UUID classId = request.getBody().getClassId();
+
+        ClassFeedDTO posts = new ClassFeedDTO(UserService.getClassFeed(userId, classId));
+        if (UserService.getClassFeed(userId, classId) == null) {
+            throw new InternalServerError("Failed to get Posts");
         }
 
         return posts;
