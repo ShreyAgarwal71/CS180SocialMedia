@@ -22,6 +22,7 @@ public class CommentResolver implements BaseResolver {
     @Endpoint(endpoint = "/add", method = Request.EMethod.POST, requestBodyType = AddCommentDTO.class)
     public void addComment(Request<AddCommentDTO> request) {
         UUID userId = request.getUserId();
+
         UUID postId = request.getBody().getPostId();
         String messageComment = request.getBody().getMessageComment();
         String date = request.getBody().getDate();

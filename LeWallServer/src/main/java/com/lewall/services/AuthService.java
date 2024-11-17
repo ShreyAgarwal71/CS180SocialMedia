@@ -14,6 +14,7 @@ import javax.crypto.spec.PBEKeySpec;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.lewall.api.BadRequest;
 import com.lewall.db.collections.UserCollection;
 import com.lewall.db.models.User;
 
@@ -38,6 +39,17 @@ public class AuthService implements Service {
         }
 
         User user = new User(username, hashedPassword, displayName, bio, email);
+        User existingEmailUser = users.findOne(u -> u.getEmail().equals(email));
+
+        if (existingEmailUser != null) {
+            throw new BadRequest("User with given email already exists.");
+        }
+
+        User existingUsernameUser = users.findOne(u -> u.getUsername().equals(username));
+        if (existingUsernameUser != null) {
+            throw new BadRequest("User with given username already exists.");
+        }
+
         if (!users.addUser(user)) {
             return null;
         }
@@ -58,10 +70,16 @@ public class AuthService implements Service {
             return null;
         }
 
-        return users.findOne(user -> {
-            return user.getEmail().equals(email) &&
-                    user.getPassword().equals(hashedPassword);
+        User user = users.findOne(u -> {
+            return u.getEmail().equals(email) &&
+                    u.getPassword().equals(hashedPassword);
         });
+
+        if (user == null) {
+            throw new BadRequest("No user exists with the given email and password");
+        }
+
+        return user;
     }
 
     /**

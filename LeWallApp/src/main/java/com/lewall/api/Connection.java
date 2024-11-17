@@ -25,6 +25,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+/**
+ * Static class to manage client-server communication in the application
+ * 
+ * @author Mahit Mehta
+ * @version 16 November 2024
+ */
 public class Connection {
     private static final Logger logger = LogManager.getLogger(Connection.class);
 
@@ -124,7 +130,6 @@ public class Connection {
 
             Response<?> response = gson.fromJson(responseJSON, Response.class);
 
-            // TODO: Clean up requests in the `responseQueues`
             if (response.getRequestId() == null) {
                 logger.error("Invalid Response: " + response.getBody().toString());
                 continue;
@@ -137,13 +142,21 @@ public class Connection {
         return true;
     }
 
+    private static HashMap<EHeader, String> getBaseHeaders() {
+        HashMap<EHeader, String> headers = new HashMap<>();
+        String token = LocalStorage.get("token");
+        if (token != null)
+            headers.put(EHeader.ACCESS_TOKEN, token);
+        return headers;
+    }
+
     public static <ResponseBody> CompletableFuture<Response<ResponseBody>> get(String endpoint) {
         return CompletableFuture.supplyAsync(() -> {
             if (!isConnectionActive()) {
                 throw new CompletionException(new RuntimeException("Connection Failed"));
             }
 
-            HashMap<EHeader, String> headers = new HashMap<>();
+            HashMap<EHeader, String> headers = getBaseHeaders();
             return request(new Request<>(EMethod.GET, endpoint, null, headers));
         }, executor);
     }
@@ -155,7 +168,7 @@ public class Connection {
                 throw new CompletionException(new RuntimeException("Connection Failed"));
             }
 
-            HashMap<EHeader, String> headers = new HashMap<>();
+            HashMap<EHeader, String> headers = getBaseHeaders();
             return request(new Request<>(EMethod.POST, endpoint, body, headers));
         }, executor);
     }
