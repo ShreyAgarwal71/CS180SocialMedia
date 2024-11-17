@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import com.lewall.Navigator;
 import com.lewall.api.Connection;
 import com.lewall.api.LocalStorage;
+import com.lewall.api.Validation;
 import com.lewall.dtos.AuthTokenDTO;
 import com.lewall.dtos.LoginDTO;
 import com.lewall.components.Footer;
@@ -74,31 +75,45 @@ public class Login extends Pane {
         stackPane.getChildren().add(blurLayer);
         stackPane.getChildren().add(group);
 
-        VBox loginForm = new VBox(10);
+        VBox loginForm = new VBox(3);
         loginForm.setAlignment(Pos.CENTER);
 
         Text title = new Text("LeWall");
         title.getStyleClass().add("brand-title");
         title.setFill(Color.WHITE);
+        VBox.setMargin(title, new Insets(10, 0, 0, 0));
+
         Text subTitle = new Text("Begin adding notes to LeWall");
         subTitle.getStyleClass().add("brand-subtitle");
-        VBox.setMargin(subTitle, new Insets(0, 0, 15, 0));
+        VBox.setMargin(subTitle, new Insets(5, 0, 20, 0));
+
+        Text loginError = new Text();
+        loginError.getStyleClass().add("error-text");
+        loginError.setWrappingWidth(200);
+        VBox.setMargin(loginError, new Insets(3, 0, 5, 0));
 
         TextField emailField = new TextField();
         emailField.setFocusTraversable(false);
         emailField.getStyleClass().add("brand-field");
         emailField.setMaxSize(200, 30);
         emailField.setPromptText("username@purdue.edu");
+        emailField.onKeyPressedProperty().set(e -> {
+            loginError.setText("");
+        });
+        VBox.setMargin(emailField, new Insets(0, 0, 7, 0));
 
         PasswordField passwordField = new PasswordField();
 
         Button loginButton = new Button("Login");
+        VBox.setMargin(loginButton, new Insets(0, 0, 5, 0));
         loginButton.setOnAction(event -> {
             String email = emailField.getText();
             String password = passwordField.getPassword();
 
-            System.out.println("Email: " + email);
-            System.out.println("Password: " + password);
+            if (!Validation.isEmail(email) || password == null || password.isEmpty()) {
+                loginError.setText("Invalid email or password format.");
+                return;
+            }
 
             Connection.<LoginDTO, AuthTokenDTO>post("/auth/login", new LoginDTO(
                     email, password))
@@ -112,9 +127,16 @@ public class Login extends Pane {
                             });
                         } else {
                             logger.debug("Login Failed");
+                            loginError.setText("Internal server error, try again later.");
                         }
                     }).exceptionally(ex -> {
-                        logger.error("Error Message: " + ex.getMessage());
+                        logger.error(ex.getMessage());
+
+                        while (ex.getCause() != null) {
+                            ex = ex.getCause();
+                        }
+
+                        loginError.setText(ex.getMessage());
                         return null;
                     });
         });
@@ -124,6 +146,7 @@ public class Login extends Pane {
         Button signWithGoogleButton = new Button("Sign in with Google");
         signWithGoogleButton.setOnAction(e -> {
             logger.debug("Sign in with Google");
+            loginError.setText("Feature Coming Soon.");
         });
         signWithGoogleButton.setMinSize(200, 30);
         signWithGoogleButton.getStyleClass().add("brand-button");
@@ -140,13 +163,14 @@ public class Login extends Pane {
             Navigator.navigateTo(Navigator.EPage.REGISTER);
         });
         registerButton.getStyleClass().add("brand-text-button");
-        VBox.setMargin(registerButton, new Insets(5, 0, 20, 0));
+        VBox.setMargin(registerButton, new Insets(10, 0, 10, 0));
 
         loginForm.getChildren().addAll(
                 title,
                 subTitle,
                 emailField,
                 passwordField,
+                loginError,
                 loginButton,
                 signWithGoogleButton,
                 registerButton);

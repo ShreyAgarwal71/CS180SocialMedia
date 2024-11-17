@@ -43,7 +43,7 @@ public class AuthResolver implements BaseResolver {
             throw new BadRequest("Invalid email, password, or username format.");
         }
 
-        User user = AuthService.signUp(username, password, displayName, bio, email);
+        User user = AuthService.signUp(username, password, displayName, bio, email.toLowerCase());
         if (user == null) {
             throw new InternalServerError("Unable to Register Temporarily.");
         }
@@ -75,7 +75,7 @@ public class AuthResolver implements BaseResolver {
             throw new BadRequest("Invalid email or password format.");
         }
 
-        User user = AuthService.signInWithEmailAndPassword(email, password);
+        User user = AuthService.signInWithEmailAndPassword(email.toLowerCase(), password);
         if (user == null) {
             throw new InternalServerError("Unable to Login Temporarily.");
         }

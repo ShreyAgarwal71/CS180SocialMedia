@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import com.lewall.Navigator;
 import com.lewall.api.Connection;
 import com.lewall.api.LocalStorage;
+import com.lewall.api.Validation;
 import com.lewall.components.Footer;
 import com.lewall.components.PasswordField;
 import com.lewall.dtos.AuthTokenDTO;
@@ -74,21 +75,32 @@ public class Register extends Pane {
         stackPane.getChildren().add(blurLayer);
         stackPane.getChildren().add(group);
 
-        VBox registerForm = new VBox(10);
+        VBox registerForm = new VBox(3);
         registerForm.setAlignment(Pos.CENTER);
 
         Text title = new Text("LeWall");
         title.getStyleClass().add("brand-title");
         title.setFill(Color.WHITE);
+        VBox.setMargin(title, new Insets(15, 0, 0, 0));
+
         Text subTitle = new Text("Begin adding notes to LeWall");
         subTitle.getStyleClass().add("brand-subtitle");
-        VBox.setMargin(subTitle, new Insets(0, 0, 15, 0));
+        VBox.setMargin(subTitle, new Insets(5, 0, 20, 0));
+
+        Text registerError = new Text();
+        registerError.getStyleClass().add("error-text");
+        registerError.setWrappingWidth(200);
+        VBox.setMargin(registerError, new Insets(3, 0, 5, 0));
 
         TextField emailField = new TextField();
         emailField.setFocusTraversable(false);
         emailField.getStyleClass().add("brand-field");
         emailField.setMaxSize(200, 30);
         emailField.setPromptText("username@purdue.edu");
+        emailField.onKeyPressedProperty().set(e -> {
+            registerError.setText("");
+        });
+        VBox.setMargin(emailField, new Insets(0, 0, 7, 0));
 
         PasswordField passwordField = new PasswordField();
 
@@ -97,6 +109,17 @@ public class Register extends Pane {
             String email = emailField.getText();
             String password = passwordField.getPassword();
             String username = email;
+
+            if (!Validation.isEmail(email)) {
+                registerError.setText("Invalid Email");
+                return;
+            }
+
+            if (!Validation.isSecurePassword(password)) {
+                registerError.setText(
+                        "Password must contain at least 8 characters, 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character.");
+                return;
+            }
 
             Connection.<CreateUserDTO, AuthTokenDTO>post("/auth/register", new CreateUserDTO(
                     username, password, "", "", email))
@@ -113,16 +136,24 @@ public class Register extends Pane {
                             logger.debug("Registration Failed");
                         }
                     }).exceptionally(ex -> {
-                        logger.error("Error Message: " + ex.getMessage());
+                        logger.error(ex.getMessage());
+
+                        while (ex.getCause() != null) {
+                            ex = ex.getCause();
+                        }
+
+                        registerError.setText(ex.getMessage());
                         return null;
                     });
         });
         registerButton.setMinSize(200, 30);
         registerButton.getStyleClass().add("brand-button");
+        VBox.setMargin(registerButton, new Insets(0, 0, 5, 0));
 
         Button signWithGoogleButton = new Button("Sign up with Google");
         signWithGoogleButton.setOnAction(e -> {
             logger.debug("Sign up with Google");
+            registerError.setText("Feature Coming Soon.");
         });
         signWithGoogleButton.setMinSize(200, 30);
         signWithGoogleButton.getStyleClass().add("brand-button");
@@ -146,6 +177,7 @@ public class Register extends Pane {
                 subTitle,
                 emailField,
                 passwordField,
+                registerError,
                 registerButton,
                 signWithGoogleButton,
                 loginButton);
