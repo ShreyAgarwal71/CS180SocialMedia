@@ -48,7 +48,7 @@ public class AuthResolverTest {
 		// Valid user
 		CreateUserDTO user = new CreateUserDTO(
 												"Alice", "patsoburger19", 
-												"alice_2", "bio", "foo@bar.com");
+												"alice_2", "bio", "alice@foo.bar");
 		Request<CreateUserDTO> req = new Request<CreateUserDTO>(
 													EMethod.POST, "/auth/register", user, null);
 
@@ -90,12 +90,21 @@ public class AuthResolverTest {
 	@Test
 	public void signInWithEmailAndPasswordTest() {
 		// Valid sign in
-		LoginDTO body = new LoginDTO("foo@bar.com", "recep-ivedik-31");
+		AuthResolver ar = new AuthResolver();
+		CreateUserDTO user = new CreateUserDTO(
+												"recep-ivedik", "patsoburger19", 
+												"bohohohoyt", "bio", "recep@foo.com");
+		Request<CreateUserDTO> req2 = new Request<CreateUserDTO>(
+													EMethod.POST, "/auth/register", user, null);
+
+		ar.signUp(req2);
+
+		LoginDTO body = new LoginDTO(user.getEmail(), user.getPassword());
 
 		Request<LoginDTO> req = new Request<LoginDTO>(
 													EMethod.POST, "/auth/login", body, null);
 
-		AuthResolver ar = new AuthResolver();
+
 		AuthTokenDTO token = ar.signInWithEmailAndPassword(req);
 		assertNotNull(token, "Ensure this is a token");
 		
