@@ -10,7 +10,7 @@ import com.lewall.dtos.CreateUserDTO;
 import com.lewall.dtos.LoginDTO;
 
 /*
- * A class to tes the AuthResolver class
+ * A class to test the AuthResolver class
  *
  * @author Ates Isfendiyaroglu, L17
  * @version 16 November 2024
