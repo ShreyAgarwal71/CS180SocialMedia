@@ -1,6 +1,7 @@
 package com.lewall.services;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.UUID;
@@ -8,6 +9,9 @@ import java.util.UUID;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
+
+import com.lewall.api.BadRequest;
 
 import com.lewall.db.Database;
 import com.lewall.db.models.User;
@@ -51,6 +55,23 @@ public class AuthServiceTest {
 		User u2 = new User(username, password, displayName, bio, email);
 
 		assertTrue(u1.equals(u2));
+
+		// Test adding user with the same username
+		Executable e = new Executable() {
+			@Override
+			public void execute() throws Throwable {
+				AuthService.signUp("alice", "qwe123asd", "messi", "bio", "lio@messi.edu");
+			}
+		};
+		assertThrows(BadRequest.class, e);
+		// Test adding user with the same email
+		e = new Executable() {
+			@Override
+			public void execute() throws Throwable {
+				AuthService.signUp("lebronita", "qwe123asd", "james", "bio", "foo@bar.com");
+			}
+		};
+		assertThrows(BadRequest.class, e);
 	}
 
 	/**
@@ -70,6 +91,15 @@ public class AuthServiceTest {
 		User u2 = AuthService.signInWithEmailAndPassword(email, password);
 
 		assertTrue(u1.equals(u2));
+		
+		// No user exists
+		Executable e = new Executable() {
+			@Override
+			public void execute() throws Throwable {
+				AuthService.signInWithEmailAndPassword("uglawbluw@ogur.edu", "ardfef1071");
+			}
+		};
+		assertThrows(BadRequest.class, e);
 	}
 
 	/**
