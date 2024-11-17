@@ -3,10 +3,10 @@ package com.lewall.dtos;
 import com.lewall.db.models.Post;
 import java.util.List;
 
-public class FollowingPostsDTO {
+public class ClassFeedDTO {
     private List<Post> posts;
 
-    public FollowingPostsDTO(List<Post> posts) {
+    public ClassFeedDTO(List<Post> posts) {
         this.posts = posts;
     }
 

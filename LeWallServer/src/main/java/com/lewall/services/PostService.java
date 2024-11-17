@@ -3,17 +3,21 @@ package com.lewall.services;
 import java.util.List;
 import java.util.UUID;
 
+import com.lewall.db.collections.UserCollection;
 import com.lewall.db.collections.PostCollection;
-import com.lewall.db.models.Post;
 import com.lewall.db.models.Comment;
+import com.lewall.db.models.Post;
+import com.lewall.db.models.User;
 import com.lewall.db.collections.CommentCollection;
 
 public class PostService implements Service {
+    private static final UserCollection users = db.getUserCollection();
     private static final PostCollection posts = db.getPostCollection();
     private static final CommentCollection comments = db.getCommentCollection();
 
-    public static boolean createPost(UUID userId, String messagePost, String date, int likes, String imageURL) {
-        Post post = new Post(userId, messagePost, date, likes, imageURL);
+    public static boolean createPost(UUID userId, String messagePost, String date, int likes, String imageURL,
+            UUID classId) {
+        Post post = new Post(userId, messagePost, date, likes, imageURL, classId);
         return posts.addElement(post);
     }
 
@@ -41,6 +45,33 @@ public class PostService implements Service {
         post.removeLike(userId.toString());
 
         return posts.updateElement(post.getId(), post);
+    }
+
+    public static boolean hidePost(UUID userId, UUID postId) {
+        Post post = posts.findOne(p -> p.getId().equals(postId));
+        if (post == null) {
+            return false;
+        }
+        User user = users.findOne(u -> u.getId().equals(userId));
+        if (user == null) {
+            return false;
+        }
+
+        return user.hidePost(postId.toString()) && users.updateElement(user.getId(), user);
+    }
+
+    // Shouldn't ever be able to unhide a post
+    public static boolean unhidePost(UUID userId, UUID postId) {
+        Post post = posts.findOne(p -> p.getId().equals(postId));
+        if (post == null) {
+            return false;
+        }
+        User user = users.findOne(u -> u.getId().equals(userId));
+        if (user == null) {
+            return false;
+        }
+
+        return user.unhidePost(postId.toString()) && users.updateElement(user.getId(), user);
     }
 
     public static List<Comment> getComments(UUID postId) {

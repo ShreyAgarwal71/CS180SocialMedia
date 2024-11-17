@@ -48,4 +48,24 @@ public class PostCollection extends BaseCollection<Post> {
 	public List<Post> findByUserId(UUID userId) {
 		return this.findAll(post -> post.getUserId().equals(userId));
 	}
+
+	/**
+	 * Find all posts by a specific classId and userId
+	 * 
+	 * @param userId, classId
+	 * @return List<Post>
+	 */
+	public List<Post> findByClassAndUserId(UUID userId, UUID classId) {
+		return this.findAll(post -> (post.getClassId().equals(classId) && post.getUserId().equals(userId)));
+	}
+
+	/**
+	 * Find all posts by a specific classId
+	 * 
+	 * @param classId
+	 * @return List<Post>
+	 */
+	public List<Post> findByClassId(UUID classId) {
+		return this.findAll(post -> post.getClassId().equals(classId));
+	}
 }
