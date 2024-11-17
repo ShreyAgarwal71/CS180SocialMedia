@@ -25,7 +25,7 @@ public class AuthServiceTest {
 	 */
 	@BeforeAll
 	public static void createTestDB() {
-		Database.init("temp-users.txt", "temp-posts.txt", "temp-comments.txt");
+		Database.init("tmp_users.txt", "tmp_posts.txt", "tmp_comments.txt");
 	}
 
 	/**
