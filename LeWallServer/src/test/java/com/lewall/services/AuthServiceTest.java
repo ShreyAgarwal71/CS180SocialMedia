@@ -23,7 +23,6 @@ import com.lewall.db.models.User;
  * @version 16 November 2024
  */
 public class AuthServiceTest {
-
 	/**
 	 * Initializes a temporary database to not mess up the production database files
 	 */
@@ -54,7 +53,11 @@ public class AuthServiceTest {
 		User u1 = AuthService.signUp(username, password, displayName, bio, email);
 		User u2 = new User(username, password, displayName, bio, email);
 
-		assertTrue(u1.equals(u2));
+		// Password's hashed thus not equal
+		assertTrue(u1.getUsername().equals(u2.getUsername()));
+		assertTrue(u1.getDisplayName().equals(u2.getDisplayName()));
+		assertTrue(u1.getBio().equals(u2.getBio()));
+		assertTrue(u1.getEmail().equals(u2.getEmail()));
 
 		// Test adding user with the same username
 		Executable e = new Executable() {
@@ -90,7 +93,11 @@ public class AuthServiceTest {
 		db.getUserCollection().addUser(u1);
 		User u2 = AuthService.signInWithEmailAndPassword(email, password);
 
-		assertTrue(u1.equals(u2));
+		// Password's hashed thus not equal
+		assertTrue(u1.getUsername().equals(u2.getUsername()));
+		assertTrue(u1.getDisplayName().equals(u2.getDisplayName()));
+		assertTrue(u1.getBio().equals(u2.getBio()));
+		assertTrue(u1.getEmail().equals(u2.getEmail()));
 		
 		// No user exists
 		Executable e = new Executable() {
