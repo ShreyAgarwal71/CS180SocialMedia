@@ -13,7 +13,7 @@ import com.lewall.services.CommentService;
 import com.lewall.dtos.AddCommentDTO;
 import com.lewall.dtos.DeleteCommentDTO;
 import com.lewall.dtos.UnlikeCommentDTO;
-import com.lewall.resolverinterfaces.ICommentResolver;
+import com.lewall.interfaces.ICommentResolver;
 import com.lewall.dtos.LikeCommentDTO;
 
 /**

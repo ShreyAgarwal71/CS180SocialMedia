@@ -2,7 +2,7 @@ package com.lewall.resolvers;
 
 import com.lewall.api.Request;
 import com.lewall.api.Request.EMethod;
-import com.lewall.resolverinterfaces.IRootResolver;
+import com.lewall.interfaces.IRootResolver;
 import com.lewall.resolvers.ResolverTools.BaseResolver;
 import com.lewall.resolvers.ResolverTools.Endpoint;
 import com.lewall.resolvers.ResolverTools.Resolver;
