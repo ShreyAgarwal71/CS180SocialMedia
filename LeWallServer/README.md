@@ -70,11 +70,7 @@ The main components of the project include:
 │                     ├──PostTest.java
 │                     ├──UserTest.java
 │
-│
-└── Data Files
-    ├── users.txt               # Stores user data
-    ├── posts.txt               # Stores post data
-    └── comments.txt            # Stores comment data
+
 ```
 
 ---
@@ -127,25 +123,6 @@ The main components of the project include:
 - **UserServiceTest**:
 
 - **Multithread Testing**
-
----
-
-## Usage
-
-1. View application specific `README.md`
-2. Interact with the program to create, view, and manage users, posts, and comments. The application saves data to text files for persistence.
-
----
-
-## Data Storage
-
-The program stores data in three text files:
-
-- **users.txt**: Holds user data (e.g., usernames, passwords, and profiles).
-- **posts.txt**: Contains post details, including content, author, and timestamps.
-- **comments.txt**: Holds comment data associated with specific posts.
-
-These files are read and updated through the `Database.java` class, ensuring data is saved across application sessions.
 
 ---
 
