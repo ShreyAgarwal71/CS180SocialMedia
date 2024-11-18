@@ -141,7 +141,7 @@ Tests are located in the `test` directory, this covers the main functionalities 
 ## To Run
 
 ```bash
-mvn exec:java -Dexec.mainClass="com.lewall.AppServer";     
+mvn exec:java -Dexec.mainClass="com.lewall.AppServer"
 ```
 
 ---
