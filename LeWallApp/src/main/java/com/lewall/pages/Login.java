@@ -51,7 +51,7 @@ public class Login extends Pane {
         StackPane stackPane = new StackPane();
         stackPane.setAlignment(Pos.CENTER);
 
-        Rectangle loginBox = new Rectangle(235, 350);
+        Rectangle loginBox = new Rectangle(235, 300);
         loginBox.setFill(new Color(0, 0, 0, 0));
         loginBox.setStroke(Color.rgb(255, 255, 255, 0.05));
         loginBox.setStrokeWidth(1);
@@ -111,8 +111,8 @@ public class Login extends Pane {
         // Gear image setup
         Image gearImage = new Image("imgs/loading-gear.png");
         ImageView gearImageView = new ImageView(gearImage);
-        gearImageView.setFitWidth(30);
-        gearImageView.setFitHeight(30);
+        gearImageView.setFitWidth(20);
+        gearImageView.setFitHeight(20);
         gearImageView.setVisible(false); // Initially hidden
 
         // RotateTransition for spinning
@@ -121,8 +121,8 @@ public class Login extends Pane {
         rotateTransition.setCycleCount(RotateTransition.INDEFINITE);
         rotateTransition.setInterpolator(Interpolator.LINEAR);
 
+        StackPane buttonStack = new StackPane();
         Button loginButton = new Button("Login");
-        VBox.setMargin(loginButton, new Insets(0, 0, 5, 0));
         loginButton.setOnAction(event -> {
             String email = emailField.getText();
             String password = passwordField.getPassword();
@@ -137,13 +137,19 @@ public class Login extends Pane {
             // Show and spin gear
             gearImageView.setVisible(true);
             rotateTransition.play();
+            loginButton.setDisable(true);
+            loginButton.setText("");
 
             Connection.<LoginDTO, AuthTokenDTO>post("/auth/login", new LoginDTO(
                     email, password))
                     .thenAccept(response -> {
                         String token = response.getBody().getToken();
-                        rotateTransition.stop();
-                        gearImageView.setVisible(false);
+                        Platform.runLater(() -> {
+                            rotateTransition.stop();
+                            gearImageView.setVisible(false);
+                            loginButton.setDisable(false);
+                            loginButton.setText("Login");
+                        });
                         if (token != null) {
                             logger.debug("Login Successful");
                             LocalStorage.set("token", token);
@@ -171,14 +177,22 @@ public class Login extends Pane {
                         while (ex.getCause() != null) {
                             ex = ex.getCause();
                         }
-
                         loginError.setText(ex.getMessage());
-                        gearImageView.setVisible(false);
+
+                        Platform.runLater(() -> {
+                            rotateTransition.stop();
+                            gearImageView.setVisible(false);
+                            loginButton.setDisable(false);
+                            loginButton.setText("Login");
+                        });
                         return null;
                     });
         });
         loginButton.setMinSize(200, 30);
         loginButton.getStyleClass().add("brand-button");
+
+        buttonStack.getChildren().addAll(loginButton, gearImageView);
+        VBox.setMargin(buttonStack, new Insets(0, 0, 5, 0));
 
         Button signWithGoogleButton = new Button("Sign in with Google");
         signWithGoogleButton.setOnAction(e -> {
@@ -207,9 +221,8 @@ public class Login extends Pane {
                 subTitle,
                 emailField,
                 passwordField,
-                gearImageView,
                 loginError,
-                loginButton,
+                buttonStack,
                 signWithGoogleButton,
                 registerButton);
 

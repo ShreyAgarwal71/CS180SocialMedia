@@ -90,8 +90,8 @@ public class AuthResolver implements BaseResolver, IAuthResolver {
         String token = AuthService.generateAccessToken(user.getId().toString());
 
         try {
-            // Sleep thread for 250 ms
-            Thread.sleep(250);
+            // Sleep thread for 500 ms, simulating processing
+            Thread.sleep(500);
         } catch (InterruptedException e) {
             // Handle the interruption appropriately
             Thread.currentThread().interrupt(); // Preserve the interrupted status
