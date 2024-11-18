@@ -10,12 +10,14 @@
 
 - **Java**: JDK 23
 - **Maven**: For dependency management and building
+- Run `mvn clean install` before in the root directory before attempting to run the client application
 
 ---
 
 ## Usage
 
 > Note: Must have JDK 23 installed.
+> cd into LeWallApp/ before running this command
 
 - mvn clean compile javafx:run
 
