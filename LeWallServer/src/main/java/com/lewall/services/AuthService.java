@@ -23,7 +23,13 @@ import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 
-public class AuthService implements Service {
+/**
+ * A class that implements Auth-managing services
+ * 
+ * @author Shrey Agarwal
+ * @version 14 November 2024
+ */
+public class AuthService implements IService {
     private static final Logger logger = LogManager.getLogger(AuthService.class);
     // JWT Key is intentionally hardcoded for the sake of this assignment
     private static final SecretKey JWT_SECRET_KEY = generateKeyFromString(

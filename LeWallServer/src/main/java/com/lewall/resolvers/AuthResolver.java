@@ -6,6 +6,7 @@ import com.lewall.api.Request;
 import com.lewall.api.Request.EMethod;
 import com.lewall.db.models.User;
 import com.lewall.dtos.LoginDTO;
+import com.lewall.resolverinterfaces.IAuthResolver;
 import com.lewall.dtos.CreateUserDTO;
 import com.lewall.dtos.AuthTokenDTO;
 import com.lewall.resolvers.ResolverTools.BaseResolver;
@@ -13,8 +14,14 @@ import com.lewall.resolvers.ResolverTools.Endpoint;
 import com.lewall.resolvers.ResolverTools.Resolver;
 import com.lewall.services.AuthService;
 
+/**
+ * A class to resolve Auth-related requests
+ *
+ * @author Shrey Agarwal
+ * @version 14 November 2024
+ */
 @Resolver(basePath = "/auth")
-public class AuthResolver implements BaseResolver {
+public class AuthResolver implements BaseResolver, IAuthResolver {
 
     /**
      * Sign up with email, password, username, display name, and bio
