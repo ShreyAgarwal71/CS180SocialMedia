@@ -76,7 +76,7 @@ public class AuthService implements Service {
         });
 
         if (user == null) {
-            throw new BadRequest("No user exists with the given email and password");
+            throw new BadRequest("Inavlid email or password.");
         }
 
         return user;

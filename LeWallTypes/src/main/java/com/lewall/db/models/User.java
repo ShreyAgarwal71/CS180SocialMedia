@@ -23,6 +23,7 @@ public class User extends Model {
     private Set<String> followers;
     private Set<String> blockedUsers;
     private Set<String> following;
+    private Set<String> hiddenPosts;
 
     /**
      * Constructor for User
@@ -41,6 +42,7 @@ public class User extends Model {
         this.followers = new HashSet<>();
         this.blockedUsers = new HashSet<>();
         this.following = new HashSet<>();
+        this.hiddenPosts = new HashSet<>();
     }
 
     /**
@@ -188,6 +190,24 @@ public class User extends Model {
     }
 
     /**
+     * Getter for hiddenPosts
+     * 
+     * @return hiddenPosts
+     */
+    public Set<String> getHiddenPosts() {
+        return hiddenPosts;
+    }
+
+    /**
+     * Setter for hiddenPosts
+     * 
+     * @param hiddenPosts
+     */
+    public void setHiddenPosts(Set<String> hiddenPosts) {
+        this.hiddenPosts = hiddenPosts;
+    }
+
+    /**
      * Follow a user
      * 
      * @param follower
@@ -265,6 +285,32 @@ public class User extends Model {
             return false;
         }
         blockedUsers.remove(blockedUser);
+        return true;
+    }
+
+    /**
+     * Hide a post
+     * 
+     * @param postId
+     */
+    public boolean hidePost(String postId) {
+        if (hiddenPosts.contains(postId)) {
+            return false;
+        }
+        hiddenPosts.add(postId);
+        return true;
+    }
+
+    /**
+     * Unhide a post
+     * 
+     * @param postId
+     */
+    public boolean unhidePost(String postId) {
+        if (!hiddenPosts.contains(postId)) {
+            return false;
+        }
+        hiddenPosts.remove(postId);
         return true;
     }
 

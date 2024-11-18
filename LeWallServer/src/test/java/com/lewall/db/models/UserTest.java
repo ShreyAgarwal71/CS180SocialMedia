@@ -131,6 +131,25 @@ public class UserTest {
 	}
 
 	/**
+	 * A test case for the User hiddenPosts methods.
+	 */
+	@Test
+	public void testHiddenPosts() {
+		User testUser = new User("username", "password", "displayName", "bio", "email");
+
+		testUser.hidePost("hiddenPost1");
+		testUser.hidePost("hiddenPost2");
+		Set<String> expectedHiddenPosts = new HashSet<>();
+		expectedHiddenPosts.add("hiddenPost1");
+		expectedHiddenPosts.add("hiddenPost2");
+		assertEquals(expectedHiddenPosts, testUser.getHiddenPosts(), "Ensure the addHiddenPost method is working");
+
+		testUser.unhidePost("hiddenPost1");
+		expectedHiddenPosts.remove("hiddenPost1");
+		assertEquals(expectedHiddenPosts, testUser.getHiddenPosts(), "Ensure the removeHiddenPost method is working");
+	}
+
+	/**
 	 * A test case for the User equals and toString methods.
 	 */
 	@Test

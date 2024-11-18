@@ -8,6 +8,7 @@ import com.lewall.db.collections.PostCollection;
 import com.lewall.db.collections.UserCollection;
 import com.lewall.db.models.Post;
 import com.lewall.db.models.User;
+import com.lewall.helpers.PostSort;
 
 public class UserService implements Service {
     private static final UserCollection users = db.getUserCollection();
@@ -50,6 +51,11 @@ public class UserService implements Service {
         if (userToBlock == null) {
             return false;
         }
+
+        user.removeFollower(userToBlock.toString());
+        user.unfollowUser(userToBlock.toString());
+        userToBlock.unfollowUser(user.toString());
+        userToBlock.removeFollower(user.toString());
 
         return user.addBlockedUser(blockUserID.toString()) && users.updateElement(user.getId(), user);
     }
@@ -96,7 +102,7 @@ public class UserService implements Service {
         return posts1;
     }
 
-    public static List<List<Post>> getFollowingPosts(UUID userId) {
+    public static List<Post> getFollowingPosts(UUID userId, UUID classId) {
         User user = users.findOne(u -> u.getId().equals(userId));
         if (user == null) {
             return null;
@@ -107,8 +113,30 @@ public class UserService implements Service {
             following.add(UUID.fromString(followerId));
         }
         for (UUID follower : following) {
-            posts1.add(posts.findByUserId(follower));
+            posts1.add(posts.findByClassAndUserId(classId, follower));
         }
+
+        List<Post> posts2 = new ArrayList<>();
+        for (int i = 0; i < posts1.size(); i++) {
+            for (int j = 0; j < posts1.get(i).size(); j++) {
+                if (!(user.getBlockedUsers().contains(posts1.get(i).get(j).getUserId().toString()))) {
+                    posts2.add(posts1.get(i).get(j));
+                }
+            }
+        }
+
+        PostSort.quickSort(posts2, 0, posts2.size() - 1);
+
+        return posts2;
+    }
+
+    public static List<Post> getClassFeed(UUID userId, UUID classId) {
+        User user = users.findOne(u -> u.getId().equals(userId));
+        if (user == null) {
+            return null;
+        }
+
+        List<Post> posts1 = posts.findByClassId(classId);
 
         return posts1;
     }

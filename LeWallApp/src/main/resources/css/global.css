@@ -67,3 +67,8 @@
 .bottom-label {
     -fx-fill: rgba(255, 255, 255, 0.5);
 }
+
+.error-text {
+    -fx-fill: red;
+    -fx-font-size: 10;
+}

@@ -1,6 +1,8 @@
 package com.lewall.db.models;
 
 import java.util.UUID;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Post
@@ -17,8 +19,9 @@ public class Post extends Model {
     private String messagePost;
     private String date;
     private int likes;
-    private String[] usersLiked;
+    private Set<String> usersLiked;
     private String imageURL;
+    private UUID classId;
 
     /**
      * Constructor for Post
@@ -29,13 +32,14 @@ public class Post extends Model {
      * @param postId
      * @param likes
      */
-    public Post(UUID userId, String messagePost, String date, int likes, String imageURL) {
+    public Post(UUID userId, String messagePost, String date, int likes, String imageURL, UUID classId) {
         this.userId = userId;
         this.messagePost = messagePost;
-        this.date = date;
+        this.date = date; // MM/DD/YYYY
         this.likes = likes;
         this.imageURL = imageURL;
-        this.usersLiked = new String[0];
+        this.usersLiked = new HashSet<>();
+        this.classId = classId;
     }
 
     /**
@@ -88,8 +92,17 @@ public class Post extends Model {
      * 
      * @return usersLiked
      */
-    public String[] getUsersLiked() {
+    public Set<String> getUsersLiked() {
         return usersLiked;
+    }
+
+    /**
+     * Getter for classId
+     * 
+     * @return classId
+     */
+    public UUID getClassId() {
+        return classId;
     }
 
     /**
@@ -133,37 +146,45 @@ public class Post extends Model {
      * 
      * @param usersLiked
      */
-    public void setUsersLiked(String[] usersLiked) {
+    public void setUsersLiked(Set<String> usersLiked) {
         this.usersLiked = usersLiked;
     }
 
     /**
-     * Add a like to the post
+     * Setter for classId
+     * 
+     * @param classId
      */
-    public void addLike(String userId) {
-        this.likes++;
-        String[] newUsersLiked = new String[usersLiked.length + 1];
-        for (int i = 0; i < usersLiked.length; i++) {
-            newUsersLiked[i] = usersLiked[i];
+    public void setClassId(UUID classId) {
+        this.classId = classId;
+    }
+
+    /**
+     * Add a like to the post
+     * 
+     * @param userId
+     * @return boolean
+     */
+    public boolean addLike(String userId) {
+        if (usersLiked.add(userId)) {
+            this.likes++;
+            return true;
         }
-        newUsersLiked[usersLiked.length] = userId;
-        usersLiked = newUsersLiked;
+        return false;
     }
 
     /**
      * Remove a like from the post
+     * 
+     * @param userId
+     * @return boolean
      */
-    public void removeLike(String userId) {
-        this.likes--;
-        String[] newUsersLiked = new String[usersLiked.length - 1];
-        int j = 0;
-        for (int i = 0; i < usersLiked.length; i++) {
-            if (!usersLiked[i].equals(userId)) {
-                newUsersLiked[j] = usersLiked[i];
-                j++;
-            }
+    public boolean removeLike(String userId) {
+        if (usersLiked.remove(userId)) {
+            this.likes--;
+            return true;
         }
-        usersLiked = newUsersLiked;
+        return false;
     }
 
     public void setImageURL(String imageURL) {
@@ -172,6 +193,8 @@ public class Post extends Model {
 
     /**
      * equals method for Post
+     * 
+     * @param obj
      */
     public boolean equals(Object obj) {
         if (obj instanceof Post) {
@@ -184,7 +207,38 @@ public class Post extends Model {
     }
 
     /**
+     * compereTo method for Post
+     * 
+     * @param post
+     */
+    public int compareTo(Post post) {
+        String[] date1 = this.date.split("/");
+        String[] date2 = post.getDate().split("/");
+        if (Integer.parseInt(date1[2]) > Integer.parseInt(date2[2])) {
+            return 1;
+        } else if (Integer.parseInt(date1[2]) < Integer.parseInt(date2[2])) {
+            return -1;
+        } else {
+            if (Integer.parseInt(date1[0]) > Integer.parseInt(date2[0])) {
+                return 1;
+            } else if (Integer.parseInt(date1[0]) < Integer.parseInt(date2[0])) {
+                return -1;
+            } else {
+                if (Integer.parseInt(date1[1]) > Integer.parseInt(date2[1])) {
+                    return 1;
+                } else if (Integer.parseInt(date1[1]) < Integer.parseInt(date2[1])) {
+                    return -1;
+                } else {
+                    return 0;
+                }
+            }
+        }
+    }
+
+    /**
      * toString method for Post
+     * 
+     * @return String
      */
     public String toString() {
         return "Post: " + messagePost + " by " + userId + " on " + date + " with " + likes + " likes";

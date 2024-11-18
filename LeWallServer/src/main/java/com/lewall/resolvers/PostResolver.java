@@ -15,6 +15,7 @@ import com.lewall.dtos.UnlikePostDTO;
 import com.lewall.dtos.LikePostDTO;
 import com.lewall.dtos.CommentsDTO;
 import com.lewall.dtos.PostCommentsDTO;
+import com.lewall.dtos.HidePostDTO;
 
 @Resolver(basePath = "/post")
 public class PostResolver implements BaseResolver {
@@ -26,8 +27,9 @@ public class PostResolver implements BaseResolver {
         String date = request.getBody().getDate();
         int likes = 0;
         String imageURL = request.getBody().getImageURL();
+        UUID classId = request.getBody().getClassId();
 
-        if (!PostService.createPost(userId, messagePost, date, likes, imageURL)) {
+        if (!PostService.createPost(userId, messagePost, date, likes, imageURL, classId)) {
             throw new InternalServerError("Failed to Create Post");
         }
     }
@@ -61,6 +63,17 @@ public class PostResolver implements BaseResolver {
 
         if (!PostService.unlikePost(userId, postId)) {
             throw new InternalServerError("Failed to Unlike Post");
+        }
+    }
+
+    @AuthGuard()
+    @Endpoint(endpoint = "/hide", method = Request.EMethod.POST, requestBodyType = HidePostDTO.class)
+    public void hidePost(Request<HidePostDTO> request) {
+        UUID postId = request.getBody().getPostId();
+        UUID userId = request.getUserId();
+
+        if (!PostService.hidePost(userId, postId)) {
+            throw new InternalServerError("Failed to hide Post");
         }
     }
 
