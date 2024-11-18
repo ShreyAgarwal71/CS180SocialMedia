@@ -1,7 +1,7 @@
 package com.lewall.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
@@ -10,7 +10,9 @@ import java.util.UUID;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
+import com.lewall.api.BadRequest;
 import com.lewall.db.Database;
 import com.lewall.db.models.Post;
 import com.lewall.db.models.User;
@@ -49,8 +51,17 @@ public class UserServiceTest {
 		assertTrue(UserService.follow(u1.getId(), u2.getId()));
 
 		// Invalid follow
-		User u3 = new User("null-bruh", "g", "bruh", "asdf", "qwe@asd.zxc");
-		assertFalse(UserService.follow(u1.getId(), u3.getId()));
+		Executable e = new Executable() {
+			@Override
+			public void execute() throws Throwable {
+				User u4 = new User("nulasd", "gl", "k", "kas", "piwa@ad.zxc");
+				UserService.db.getUserCollection().addUser(u4);
+				User u3 = new User("null-bruh", "g", "bruh", "asdf", "qwe@asd.zxc");
+				UserService.follow(u4.getId(), u3.getId());
+			}
+		};
+
+		assertThrows(BadRequest.class, e);
 	}
 
 	/**
@@ -68,8 +79,16 @@ public class UserServiceTest {
 		assertTrue(UserService.unfollow(u1.getId(), u2.getId()));
 		
 		// Invalid Unfollow
-		User u3 = new User("-bruh-", "g", "gbruh", "asdf", "qsqwe@asd.zxc");
-		assertFalse(UserService.unfollow(u1.getId(), u3.getId()));
+		Executable e = new Executable() {
+			@Override
+			public void execute() throws Throwable {
+				User u = UserService.db.getUserCollection().findByUsername("bruh21");
+				User u3 = new User("-bruh-", "g", "gbruh", "asdf", "qsqwe@asd.zxc");
+				UserService.unfollow(u.getId(), u3.getId());
+			}
+		};
+
+		assertThrows(BadRequest.class, e);
 	}
 
 	/**
@@ -87,8 +106,17 @@ public class UserServiceTest {
 		assertTrue(UserService.block(u1.getId(), u2.getId()));
 		
 		// Invalid Block
-		User u3 = new User("hjkl", "gl", "hjbruh", "asdf", "hjqwe@asd.zxc");
-		assertFalse(UserService.block(u1.getId(), u3.getId()));
+		Executable e = new Executable() {
+			@Override
+			public void execute() throws Throwable {
+				User u4 = new User("aghagh", "gl", "k", "asdf", "poqwes@asd.zxc");
+				UserService.db.getUserCollection().addUser(u4);
+				User u3 = new User("hjkl", "gl", "hjbruh", "asdf", "hjqwe@asd.zxc");
+				UserService.block(u4.getId(), u3.getId());
+			}
+		};
+
+		assertThrows(BadRequest.class, e);
 	}
 
 	/**
@@ -107,8 +135,16 @@ public class UserServiceTest {
 		assertTrue(UserService.unblock(u1.getId(), u2.getId()));
 		
 		// Invalid Block
-		User u3 = new User("ljh", "gl", "pois", "asdf", "upoi@asd.zxc");
-		assertFalse(UserService.unblock(u1.getId(), u3.getId()));
+		Executable e = new Executable() {
+			@Override
+			public void execute() throws Throwable {
+				User u = UserService.db.getUserCollection().findByUsername("bruhzxc");
+				User u3 = new User("ljh", "gl", "pois", "asdf", "upoi@asd.zxc");
+				UserService.unblock(u.getId(), u3.getId());
+			}
+		};
+
+		assertThrows(BadRequest.class, e);
 	}
 
 	/**
@@ -126,11 +162,15 @@ public class UserServiceTest {
 		assertTrue(u1.getDisplayName().equals(name));
 		
 		// Invalid Update
-		User u2 = new User("uglq", "fl", "qqewkn", "asdf", "sndal@asd.zxc");
-		result = UserService.updateProfileName(u2.getId(), name);
+		Executable e = new Executable() {
+			@Override
+			public void execute() throws Throwable {
+				User u2 = new User("uglq", "fl", "qqewkn", "asdf", "sndal@asd.zxc");
+				UserService.updateProfileName(u2.getId(), "Leverkusen");
+			}
+		};
 
-		assertFalse(result); 
-		assertFalse(u2.getDisplayName().equals(name));
+		assertThrows(BadRequest.class, e);
 	}
 
 	/**
@@ -148,11 +188,16 @@ public class UserServiceTest {
 		assertTrue(u1.getBio().equals(bio));
 		
 		// Invalid Update
-		User u2 = new User("carl", "lkja", "kral", "initial", "koral@asdje.zpc");
-		result = UserService.updateProfileBio(u2.getId(), bio);
 
-		assertFalse(result); 
-		assertFalse(u2.getBio().equals(bio));
+		Executable e = new Executable() {
+			@Override
+			public void execute() throws Throwable {
+				User u2 = new User("carl", "lkja", "kral", "initial", "koral@asdje.zpc");
+				UserService.updateProfileBio(u2.getId(), "second");
+			}
+		};
+
+		assertThrows(BadRequest.class, e);
 	}
 
 	/**
