@@ -5,7 +5,13 @@ import java.util.UUID;
 import com.lewall.db.collections.CommentCollection;
 import com.lewall.db.models.Comment;
 
-public class CommentService implements Service {
+/**
+ * A class that implements Comment-managing services
+ * 
+ * @author Shrey Agarwal
+ * @version 14 November 2024
+ */
+public class CommentService implements IService {
     private static final CommentCollection comments = db.getCommentCollection();
 
     public static boolean addComment(UUID userId, UUID postId, String messageComment, String date) {

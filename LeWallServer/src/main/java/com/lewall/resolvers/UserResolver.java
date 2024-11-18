@@ -21,13 +21,20 @@ import com.lewall.dtos.ProfileNameDTO;
 import com.lewall.dtos.UnfollowUserDTO;
 import com.lewall.dtos.UserDTO;
 import com.lewall.dtos.UserPostsDTO;
+import com.lewall.resolverinterfaces.IUserResolver;
 import com.lewall.dtos.UserFollowingPostsDTO;
 import com.lewall.dtos.FollowingPostsDTO;
 import com.lewall.dtos.ClassPostsDTO;
 import com.lewall.dtos.ClassFeedDTO;
 
+/**
+ * A class to resolve User-related requests
+ *
+ * @author Shrey Agarwal
+ * @version 14 November 2024
+ */
 @Resolver(basePath = "/user")
-public class UserResolver implements BaseResolver {
+public class UserResolver implements BaseResolver, IUserResolver {
     @AuthGuard
     @Endpoint(endpoint = "/", method = Request.EMethod.GET, responseBodyType = UserDTO.class)
     public UserDTO getUser(Request<Void> request) {
