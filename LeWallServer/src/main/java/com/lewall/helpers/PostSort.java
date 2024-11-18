@@ -4,7 +4,20 @@ import java.util.List;
 
 import com.lewall.db.models.Post;
 
+/**
+ * A class to implement Quicksort for posts
+ *
+ * @author Shrey Agarwal
+ * @version 17 November 2024
+ */
 public class PostSort {
+	/**
+	 * The quicksort method
+	 *
+	 * @param posts
+	 * @param low
+	 * @param high
+	 */
     public static void quickSort(List<Post> posts, int low, int high) {
         if (low < high) {
             int pivotIndex = partition(posts, low, high);
