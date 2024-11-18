@@ -8,7 +8,7 @@ There is also a special `Validation` class that contains `static` methods for ve
 
 After Phase 2, we decided to move the `Database Models` into this shared library so that both the app and server have access to the `User`, `Post`, and `Comment` models.
 
-There is no further functionality aside from shared classes, this project can not be run standalone.
+There is no further functionality aside from shared classes, this project can not be ran standalone.
 
 # Compile
 
