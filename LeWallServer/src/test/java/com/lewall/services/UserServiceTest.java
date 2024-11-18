@@ -122,8 +122,8 @@ public class UserServiceTest {
 		String name = "Leverkusen";
 		boolean result = UserService.updateProfileName(u1.getId(), name);
 
-		assertFalse(result); 
-		assertFalse(u1.getDisplayName().equals(name));
+		assertTrue(result); 
+		assertTrue(u1.getDisplayName().equals(name));
 		
 		// Invalid Update
 		User u2 = new User("uglq", "fl", "qqewkn", "asdf", "sndal@asd.zxc");
@@ -144,8 +144,8 @@ public class UserServiceTest {
 		String bio = "second";
 		boolean result = UserService.updateProfileBio(u1.getId(), bio);
 
-		assertFalse(result); 
-		assertFalse(u1.getBio().equals(bio));
+		assertTrue(result); 
+		assertTrue(u1.getBio().equals(bio));
 		
 		// Invalid Update
 		User u2 = new User("carl", "lkja", "kral", "initial", "koral@asdje.zpc");
@@ -166,22 +166,31 @@ public class UserServiceTest {
 		User u1 = new User("user1", "qweqwe", "user1", "bio", "user1@hj.kl");
 		User u2 = new User("user2", "qweqwe", "user2", "bio", "user2@hj.kl");
 		User u3 = new User("user3", "qweqwe", "user3", "bio", "user3@hj.kl");
+		User u4 = new User("user4", "qweqwe", "user4", "bio", "user3@hj.kl");
 
 		UserService.db.getUserCollection().addUser(u1);
 		UserService.db.getUserCollection().addUser(u2);
 		UserService.db.getUserCollection().addUser(u3);
+		UserService.db.getUserCollection().addUser(u4);
+
+		UserService.follow(u1.getId(), u2.getId());
+		UserService.follow(u1.getId(), u3.getId());
 
 		String[] expectedMsg = { "msg1", "msg3", "msg4" };
 		String[] expectedDate = { "11/17/2024", "11/18/2024", "11/19/2024", "11/20/2024" };
 		Post p1 = new Post(u2.getId(), "msg1", "11/17/2024", 0, null, target);
 		Post p2 = new Post(u2.getId(), "msg2", "11/18/2024", 0, null, extra);
-		Post p3 = new Post(u2.getId(), "msg3", "11/19/2024", 0, null, target);
-		Post p4 = new Post(u2.getId(), "msg4", "11/20/2024", 0, null, target);
+		Post p3 = new Post(u3.getId(), "msg3", "11/19/2024", 0, null, target);
+		Post p4 = new Post(u3.getId(), "msg4", "11/20/2024", 0, null, target);
+		Post p5 = new Post(u4.getId(), "msg5", "11/21/2024", 0, null, target);
+		Post p6 = new Post(u4.getId(), "msg6", "11/22/2024", 0, null, extra);
 
 		UserService.db.getPostCollection().addElement(p1);
 		UserService.db.getPostCollection().addElement(p2);
 		UserService.db.getPostCollection().addElement(p3);
 		UserService.db.getPostCollection().addElement(p4);
+		UserService.db.getPostCollection().addElement(p5);
+		UserService.db.getPostCollection().addElement(p6);
 
 		List<Post> results = UserService.getFollowingPosts(u1.getId(), target);
 
