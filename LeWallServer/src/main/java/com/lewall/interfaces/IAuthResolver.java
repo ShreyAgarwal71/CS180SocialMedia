@@ -1,4 +1,4 @@
-package com.lewall.resolverinterfaces;
+package com.lewall.interfaces;
 
 import com.lewall.api.BadRequest;
 import com.lewall.api.InternalServerError;

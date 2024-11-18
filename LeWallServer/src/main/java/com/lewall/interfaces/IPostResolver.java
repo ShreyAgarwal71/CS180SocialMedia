@@ -1,4 +1,4 @@
-package com.lewall.resolverinterfaces;
+package com.lewall.interfaces;
 
 import com.lewall.api.Request;
 import com.lewall.dtos.CreatePostDTO;
