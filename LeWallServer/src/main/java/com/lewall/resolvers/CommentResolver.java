@@ -43,8 +43,9 @@ public class CommentResolver implements BaseResolver, ICommentResolver {
     @Endpoint(endpoint = "/delete", method = Request.EMethod.POST, requestBodyType = DeleteCommentDTO.class)
     public void deleteComment(Request<DeleteCommentDTO> request) {
         UUID commentId = request.getBody().getCommentId();
+        UUID userId = request.getUserId();
 
-        if (!CommentService.deleteComment(commentId)) {
+        if (!CommentService.deleteComment(userId, commentId)) {
             throw new InternalServerError("Failed to Delete Comment");
         }
     }
