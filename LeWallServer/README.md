@@ -1,5 +1,14 @@
 # LeWall Server
 
+
+## To Run
+
+```bash
+mvn clean compile exec:java
+```
+
+---
+
 ## Features
 
 - **User Management**: Create, update, retrieve, and delete user profiles.
@@ -135,13 +144,3 @@ mvn test
 ```
 
 Tests are located in the `test` directory, this covers the main functionalities of user and post management.
-
----
-
-## To Run
-
-```bash
-mvn exec:java -Dexec.mainClass="com.lewall.AppServer"
-```
-
----
