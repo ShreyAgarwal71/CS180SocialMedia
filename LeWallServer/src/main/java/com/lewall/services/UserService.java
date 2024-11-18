@@ -14,9 +14,8 @@ public class UserService implements Service {
     private static final UserCollection users = db.getUserCollection();
     private static final PostCollection posts = db.getPostCollection();
 
-    public static boolean createUser(String username, String password, String displayName, String bio, String email) {
-        User user = new User(username, password, displayName, bio, email);
-        return users.addElement(user);
+    public static User getUser(UUID userId) {
+        return users.findById(userId);
     }
 
     public static boolean deleteUser(UUID userId) {
