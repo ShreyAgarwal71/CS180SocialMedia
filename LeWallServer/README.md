@@ -12,6 +12,8 @@
 
 ## To Run
 
+> Note: cd into LeWallServer/ before running this command
+
 ```bash
 mvn clean compile exec:java
 ```
@@ -34,6 +36,7 @@ The main components of the project include:
 - **AppServer.java**: The main entry point of the application, is initializing and running the backend simulation.
 - **Worker.java:** Instance of a server worker that can handle multiple clients with the usage of `java.nio` channels
 - **Database.java**: Manages reading from and writing to files, acting as a simple file-based database.
+- **ResolverTools.java**: Maps requests from the socket output to the functions in the resolvers and defines crucial annotations such as `Endpoint` and `Resolver`.
 
 ---
 
