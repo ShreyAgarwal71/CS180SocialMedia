@@ -1,8 +1,7 @@
-package com.lewall.resolverinterfaces;
+package com.lewall.interfaces;
 
 import com.lewall.api.Request;
 
-import com.lewall.dtos.CreateUserDTO;
 import com.lewall.dtos.DeleteUserDTO;
 import com.lewall.dtos.BlockUserDTO;
 import com.lewall.dtos.UnblockUserDTO;

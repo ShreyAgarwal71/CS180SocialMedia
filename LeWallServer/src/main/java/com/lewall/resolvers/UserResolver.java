@@ -11,7 +11,6 @@ import com.lewall.resolvers.ResolverTools.Endpoint;
 import com.lewall.resolvers.ResolverTools.Resolver;
 import com.lewall.services.UserService;
 
-import com.lewall.dtos.CreateUserDTO;
 import com.lewall.dtos.DeleteUserDTO;
 import com.lewall.dtos.BlockUserDTO;
 import com.lewall.dtos.UnblockUserDTO;
@@ -21,7 +20,7 @@ import com.lewall.dtos.ProfileNameDTO;
 import com.lewall.dtos.UnfollowUserDTO;
 import com.lewall.dtos.UserDTO;
 import com.lewall.dtos.UserPostsDTO;
-import com.lewall.resolverinterfaces.IUserResolver;
+import com.lewall.interfaces.IUserResolver;
 import com.lewall.dtos.UserFollowingPostsDTO;
 import com.lewall.dtos.FollowingPostsDTO;
 import com.lewall.dtos.ClassPostsDTO;

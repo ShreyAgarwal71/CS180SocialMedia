@@ -6,7 +6,7 @@ import com.lewall.api.Request;
 import com.lewall.api.Request.EMethod;
 import com.lewall.db.models.User;
 import com.lewall.dtos.LoginDTO;
-import com.lewall.resolverinterfaces.IAuthResolver;
+import com.lewall.interfaces.IAuthResolver;
 import com.lewall.dtos.CreateUserDTO;
 import com.lewall.dtos.AuthTokenDTO;
 import com.lewall.resolvers.ResolverTools.BaseResolver;
