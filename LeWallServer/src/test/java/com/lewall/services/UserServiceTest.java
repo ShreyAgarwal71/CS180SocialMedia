@@ -177,7 +177,7 @@ public class UserServiceTest {
 		UserService.follow(u1.getId(), u3.getId());
 
 		String[] expectedMsg = { "msg1", "msg3", "msg4" };
-		String[] expectedDate = { "11/17/2024", "11/18/2024", "11/19/2024", "11/20/2024" };
+		String[] expectedDate = { "11/17/2024", "11/19/2024", "11/20/2024" };
 		Post p1 = new Post(u2.getId(), "msg1", "11/17/2024", 0, null, target);
 		Post p2 = new Post(u2.getId(), "msg2", "11/18/2024", 0, null, extra);
 		Post p3 = new Post(u3.getId(), "msg3", "11/19/2024", 0, null, target);
