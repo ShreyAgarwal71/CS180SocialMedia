@@ -21,10 +21,20 @@ import com.lewall.api.Request.EMethod;
 import com.lewall.api.Response.EStatus;
 import com.lewall.api.ServerException;
 import com.lewall.services.AuthService;
+
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+/**
+ * A class that implements helper tools for the resolver classes
+ *
+ * @author Mahit Mehta
+ * @version 15 November 2024
+ */
 public class ResolverTools {
     private static final Logger logger = LogManager.getLogger(ResolverTools.class);
 
@@ -132,6 +142,7 @@ public class ResolverTools {
             throws IllegalAccessException, IllegalArgumentException {
         BaseResolver resolver = ref.getResolver();
         Method m = ref.getMethod();
+        UUID userId = null;
 
         // Validates request and attaches userId to request if AuthGuard is present
         if (m.isAnnotationPresent(AuthGuard.class)) {
@@ -142,15 +153,23 @@ public class ResolverTools {
                 return gson.toJson(response);
             }
 
-            UUID userId = AuthService.validateAccessToken(accessToken);
+            try {
+                userId = AuthService.validateAccessToken(accessToken);
 
-            if (userId == null) {
+                if (userId == null) {
+                    Response<String> response = new Response<String>(request.getMethod(), request.getEndpoint(),
+                            "Invalid Access Token.", EStatus.UNAUTHORIZED, request.getRequestId());
+                    return gson.toJson(response);
+                }
+            } catch (ExpiredJwtException e) {
+                Response<String> response = new Response<String>(request.getMethod(), request.getEndpoint(),
+                        "Access Token Expired.", EStatus.ACCESS_EXPIRED, request.getRequestId());
+                return gson.toJson(response);
+            } catch (JwtException e) {
                 Response<String> response = new Response<String>(request.getMethod(), request.getEndpoint(),
                         "Invalid Access Token.", EStatus.UNAUTHORIZED, request.getRequestId());
                 return gson.toJson(response);
             }
-
-            request.setUserId(userId);
         }
 
         Endpoint endpointAnnotation = m.getAnnotation(Endpoint.class);
@@ -165,6 +184,8 @@ public class ResolverTools {
                     "Bad Request", EStatus.BAD_REQUEST, request.getRequestId());
             return gson.toJson(response);
         }
+
+        request.setUserId(userId);
 
         try {
             // Handle `void` endpoint return type

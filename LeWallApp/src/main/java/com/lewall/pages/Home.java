@@ -3,10 +3,13 @@ package com.lewall.pages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.lewall.Navigator;
 import com.lewall.Navigator.EPage;
 import com.lewall.api.LocalStorage;
 import com.lewall.components.Footer;
+import com.lewall.dtos.UserDTO;
 
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
@@ -16,9 +19,13 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 
 public class Home extends Pane {
     private static final Logger logger = LogManager.getLogger(Login.class);
+
+    private static final GsonBuilder builder = new GsonBuilder();
+    private static final Gson gson = builder.create();
 
     public Home() {
         this.getStyleClass().add("primary-bg");
@@ -31,6 +38,21 @@ public class Home extends Pane {
 
         VBox column = new VBox(10);
         column.setAlignment(Pos.CENTER);
+
+        String userJSON = LocalStorage.get("/user");
+        if (userJSON != null) {
+            try {
+                UserDTO userDTO = gson.fromJson(userJSON, UserDTO.class);
+                String displayName = userDTO.getUser().getDisplayName();
+
+                Text welcome = new Text("Welcome, " + displayName + "!");
+                welcome.getStyleClass().add("brand-subtitle");
+
+                column.getChildren().add(welcome);
+            } catch (Exception e) {
+                logger.error("Unable to parse user JSON");
+            }
+        }
 
         Button logOut = new Button("Log Out");
         logOut.getStyleClass().add("brand-button");

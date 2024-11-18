@@ -11,7 +11,13 @@ import com.lewall.db.models.User;
 import com.lewall.db.collections.CommentCollection;
 import com.lewall.api.BadRequest;
 
-public class PostService implements Service {
+/**
+ * A class that implements Post-managing services
+ * 
+ * @author Shrey Agarwal
+ * @version 14 November 2024
+ */
+public class PostService implements IService {
     private static final UserCollection users = db.getUserCollection();
     private static final PostCollection posts = db.getPostCollection();
     private static final CommentCollection comments = db.getCommentCollection();

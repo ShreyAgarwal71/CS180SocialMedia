@@ -11,13 +11,18 @@ import com.lewall.db.models.Post;
 import com.lewall.db.models.User;
 import com.lewall.helpers.PostSort;
 
-public class UserService implements Service {
+/**
+ * A class that implements User-managing services
+ * 
+ * @author Shrey Agarwal
+ * @version 14 November 2024
+ */
+public class UserService implements IService {
     private static final UserCollection users = db.getUserCollection();
     private static final PostCollection posts = db.getPostCollection();
 
-    public static boolean createUser(String username, String password, String displayName, String bio, String email) {
-        User user = new User(username, password, displayName, bio, email);
-        return users.addElement(user);
+    public static User getUser(UUID userId) {
+        return users.findById(userId);
     }
 
     public static boolean deleteUser(UUID userId) {

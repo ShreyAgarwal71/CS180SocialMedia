@@ -13,10 +13,17 @@ import com.lewall.services.CommentService;
 import com.lewall.dtos.AddCommentDTO;
 import com.lewall.dtos.DeleteCommentDTO;
 import com.lewall.dtos.UnlikeCommentDTO;
+import com.lewall.resolverinterfaces.ICommentResolver;
 import com.lewall.dtos.LikeCommentDTO;
 
+/**
+ * A class to resolve Comment-related requests
+ *
+ * @author Shrey Agarwal
+ * @version 14 November 2024
+ */
 @Resolver(basePath = "/comment")
-public class CommentResolver implements BaseResolver {
+public class CommentResolver implements BaseResolver, ICommentResolver {
 
     @AuthGuard()
     @Endpoint(endpoint = "/add", method = Request.EMethod.POST, requestBodyType = AddCommentDTO.class)

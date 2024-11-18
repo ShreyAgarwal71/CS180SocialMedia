@@ -8,7 +8,13 @@ import com.lewall.api.BadRequest;
 import com.lewall.db.collections.PostCollection;
 import com.lewall.db.models.Post;
 
-public class CommentService implements Service {
+/**
+ * A class that implements Comment-managing services
+ * 
+ * @author Shrey Agarwal
+ * @version 14 November 2024
+ */
+public class CommentService implements IService {
     private static final CommentCollection comments = db.getCommentCollection();
     private static final PostCollection posts = db.getPostCollection();
 

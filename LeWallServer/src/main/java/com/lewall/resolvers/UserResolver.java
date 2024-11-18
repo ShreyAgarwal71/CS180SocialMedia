@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import com.lewall.api.InternalServerError;
 import com.lewall.api.Request;
+import com.lewall.db.models.User;
 import com.lewall.resolvers.ResolverTools.AuthGuard;
 import com.lewall.resolvers.ResolverTools.BaseResolver;
 import com.lewall.resolvers.ResolverTools.Endpoint;
@@ -18,27 +19,33 @@ import com.lewall.dtos.FollowUserDTO;
 import com.lewall.dtos.PostsDTO;
 import com.lewall.dtos.ProfileNameDTO;
 import com.lewall.dtos.UnfollowUserDTO;
+import com.lewall.dtos.UserDTO;
 import com.lewall.dtos.UserPostsDTO;
+import com.lewall.resolverinterfaces.IUserResolver;
 import com.lewall.dtos.UserFollowingPostsDTO;
 import com.lewall.dtos.FollowingPostsDTO;
 import com.lewall.dtos.ClassPostsDTO;
 import com.lewall.dtos.ClassFeedDTO;
 
+/**
+ * A class to resolve User-related requests
+ *
+ * @author Shrey Agarwal
+ * @version 14 November 2024
+ */
 @Resolver(basePath = "/user")
-public class UserResolver implements BaseResolver {
+public class UserResolver implements BaseResolver, IUserResolver {
+    @AuthGuard
+    @Endpoint(endpoint = "/", method = Request.EMethod.GET, responseBodyType = UserDTO.class)
+    public UserDTO getUser(Request<Void> request) {
+        UUID userId = request.getUserId();
 
-    @AuthGuard()
-    @Endpoint(endpoint = "/create", method = Request.EMethod.POST, requestBodyType = CreateUserDTO.class)
-    public void createUser(Request<CreateUserDTO> request) {
-        String username = request.getBody().getUsername();
-        String password = request.getBody().getPassword();
-        String displayName = request.getBody().getDisplayName();
-        String bio = request.getBody().getBio();
-        String email = request.getBody().getEmail();
-
-        if (!UserService.createUser(username, password, displayName, bio, email)) {
-            throw new InternalServerError("Failed to Create User");
+        User user = UserService.getUser(userId);
+        if (user == null) {
+            throw new InternalServerError("Failed to get User");
         }
+
+        return new UserDTO(user);
     }
 
     @AuthGuard()

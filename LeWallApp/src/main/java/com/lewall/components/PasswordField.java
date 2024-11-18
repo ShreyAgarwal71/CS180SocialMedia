@@ -1,10 +1,7 @@
 package com.lewall.components;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -15,6 +12,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 
 public class PasswordField extends StackPane {
+    private static final Logger logger = LogManager.getLogger(PasswordField.class);
+
     private String password = "";
     private boolean isMasked = true;
 
@@ -22,11 +21,17 @@ public class PasswordField extends StackPane {
         TextField field = new TextField();
         field.setOnKeyTyped(e -> {
             String input = field.getText();
+            int insertPosition = field.getCaretPosition();
 
             if (input.length() < password.length()) {
                 password = password.substring(0, password.length() - 1);
             } else if (input.length() > password.length()) {
-                password += input.charAt(input.length() - 1);
+                String newPassword = password.substring(0, insertPosition - 1) + input.charAt(insertPosition - 1);
+                if (insertPosition - 1 < password.length()) {
+                    System.out.println("added" + password.substring(insertPosition - 1));
+                    newPassword += password.substring(insertPosition - 1);
+                }
+                password = newPassword;
             }
 
             StringBuilder maskedInput = new StringBuilder();
@@ -34,7 +39,7 @@ public class PasswordField extends StackPane {
                 maskedInput.append(isMasked ? "•" : input.charAt(i));
             }
             field.setText(maskedInput.toString());
-            field.positionCaret(maskedInput.length());
+            field.positionCaret(insertPosition);
         });
         field.setFocusTraversable(false);
         field.getStyleClass().add("brand-field");

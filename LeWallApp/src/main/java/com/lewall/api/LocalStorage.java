@@ -148,6 +148,16 @@ public class LocalStorage {
 	}
 
 	/**
+	 * Removes the requested data from the storage HashMap
+	 * 
+	 * @return
+	 */
+	public static String remove(String key) {
+		NEED_WRITE.set(true);
+		return storage.remove(key);
+	}
+
+	/**
 	 * s
 	 * Gets the storage file location based on the OS
 	 * 
