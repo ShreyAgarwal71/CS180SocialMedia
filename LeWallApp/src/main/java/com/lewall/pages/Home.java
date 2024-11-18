@@ -21,12 +21,21 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
+/**
+ * Home page for the application
+ * 
+ * @author Mahit Mehta
+ * @version 17 November 2024
+ */
 public class Home extends Pane {
     private static final Logger logger = LogManager.getLogger(Login.class);
 
     private static final GsonBuilder builder = new GsonBuilder();
     private static final Gson gson = builder.create();
 
+    /**
+     * Constructor for the home page
+     */
     public Home() {
         this.getStyleClass().add("primary-bg");
 

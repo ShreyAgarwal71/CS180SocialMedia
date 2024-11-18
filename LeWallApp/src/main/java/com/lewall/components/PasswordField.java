@@ -1,8 +1,5 @@
 package com.lewall.components;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -11,10 +8,19 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 
+/**
+ * Custom password field component
+ * 
+ * @author Mahit Mehta
+ * @version 17 November 2024
+ */
 public class PasswordField extends StackPane {
     private String password = "";
     private boolean isMasked = true;
 
+    /**
+     * Constructor for the password field
+     */
     public PasswordField() {
         TextField field = new TextField();
         field.setOnKeyTyped(e -> {
@@ -82,6 +88,11 @@ public class PasswordField extends StackPane {
         getChildren().add(eye);
     }
 
+    /**
+     * Getter for the password
+     * 
+     * @return the password
+     */
     public String getPassword() {
         return password;
     }

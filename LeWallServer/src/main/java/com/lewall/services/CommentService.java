@@ -18,12 +18,29 @@ public class CommentService implements IService {
     private static final CommentCollection comments = db.getCommentCollection();
     private static final PostCollection posts = db.getPostCollection();
 
+    /**
+     * Add a comment to a post
+     * 
+     * @param userId
+     * @param postId
+     * @param messageComment
+     * @param date
+     * @return
+     */
     public static boolean addComment(UUID userId, UUID postId, String messageComment, String date) {
         Comment comment = new Comment(userId, postId, messageComment, date, 0);
 
         return comments.addElement(comment);
     }
 
+    /**
+     * Edit a comment
+     * 
+     * @param userId
+     * @param commentId
+     * @param messageComment
+     * @return
+     */
     public static boolean deleteComment(UUID userId, UUID commentId) {
         Comment comment = comments.findOne(c -> c.getId().equals(commentId));
         if (comment == null) {
@@ -36,6 +53,13 @@ public class CommentService implements IService {
         return comments.removeElement(commentId);
     }
 
+    /**
+     * Delete a comment
+     * 
+     * @param userId
+     * @param commentId
+     * @return
+     */
     public static boolean likeComment(UUID userId, UUID commentId) {
         Comment comment = comments.findOne(c -> c.getId().equals(commentId));
         if (comment == null) {
@@ -49,6 +73,13 @@ public class CommentService implements IService {
         return comments.updateElement(comment.getId(), comment);
     }
 
+    /**
+     * Unlike a comment
+     * 
+     * @param userId
+     * @param commentId
+     * @return
+     */
     public static boolean unlikeComment(UUID userId, UUID commentId) {
         Comment comment = comments.findOne(c -> c.getId().equals(commentId));
         if (comment == null) {

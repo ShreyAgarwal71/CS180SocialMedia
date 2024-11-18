@@ -10,6 +10,11 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 
+/**
+ * Main class for the application
+ * 
+ * @version 17 November 2024
+ */
 public class App extends Application {
     public static final String ID = "LeWall";
 
@@ -58,6 +63,11 @@ public class App extends Application {
         stage.show();
     }
 
+    /**
+     * Main method for the application, Will launch the application
+     * 
+     * @param args
+     */
     public static void main(String[] args) {
         launch(App.class, args);
     }

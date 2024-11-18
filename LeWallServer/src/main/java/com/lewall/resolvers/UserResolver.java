@@ -34,6 +34,12 @@ import com.lewall.dtos.ClassFeedDTO;
  */
 @Resolver(basePath = "/user")
 public class UserResolver implements BaseResolver, IUserResolver {
+    /**
+     * Get a user
+     * 
+     * @param request
+     * @return {@link UserDTO}
+     */
     @AuthGuard
     @Endpoint(endpoint = "/", method = Request.EMethod.GET, responseBodyType = UserDTO.class)
     public UserDTO getUser(Request<Void> request) {
@@ -47,6 +53,15 @@ public class UserResolver implements BaseResolver, IUserResolver {
         return new UserDTO(user);
     }
 
+    /**
+     * Delete a user
+     * 
+     * @param request
+     *            {@link Request} with {@link DeleteUserDTO} body
+     * @throws InternalServerError
+     *             if unable to delete user
+     * @return void
+     */
     @AuthGuard()
     @Endpoint(endpoint = "/delete", method = Request.EMethod.POST, requestBodyType = DeleteUserDTO.class)
     public void deleteUser(Request<DeleteUserDTO> request) {
@@ -57,6 +72,15 @@ public class UserResolver implements BaseResolver, IUserResolver {
         }
     }
 
+    /**
+     * Follow a user
+     * 
+     * @param request
+     *            {@link Request} with {@link FollowUserDTO} body
+     * @throws InternalServerError
+     *             if unable to follow user
+     * @return void
+     */
     @AuthGuard()
     @Endpoint(endpoint = "/follow", method = Request.EMethod.POST, requestBodyType = FollowUserDTO.class)
     public void followUser(Request<FollowUserDTO> request) {
@@ -68,6 +92,15 @@ public class UserResolver implements BaseResolver, IUserResolver {
         }
     }
 
+    /**
+     * Unfollow a user
+     * 
+     * @param request
+     *            {@link Request} with {@link UnfollowUserDTO} body
+     * @throws InternalServerError
+     *             if unable to unfollow user
+     * @return void
+     */
     @AuthGuard()
     @Endpoint(endpoint = "/unfollow", method = Request.EMethod.POST, requestBodyType = UnfollowUserDTO.class)
     public void unfollowUser(Request<UnfollowUserDTO> request) {
@@ -79,6 +112,15 @@ public class UserResolver implements BaseResolver, IUserResolver {
         }
     }
 
+    /**
+     * Block a user
+     * 
+     * @param request
+     *            {@link Request} with {@link BlockUserDTO} body
+     * @throws InternalServerError
+     *             if unable to block user
+     * @return void
+     */
     @AuthGuard()
     @Endpoint(endpoint = "/block", method = Request.EMethod.POST, requestBodyType = BlockUserDTO.class)
     public void blockUser(Request<BlockUserDTO> request) {
@@ -90,6 +132,15 @@ public class UserResolver implements BaseResolver, IUserResolver {
         }
     }
 
+    /**
+     * Unblock a user
+     * 
+     * @param request
+     *            {@link Request} with {@link UnblockUserDTO} body
+     * @throws InternalServerError
+     *             if unable to unblock user
+     * @return void
+     */
     @AuthGuard()
     @Endpoint(endpoint = "/unblock", method = Request.EMethod.POST, requestBodyType = UnblockUserDTO.class)
     public void unblockUser(Request<UnblockUserDTO> request) {
@@ -101,6 +152,13 @@ public class UserResolver implements BaseResolver, IUserResolver {
         }
     }
 
+    /**
+     * Get posts of a user
+     * 
+     * @param request
+     *            {@link Request} with {@link UserPostsDTO} body
+     * @return {@link PostsDTO}
+     */
     @AuthGuard()
     @Endpoint(endpoint = "/getPosts", method = Request.EMethod.GET, requestBodyType = UserPostsDTO.class, responseBodyType = PostsDTO.class)
     public PostsDTO getPosts(Request<UserPostsDTO> request) {
@@ -114,6 +172,15 @@ public class UserResolver implements BaseResolver, IUserResolver {
         return posts;
     }
 
+    /**
+     * Update the profile name of a user
+     * 
+     * @param request
+     *            {@link Request} with {@link ProfileNameDTO} body
+     * @throws InternalServerError
+     *             if unable to update profile name
+     * @return void
+     */
     @AuthGuard()
     @Endpoint(endpoint = "/updateProfileName", method = Request.EMethod.POST, requestBodyType = ProfileNameDTO.class)
     public void updateProfileName(Request<ProfileNameDTO> request) {
@@ -125,6 +192,14 @@ public class UserResolver implements BaseResolver, IUserResolver {
         }
     }
 
+    /**
+     * Get posts of users that the user is following
+     * 
+     * @param request
+     *            {@link Request} with {@link UserFollowingPostsDTO} body
+     * @return {@link FollowingPostsDTO}
+     * 
+     */
     @AuthGuard()
     @Endpoint(endpoint = "/getFollowerPosts", method = Request.EMethod.GET, requestBodyType = UserFollowingPostsDTO.class, responseBodyType = FollowingPostsDTO.class)
     public FollowingPostsDTO getFollowerPosts(Request<UserFollowingPostsDTO> request) {
@@ -139,6 +214,13 @@ public class UserResolver implements BaseResolver, IUserResolver {
         return posts;
     }
 
+    /**
+     * Get posts of a class
+     * 
+     * @param request
+     *            {@link Request} with {@link ClassPostsDTO} body
+     * @return {@link ClassFeedDTO}
+     */
     @AuthGuard()
     @Endpoint(endpoint = "/getMainFeed", method = Request.EMethod.GET, requestBodyType = ClassPostsDTO.class, responseBodyType = ClassFeedDTO.class)
     public ClassFeedDTO getMainFeed(Request<ClassPostsDTO> request) {

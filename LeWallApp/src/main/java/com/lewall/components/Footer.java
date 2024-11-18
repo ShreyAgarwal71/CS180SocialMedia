@@ -6,7 +6,16 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.text.Text;
 
+/**
+ * Footer component for the application
+ * 
+ * @author Mahit Mehta
+ * @version 17 November 2024
+ */
 public class Footer extends HBox {
+    /**
+     * Constructor for the footer
+     */
     public Footer() {
         super(10);
 

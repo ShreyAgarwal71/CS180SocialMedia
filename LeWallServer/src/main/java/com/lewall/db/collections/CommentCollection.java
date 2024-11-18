@@ -38,6 +38,11 @@ public class CommentCollection extends BaseCollection<Comment> {
 		return this.persistToDisk(fileName, arr);
 	}
 
+	/**
+	 * Gets all comments by postId.
+	 * 
+	 * @return exitCode
+	 */
 	public List<Comment> commentsByPostId(UUID postId) {
 		return this.findAll(c -> c.getPostId().equals(postId));
 	}

@@ -16,6 +16,14 @@ import com.lewall.resolvers.ResolverTools.Resolver;
 @Resolver(basePath = "/")
 public class RootResolver implements BaseResolver, IRootResolver {
 
+    /**
+     * Defines the root
+     * 
+     * @param request
+     *            {@link Request} with {@link String} body
+     * @return {@link String}
+     *
+     */
     @Endpoint(endpoint = "/", method = EMethod.GET)
     public String root(Request<String> request) {
         return "All Systems Operational.";
