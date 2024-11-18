@@ -12,8 +12,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 
 public class PasswordField extends StackPane {
-    private static final Logger logger = LogManager.getLogger(PasswordField.class);
-
     private String password = "";
     private boolean isMasked = true;
 

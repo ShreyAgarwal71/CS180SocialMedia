@@ -20,6 +20,12 @@ import com.lewall.resolvers.ResolverTools;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+/**
+ * Worker class to handle client requests
+ * 
+ * @author Mahit Mehta
+ * @version November 17, 2024
+ */
 public class Worker implements Runnable {
     private static final Logger logger = LogManager.getLogger(Worker.class);
 
@@ -37,6 +43,12 @@ public class Worker implements Runnable {
         workerId = workerCount.getAndIncrement();
     }
 
+    /**
+     * Handles reading from the client
+     * 
+     * @param key
+     *            SelectionKey for the client
+     */
     private void handleRead(SelectionKey key) {
         SocketChannel clientChannel = (SocketChannel) key.channel();
         ByteBuffer buffer = ByteBuffer.allocate(1024);
@@ -60,7 +72,6 @@ public class Worker implements Runnable {
 
                     String response = ResolverTools.resolve(request, json);
 
-                    // TODO: Super inefficient way of getting the status, pls fix :(
                     @SuppressWarnings("unchecked")
                     Response<NullType> responseObj = gson.fromJson(response, Response.class);
                     logger.info(
@@ -100,6 +111,11 @@ public class Worker implements Runnable {
         }
     }
 
+    /**
+     * Main worker loop
+     * 
+     * @see java.lang.Runnable#run()
+     */
     @Override
     public void run() {
         try {
