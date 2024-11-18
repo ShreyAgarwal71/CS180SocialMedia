@@ -21,15 +21,21 @@ public class PasswordField extends StackPane {
         TextField field = new TextField();
         field.setOnKeyTyped(e -> {
             String input = field.getText();
-            int insertPosition = field.getCaretPosition();
+            int opPosition = field.getCaretPosition();
 
-            if (input.length() < password.length()) {
-                password = password.substring(0, password.length() - 1);
+            if (input.length() == 0) {
+                password = "";
+            } else if (input.length() < password.length()) {
+                String newPassword = password.substring(0, opPosition);
+                if (opPosition < password.length()) {
+                    newPassword += password.substring(opPosition + 1);
+                }
+
+                password = newPassword;
             } else if (input.length() > password.length()) {
-                String newPassword = password.substring(0, insertPosition - 1) + input.charAt(insertPosition - 1);
-                if (insertPosition - 1 < password.length()) {
-                    System.out.println("added" + password.substring(insertPosition - 1));
-                    newPassword += password.substring(insertPosition - 1);
+                String newPassword = password.substring(0, opPosition - 1) + input.charAt(opPosition - 1);
+                if (opPosition - 1 < password.length()) {
+                    newPassword += password.substring(opPosition - 1);
                 }
                 password = newPassword;
             }
@@ -39,7 +45,7 @@ public class PasswordField extends StackPane {
                 maskedInput.append(isMasked ? "•" : input.charAt(i));
             }
             field.setText(maskedInput.toString());
-            field.positionCaret(insertPosition);
+            field.positionCaret(opPosition);
         });
         field.setFocusTraversable(false);
         field.getStyleClass().add("brand-field");
