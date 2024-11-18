@@ -113,7 +113,7 @@ public class UserService implements Service {
             following.add(UUID.fromString(followerId));
         }
         for (UUID follower : following) {
-            posts1.add(posts.findByClassAndUserId(classId, follower));
+            posts1.add(posts.findByClassAndUserId(follower, classId));
         }
 
         List<Post> posts2 = new ArrayList<>();
