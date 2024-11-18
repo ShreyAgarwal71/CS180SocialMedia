@@ -81,6 +81,16 @@ public class AuthResolver implements BaseResolver {
         }
 
         String token = AuthService.generateAccessToken(user.getId().toString());
+
+        try {
+            // Sleep thread for 250 ms
+            Thread.sleep(250);
+        } catch (InterruptedException e) {
+            // Handle the interruption appropriately
+            Thread.currentThread().interrupt(); // Preserve the interrupted status
+            throw new InternalServerError("Thread was interrupted during processing.");
+        }
+
         return new AuthTokenDTO(token);
     }
 }

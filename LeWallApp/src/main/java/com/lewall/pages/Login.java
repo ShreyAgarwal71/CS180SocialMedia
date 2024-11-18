@@ -31,6 +31,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.animation.RotateTransition;
+import javafx.animation.Interpolator;
+import javafx.util.Duration;
 
 public class Login extends Pane {
     private static final Logger logger = LogManager.getLogger(Login.class);
@@ -47,7 +50,7 @@ public class Login extends Pane {
         StackPane stackPane = new StackPane();
         stackPane.setAlignment(Pos.CENTER);
 
-        Rectangle loginBox = new Rectangle(235, 300);
+        Rectangle loginBox = new Rectangle(235, 350);
         loginBox.setFill(new Color(0, 0, 0, 0));
         loginBox.setStroke(Color.rgb(255, 255, 255, 0.05));
         loginBox.setStrokeWidth(1);
@@ -104,6 +107,19 @@ public class Login extends Pane {
 
         PasswordField passwordField = new PasswordField();
 
+        // Gear image setup
+        Image gearImage = new Image("imgs/loading-gear.png");
+        ImageView gearImageView = new ImageView(gearImage);
+        gearImageView.setFitWidth(30);
+        gearImageView.setFitHeight(30);
+        gearImageView.setVisible(false); // Initially hidden
+
+        // RotateTransition for spinning
+        RotateTransition rotateTransition = new RotateTransition(Duration.seconds(1), gearImageView);
+        rotateTransition.setByAngle(360);
+        rotateTransition.setCycleCount(RotateTransition.INDEFINITE);
+        rotateTransition.setInterpolator(Interpolator.LINEAR);
+
         Button loginButton = new Button("Login");
         VBox.setMargin(loginButton, new Insets(0, 0, 5, 0));
         loginButton.setOnAction(event -> {
@@ -112,8 +128,14 @@ public class Login extends Pane {
 
             if (!Validation.isEmail(email) || password == null || password.isEmpty()) {
                 loginError.setText("Invalid email or password format.");
+                gearImageView.setVisible(false);
+                rotateTransition.stop();
                 return;
             }
+
+            // Show and spin gear
+            gearImageView.setVisible(true);
+            rotateTransition.play();
 
             Connection.<LoginDTO, AuthTokenDTO>post("/auth/login", new LoginDTO(
                     email, password))
@@ -123,11 +145,15 @@ public class Login extends Pane {
                             logger.debug("Login Successful");
                             LocalStorage.set("token", token);
                             Platform.runLater(() -> {
+                                rotateTransition.stop();
+                                gearImageView.setVisible(false);
                                 Navigator.navigateTo(Navigator.EPage.HOME);
                             });
                         } else {
                             logger.debug("Login Failed");
                             loginError.setText("Internal server error, try again later.");
+                            rotateTransition.stop();
+                            gearImageView.setVisible(false);
                         }
                     }).exceptionally(ex -> {
                         logger.error(ex.getMessage());
@@ -137,6 +163,7 @@ public class Login extends Pane {
                         }
 
                         loginError.setText(ex.getMessage());
+                        gearImageView.setVisible(false);
                         return null;
                     });
         });
@@ -170,6 +197,7 @@ public class Login extends Pane {
                 subTitle,
                 emailField,
                 passwordField,
+                gearImageView,
                 loginError,
                 loginButton,
                 signWithGoogleButton,
