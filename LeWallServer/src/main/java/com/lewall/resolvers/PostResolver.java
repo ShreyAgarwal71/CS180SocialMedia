@@ -12,7 +12,7 @@ import com.lewall.services.PostService;
 import com.lewall.dtos.CreatePostDTO;
 import com.lewall.dtos.DeletePostDTO;
 import com.lewall.dtos.UnlikePostDTO;
-import com.lewall.resolverinterfaces.IPostResolver;
+import com.lewall.interfaces.IPostResolver;
 import com.lewall.dtos.LikePostDTO;
 import com.lewall.dtos.CommentsDTO;
 import com.lewall.dtos.PostCommentsDTO;
