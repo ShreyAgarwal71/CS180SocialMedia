@@ -27,7 +27,7 @@ public class Request<Body> {
         this.method = method;
         this.endpoint = endpoint;
         this.body = body;
-        this.bodyType = body.getClass().getName();
+        this.bodyType = body != null ? body.getClass().getName() : null;
         this.headers = headers;
         this.userId = null;
     }

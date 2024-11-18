@@ -150,14 +150,14 @@ public class Connection {
         return headers;
     }
 
-    public static <ResponseBody> CompletableFuture<Response<ResponseBody>> get(String endpoint) {
+    public static <ResponseBody> CompletableFuture<Response<ResponseBody>> get(String endpoint, boolean cache) {
         return CompletableFuture.supplyAsync(() -> {
             if (!isConnectionActive()) {
                 throw new CompletionException(new RuntimeException("Connection Failed"));
             }
 
             HashMap<EHeader, String> headers = getBaseHeaders();
-            return request(new Request<>(EMethod.GET, endpoint, null, headers));
+            return request(new Request<>(EMethod.GET, endpoint, null, headers), cache);
         }, executor);
     }
 
@@ -169,12 +169,12 @@ public class Connection {
             }
 
             HashMap<EHeader, String> headers = getBaseHeaders();
-            return request(new Request<>(EMethod.POST, endpoint, body, headers));
+            return request(new Request<>(EMethod.POST, endpoint, body, headers), false);
         }, executor);
     }
 
     private static <RequestBody, ResponseBody> Response<ResponseBody> request(
-            Request<RequestBody> request) {
+            Request<RequestBody> request, boolean cache) {
         try {
             ByteBuffer buffer = ByteBuffer.allocate(1024);
 
@@ -212,6 +212,11 @@ public class Connection {
 
             if (response.getStatus() != Response.EStatus.OK) {
                 throw new CompletionException(new RuntimeException(response.getBody().toString()));
+            }
+
+            if (cache) {
+                String responseBodyJSON = gson.toJson(response.getBody());
+                LocalStorage.set(request.getEndpoint(), responseBodyJSON);
             }
 
             return response;
