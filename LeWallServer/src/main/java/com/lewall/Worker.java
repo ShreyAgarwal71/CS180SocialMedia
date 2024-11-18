@@ -58,6 +58,7 @@ public class Worker implements Runnable {
             if (bytesRead == -1) {
                 logger.info("Client disconnected: " + clientChannel);
                 clientChannel.close();
+                key.cancel();
             } else {
                 buffer.flip();
                 String json = new String(buffer.array()).trim();
@@ -133,6 +134,7 @@ public class Worker implements Runnable {
 
                     handleRead(key);
                 }
+                this.selector.selectedKeys().clear();
             }
         } catch (IOException e) {
             logger.error(e);
