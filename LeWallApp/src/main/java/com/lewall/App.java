@@ -5,7 +5,9 @@ import org.apache.logging.log4j.Logger;
 
 import com.lewall.api.LocalStorage;
 import com.lewall.api.Connection;
+import com.lewall.dtos.UserDTO;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.stage.Stage;
 
 public class App extends Application {
@@ -29,8 +31,26 @@ public class App extends Application {
         stage.setResizable(false);
 
         if (LocalStorage.get("token") != null) {
-            Navigator.navigateTo(Navigator.EPage.HOME);
-            stage.show();
+            Connection.<UserDTO>get("/user", true).thenAccept(response -> {
+                Platform.runLater(() -> {
+                    Navigator.navigateTo(Navigator.EPage.HOME);
+                    stage.show();
+                });
+            }).exceptionally(e -> {
+                while (e.getCause() != null) {
+                    e = e.getCause();
+                }
+                logger.error(e.getMessage());
+
+                LocalStorage.clear();
+
+                Platform.runLater(() -> {
+                    Navigator.navigateTo(Navigator.EPage.LOGIN);
+                    stage.show();
+                });
+                return null;
+            });
+
             return;
         }
 
