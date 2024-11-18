@@ -17,6 +17,7 @@
 ## Usage
 
 > Note: Must have JDK 23 installed.
+
 > cd into LeWallApp/ before running this command
 
 - mvn clean compile javafx:run
