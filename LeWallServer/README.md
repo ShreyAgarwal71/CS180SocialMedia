@@ -27,49 +27,49 @@ The main components of the project include:
 │       ├── main/
 │       │   └── java/com/lewall/
 │       │       ├── db/
-                    ├── collections
-                        ├── CommentCollection.java
-                        ├── PostCollection.java
-                        └── UserCollection.java
-                    └──helpers
-                        ├── BaseCollection.java
-                        ├── Collection.java
-                        └── RwLockArrayList.java
-                ├── helpers
+│                    ├── collections
+│                        ├── CommentCollection.java
+│                        ├── PostCollection.java
+│                        └── UserCollection.java
+│                    └──helpers
+│                        ├── BaseCollection.java
+│                        ├── Collection.java
+│                        └── RwLockArrayList.java
+│                ├── helpers
 │       │           ├── PostSort.java
-                ├── interfaces
-                    ├── IAuthResolver.java
-                    ├── ICommentResolver.java
-                    ├── IPostResolver.java
+│                ├── interfaces
+│                    ├── IAuthResolver.java
+│                    ├── ICommentResolver.java
+│                    ├── IPostResolver.java
 │       │           ├── IRootResolver.java
 │       │           └── IUserResolver.java
-                ├── resolvers
-                    ├── AuthResolver.java
-                    ├── CommentResolver.java
-                    ├── PostResolver.java
+│                ├── resolvers
+│                    ├── AuthResolver.java
+│                    ├── CommentResolver.java
+│                    ├── PostResolver.java
 │       │           ├── RootResolver.java
 │       │           └── UserResolver.java
-                ├── services
-                    ├── AuthService.java
-                    ├── CommentService.java
-                    ├── IService.java
+│                ├── services
+│                    ├── AuthService.java
+│                    ├── CommentService.java
+│                    ├── IService.java
 │       │           ├── PostService.java
 │       │           └── UserService.java
-                ├── AppServer.java
-                └──Worker.java
-            ├── resources/
-                └──log4j2.xml
-            ├── test/java/com/lewall/
-                ├── db/
-                    ├── models/
-                        ├──CommentTest.java
-                        ├──PostTest.java
-                        ├──UserTest.java
-                    ├── models/
-                        ├──CommentTest.java
-                        ├──PostTest.java
-                        ├──UserTest.java
-
+│                ├── AppServer.java
+│                └──Worker.java
+│            ├── resources/
+│                └──log4j2.xml
+│            ├── test/java/com/lewall/
+│                ├── db/
+│                    ├── models/
+│                       ├──CommentTest.java
+│                       ├──PostTest.java
+│                      ├──UserTest.java
+│                  ├── models/
+│                      ├──CommentTest.java
+│                     ├──PostTest.java
+│                     ├──UserTest.java
+│
 │
 └── Data Files
     ├── users.txt               # Stores user data
