@@ -11,6 +11,7 @@ import com.lewall.components.Footer;
 import com.lewall.components.PasswordField;
 import com.lewall.dtos.AuthTokenDTO;
 import com.lewall.dtos.CreateUserDTO;
+import com.lewall.dtos.UserDTO;
 
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -47,7 +48,7 @@ public class Register extends Pane {
         StackPane stackPane = new StackPane();
         stackPane.setAlignment(Pos.CENTER);
 
-        Rectangle registerBox = new Rectangle(235, 300);
+        Rectangle registerBox = new Rectangle(235, 350);
         registerBox.setFill(new Color(0, 0, 0, 0));
         registerBox.setStroke(Color.rgb(255, 255, 255, 0.05));
         registerBox.setStrokeWidth(1);
@@ -92,6 +93,16 @@ public class Register extends Pane {
         registerError.setWrappingWidth(200);
         VBox.setMargin(registerError, new Insets(3, 0, 5, 0));
 
+        TextField displayNameField = new TextField();
+        displayNameField.setFocusTraversable(false);
+        displayNameField.getStyleClass().add("brand-field");
+        displayNameField.setMaxSize(200, 30);
+        displayNameField.setPromptText("Display Name");
+        displayNameField.onKeyPressedProperty().set(e -> {
+            registerError.setText("");
+        });
+        VBox.setMargin(displayNameField, new Insets(0, 0, 7, 0));
+
         TextField emailField = new TextField();
         emailField.setFocusTraversable(false);
         emailField.getStyleClass().add("brand-field");
@@ -109,6 +120,12 @@ public class Register extends Pane {
             String email = emailField.getText();
             String password = passwordField.getPassword();
             String username = email;
+            String displayName = displayNameField.getText();
+
+            if (displayName == null || displayName.isEmpty()) {
+                registerError.setText("Display Name is required.");
+                return;
+            }
 
             if (!Validation.isEmail(email)) {
                 registerError.setText("Invalid Email");
@@ -117,20 +134,31 @@ public class Register extends Pane {
 
             if (!Validation.isSecurePassword(password)) {
                 registerError.setText(
-                        "Password must contain at least 8 characters, 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character.");
+                        "Password must have 8+ characters, 1 lowercase and uppercase letter, number, & special character.");
                 return;
             }
 
             Connection.<CreateUserDTO, AuthTokenDTO>post("/auth/register", new CreateUserDTO(
-                    username, password, "", "", email))
+                    username, password, displayName, "", email))
                     .thenAccept(response -> {
                         String token = response.getBody().getToken();
                         if (token != null) {
                             logger.debug("Registration Successful");
                             LocalStorage.set("token", token);
 
-                            Platform.runLater(() -> {
-                                Navigator.navigateTo(Navigator.EPage.HOME);
+                            Connection.<UserDTO>get("/user", true).thenAccept(userResponse -> {
+                                Platform.runLater(() -> {
+                                    Navigator.navigateTo(Navigator.EPage.HOME);
+                                });
+                            }).exceptionally(e -> {
+                                while (e.getCause() != null) {
+                                    e = e.getCause();
+                                }
+
+                                logger.error(e.getMessage());
+                                LocalStorage.remove("token");
+                                registerError.setText(e.getMessage());
+                                return null;
                             });
                         } else {
                             logger.debug("Registration Failed");
@@ -175,6 +203,7 @@ public class Register extends Pane {
         registerForm.getChildren().addAll(
                 title,
                 subTitle,
+                displayNameField,
                 emailField,
                 passwordField,
                 registerError,

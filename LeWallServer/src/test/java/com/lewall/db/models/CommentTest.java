@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.UUID;
+import java.util.Set;
+import java.util.HashSet;
 
 import org.junit.jupiter.api.Test;
 
@@ -71,7 +73,9 @@ public class CommentTest {
 		testComment.setUserId(UUID.randomUUID());
 		testComment.setLikes(1234);
 		testComment.setComments(new Comment[2]);
-		testComment.setLikedBy(new String[2]);
+		Set<String> likedBy = new HashSet<String>();
+		likedBy.add("user1");
+		testComment.setLikedBy(likedBy);
 
 		assertEquals(testComment.getMessageComment(), "This is a new comment",
 				"Ensure the setter is working for comment");
@@ -80,7 +84,7 @@ public class CommentTest {
 		assertFalse(testComment.getUserId().equals(userId), "Ensure the setter is working for userId");
 		assertEquals(testComment.getLikes(), 1234, "Ensure the setter is working for votes");
 		assertArrayEquals(testComment.getComments(), new Comment[2], "Ensure the setter is working for comments");
-		assertArrayEquals(testComment.getLikedBy(), new String[2], "Ensure the setter is working for likedBy");
+		assertEquals(testComment.getLikedBy(), likedBy, "Ensure the setter is working for likedBy");
 
 	}
 

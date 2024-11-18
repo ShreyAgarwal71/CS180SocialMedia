@@ -20,6 +20,12 @@ import com.lewall.resolvers.ResolverTools;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+/**
+ * Worker class to handle client requests
+ * 
+ * @author Mahit Mehta
+ * @version November 17, 2024
+ */
 public class Worker implements Runnable {
     private static final Logger logger = LogManager.getLogger(Worker.class);
 
@@ -37,6 +43,12 @@ public class Worker implements Runnable {
         workerId = workerCount.getAndIncrement();
     }
 
+    /**
+     * Handles reading from the client
+     * 
+     * @param key
+     *            SelectionKey for the client
+     */
     private void handleRead(SelectionKey key) {
         SocketChannel clientChannel = (SocketChannel) key.channel();
         ByteBuffer buffer = ByteBuffer.allocate(1024);
@@ -46,6 +58,7 @@ public class Worker implements Runnable {
             if (bytesRead == -1) {
                 logger.info("Client disconnected: " + clientChannel);
                 clientChannel.close();
+                key.cancel();
             } else {
                 buffer.flip();
                 String json = new String(buffer.array()).trim();
@@ -60,7 +73,6 @@ public class Worker implements Runnable {
 
                     String response = ResolverTools.resolve(request, json);
 
-                    // TODO: Super inefficient way of getting the status, pls fix :(
                     @SuppressWarnings("unchecked")
                     Response<NullType> responseObj = gson.fromJson(response, Response.class);
                     logger.info(
@@ -100,6 +112,11 @@ public class Worker implements Runnable {
         }
     }
 
+    /**
+     * Main worker loop
+     * 
+     * @see java.lang.Runnable#run()
+     */
     @Override
     public void run() {
         try {
@@ -117,6 +134,7 @@ public class Worker implements Runnable {
 
                     handleRead(key);
                 }
+                this.selector.selectedKeys().clear();
             }
         } catch (IOException e) {
             logger.error(e);

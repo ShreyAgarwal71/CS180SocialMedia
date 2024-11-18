@@ -9,6 +9,7 @@ import com.lewall.api.LocalStorage;
 import com.lewall.api.Validation;
 import com.lewall.dtos.AuthTokenDTO;
 import com.lewall.dtos.LoginDTO;
+import com.lewall.dtos.UserDTO;
 import com.lewall.components.Footer;
 import com.lewall.components.PasswordField;
 
@@ -141,19 +142,28 @@ public class Login extends Pane {
                     email, password))
                     .thenAccept(response -> {
                         String token = response.getBody().getToken();
+                        rotateTransition.stop();
+                        gearImageView.setVisible(false);
                         if (token != null) {
                             logger.debug("Login Successful");
                             LocalStorage.set("token", token);
-                            Platform.runLater(() -> {
-                                rotateTransition.stop();
-                                gearImageView.setVisible(false);
-                                Navigator.navigateTo(Navigator.EPage.HOME);
+                            Connection.<UserDTO>get("/user", true).thenAccept(userResponse -> {
+                                Platform.runLater(() -> {
+                                    Navigator.navigateTo(Navigator.EPage.HOME);
+                                });
+                            }).exceptionally(e -> {
+                                while (e.getCause() != null) {
+                                    e = e.getCause();
+                                }
+
+                                logger.error(e.getMessage());
+                                LocalStorage.remove("token");
+                                loginError.setText(e.getMessage());
+                                return null;
                             });
                         } else {
                             logger.debug("Login Failed");
                             loginError.setText("Internal server error, try again later.");
-                            rotateTransition.stop();
-                            gearImageView.setVisible(false);
                         }
                     }).exceptionally(ex -> {
                         logger.error(ex.getMessage());

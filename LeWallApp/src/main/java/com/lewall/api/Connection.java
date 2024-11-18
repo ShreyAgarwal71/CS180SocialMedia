@@ -47,6 +47,11 @@ public class Connection {
     private static Selector selector;
     private static HashMap<UUID, LinkedBlockingQueue<String>> responseQueues = new HashMap<>();
 
+    /**
+     * Connects to the server
+     * 
+     * @return true if connection is successful, false otherwise
+     */
     public static synchronized boolean connect() {
         if (serverChannel != null && serverChannel.isConnected()) {
             return true;
@@ -85,6 +90,9 @@ public class Connection {
         return true;
     }
 
+    /**
+     * Closes the connection to the server
+     */
     private synchronized static void handleClose() {
         try {
             serverChannel.close();
@@ -96,6 +104,12 @@ public class Connection {
         }
     }
 
+    /**
+     * Checks if the connection is active
+     * Also attempts to reconnect if connection is inactive
+     * 
+     * @return true if connection is active, false otherwise
+     */
     private static boolean isConnectionActive() {
         if (serverChannel == null || !serverChannel.isConnected()) {
             logger.debug("Attempting Reconnection");
@@ -105,6 +119,13 @@ public class Connection {
         return serverChannel.isConnected();
     }
 
+    /**
+     * Handles the server response
+     * 
+     * @return true if response was handled successfully, false otherwise
+     * @throws IOException
+     * @throws InterruptedException
+     */
     private static boolean handleResponse() throws IOException, InterruptedException {
         if (selector.select() == 0) {
             return true;
@@ -142,6 +163,12 @@ public class Connection {
         return true;
     }
 
+    /**
+     * Gets the base headers for the request
+     * and adds the access token if available
+     * 
+     * @return base headers
+     */
     private static HashMap<EHeader, String> getBaseHeaders() {
         HashMap<EHeader, String> headers = new HashMap<>();
         String token = LocalStorage.get("token");
@@ -150,17 +177,31 @@ public class Connection {
         return headers;
     }
 
-    public static <ResponseBody> CompletableFuture<Response<ResponseBody>> get(String endpoint) {
+    /**
+     * Sends a GET request to the server
+     * 
+     * @param endpoint
+     * @param cache
+     * @return response from the server
+     */
+    public static <ResponseBody> CompletableFuture<Response<ResponseBody>> get(String endpoint, boolean cache) {
         return CompletableFuture.supplyAsync(() -> {
             if (!isConnectionActive()) {
                 throw new CompletionException(new RuntimeException("Connection Failed"));
             }
 
             HashMap<EHeader, String> headers = getBaseHeaders();
-            return request(new Request<>(EMethod.GET, endpoint, null, headers));
+            return request(new Request<>(EMethod.GET, endpoint, null, headers), cache);
         }, executor);
     }
 
+    /**
+     * Sends a POST request to the server
+     * 
+     * @param endpoint
+     * @param body
+     * @return response from the server
+     */
     public static <RequestBody, ResponseBody> CompletableFuture<Response<ResponseBody>> post(String endpoint,
             RequestBody body) {
         return CompletableFuture.supplyAsync(() -> {
@@ -169,12 +210,19 @@ public class Connection {
             }
 
             HashMap<EHeader, String> headers = getBaseHeaders();
-            return request(new Request<>(EMethod.POST, endpoint, body, headers));
+            return request(new Request<>(EMethod.POST, endpoint, body, headers), false);
         }, executor);
     }
 
+    /**
+     * Sends a request to the server
+     * 
+     * @param endpoint
+     * @param body
+     * @return response from the server
+     */
     private static <RequestBody, ResponseBody> Response<ResponseBody> request(
-            Request<RequestBody> request) {
+            Request<RequestBody> request, boolean cache) {
         try {
             ByteBuffer buffer = ByteBuffer.allocate(1024);
 
@@ -212,6 +260,11 @@ public class Connection {
 
             if (response.getStatus() != Response.EStatus.OK) {
                 throw new CompletionException(new RuntimeException(response.getBody().toString()));
+            }
+
+            if (cache) {
+                String responseBodyJSON = gson.toJson(response.getBody());
+                LocalStorage.set(request.getEndpoint(), responseBodyJSON);
             }
 
             return response;

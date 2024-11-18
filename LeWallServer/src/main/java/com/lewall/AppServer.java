@@ -101,6 +101,12 @@ public class AppServer {
         }
     }
 
+    /**
+     * Entry point of the program
+     * 
+     * @param args
+     * @throws IOException
+     */
     public static void main(String[] args) throws IOException {
         AppServer server = new AppServer();
         server.start();

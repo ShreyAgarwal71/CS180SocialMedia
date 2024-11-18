@@ -1,5 +1,7 @@
 package com.lewall.db;
 
+import java.io.File;
+import java.nio.file.Path;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -19,7 +21,7 @@ import com.lewall.db.helpers.Collection;
  * class.
  *
  * @author Ates Isfendiyaroglu and Mahit Mehta
- * @version 2024-11-03
+ * @version 2024-11-17
  */
 public class Database {
 	private static final Logger logger = LogManager.getLogger(Database.class);
@@ -49,6 +51,30 @@ public class Database {
 	public static void init() {
 		synchronized (MAIN_LOCK) {
 			if (uc == null) {
+				uc = new UserCollection(Collection.getCollectionAbsolutePath(Database.userFileName), SCHEDULER);
+				pc = new PostCollection(Collection.getCollectionAbsolutePath(Database.postFileName), SCHEDULER);
+				cc = new CommentCollection(Collection.getCollectionAbsolutePath(Database.commentFileName),
+						SCHEDULER);
+			}
+		}
+	}
+
+	/**
+	 * This should be called after tests to cleanup the test database
+	 */
+	public static void cleanup(String userFile, String postFile, String commentFile) {
+		synchronized (MAIN_LOCK) {
+			Path dataPath = Collection.getOSDataBasePath();
+
+			File uf = new File(dataPath.resolve(userFile).toString());
+			File pf = new File(dataPath.resolve(postFile).toString());
+			File cf = new File(dataPath.resolve(commentFile).toString());
+
+			uf.deleteOnExit();
+			pf.deleteOnExit();
+			cf.deleteOnExit();
+
+			if (uc != null) {
 				uc = new UserCollection(Collection.getCollectionAbsolutePath(Database.userFileName), SCHEDULER);
 				pc = new PostCollection(Collection.getCollectionAbsolutePath(Database.postFileName), SCHEDULER);
 				cc = new CommentCollection(Collection.getCollectionAbsolutePath(Database.commentFileName),

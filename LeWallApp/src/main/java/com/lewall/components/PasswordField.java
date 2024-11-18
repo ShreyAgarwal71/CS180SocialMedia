@@ -1,10 +1,7 @@
 package com.lewall.components;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -22,11 +19,23 @@ public class PasswordField extends StackPane {
         TextField field = new TextField();
         field.setOnKeyTyped(e -> {
             String input = field.getText();
+            int opPosition = field.getCaretPosition();
 
-            if (input.length() < password.length()) {
-                password = password.substring(0, password.length() - 1);
+            if (input.length() == 0) {
+                password = "";
+            } else if (input.length() < password.length()) {
+                String newPassword = password.substring(0, opPosition);
+                if (opPosition < password.length()) {
+                    newPassword += password.substring(opPosition + 1);
+                }
+
+                password = newPassword;
             } else if (input.length() > password.length()) {
-                password += input.charAt(input.length() - 1);
+                String newPassword = password.substring(0, opPosition - 1) + input.charAt(opPosition - 1);
+                if (opPosition - 1 < password.length()) {
+                    newPassword += password.substring(opPosition - 1);
+                }
+                password = newPassword;
             }
 
             StringBuilder maskedInput = new StringBuilder();
@@ -34,7 +43,7 @@ public class PasswordField extends StackPane {
                 maskedInput.append(isMasked ? "•" : input.charAt(i));
             }
             field.setText(maskedInput.toString());
-            field.positionCaret(maskedInput.length());
+            field.positionCaret(opPosition);
         });
         field.setFocusTraversable(false);
         field.getStyleClass().add("brand-field");
