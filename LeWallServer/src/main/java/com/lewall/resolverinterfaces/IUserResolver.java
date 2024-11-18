@@ -25,13 +25,6 @@ import com.lewall.dtos.ClassFeedDTO;
 public interface IUserResolver {
 
 	/**
-	 * Resolves a create new user request;
-	 *
-	 * @param request
-	 */
-    public void createUser(Request<CreateUserDTO> request);
-
-	/**
 	 * Resolves a delete user request;
 	 *
 	 * @param request
