@@ -1,5 +1,14 @@
 # LeWall Server
 
+---
+
+### Prerequisites
+
+- **Java**: JDK 23
+- **Maven**: For dependency management and building
+- Run `mvn clean install` before in the root directory before attempting to run the server application
+
+---
 
 ## To Run
 
