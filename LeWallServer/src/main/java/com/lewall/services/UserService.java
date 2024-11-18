@@ -10,7 +10,13 @@ import com.lewall.db.models.Post;
 import com.lewall.db.models.User;
 import com.lewall.helpers.PostSort;
 
-public class UserService implements Service {
+/**
+ * A class that implements User-managing services
+ * 
+ * @author Shrey Agarwal
+ * @version 14 November 2024
+ */
+public class UserService implements IService {
     private static final UserCollection users = db.getUserCollection();
     private static final PostCollection posts = db.getPostCollection();
 

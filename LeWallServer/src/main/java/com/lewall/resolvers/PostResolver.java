@@ -12,13 +12,20 @@ import com.lewall.services.PostService;
 import com.lewall.dtos.CreatePostDTO;
 import com.lewall.dtos.DeletePostDTO;
 import com.lewall.dtos.UnlikePostDTO;
+import com.lewall.resolverinterfaces.IPostResolver;
 import com.lewall.dtos.LikePostDTO;
 import com.lewall.dtos.CommentsDTO;
 import com.lewall.dtos.PostCommentsDTO;
 import com.lewall.dtos.HidePostDTO;
 
+/**
+ * A class to resolve Post-related requests
+ *
+ * @author Shrey Agarwal
+ * @version 14 November 2024
+ */
 @Resolver(basePath = "/post")
-public class PostResolver implements BaseResolver {
+public class PostResolver implements BaseResolver, IPostResolver {
     @AuthGuard()
     @Endpoint(endpoint = "/create", method = Request.EMethod.POST, requestBodyType = CreatePostDTO.class)
     public void createPost(Request<CreatePostDTO> request) {

@@ -29,6 +29,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+/**
+ * A class that implements helper tools for the resolver classes
+ *
+ * @author Mahit Mehta
+ * @version 15 November 2024
+ */
 public class ResolverTools {
     private static final Logger logger = LogManager.getLogger(ResolverTools.class);
 
