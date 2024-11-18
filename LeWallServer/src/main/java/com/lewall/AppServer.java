@@ -86,8 +86,7 @@ public class AppServer {
                     SocketChannel clientChannel = channel.accept();
 
                     clientChannel.configureBlocking(false);
-                    selectors[nextSelector].wakeup();
-                    clientChannel.register(selectors[nextSelector], SelectionKey.OP_READ);
+                    clientChannel.register(selectors[nextSelector].wakeup(), SelectionKey.OP_READ);
                     logger.info("Accepted new connection from " + clientChannel);
 
                     // Perform round-robin selection of selectors
