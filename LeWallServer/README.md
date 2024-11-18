@@ -31,7 +31,8 @@ mvn clean compile exec:java
 
 The main components of the project include:
 
-- **App.java**: The main entry point of the application, initializing and running the backend simulation.
+- **AppServer.java**: The main entry point of the application, is initializing and running the backend simulation.
+- **Worker.java:** Instance of a server worker that can handle multiple clients with the usage of `java.nio` channels
 - **Database.java**: Manages reading from and writing to files, acting as a simple file-based database.
 
 ---
