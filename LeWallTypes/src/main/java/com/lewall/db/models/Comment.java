@@ -1,6 +1,8 @@
 package com.lewall.db.models;
 
 import java.util.UUID;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Comment
@@ -19,7 +21,7 @@ public class Comment extends Model {
     private String messageComment;
     private String date;
     private int likes;
-    private String[] likedBy;
+    private Set<String> likedBy;
     private Comment[] comments;
 
     /**
@@ -40,7 +42,7 @@ public class Comment extends Model {
         this.messageComment = messageComment;
         this.date = date;
         this.likes = likes;
-        this.likedBy = new String[0];
+        this.likedBy = new HashSet<>();
         this.comments = new Comment[0];
     }
 
@@ -103,7 +105,7 @@ public class Comment extends Model {
      * 
      * @return likedBy
      */
-    public String[] getLikedBy() {
+    public Set<String> getLikedBy() {
         return likedBy;
     }
 
@@ -166,7 +168,7 @@ public class Comment extends Model {
      * 
      * @param likedBy
      */
-    public void setLikedBy(String[] likedBy) {
+    public void setLikedBy(Set<String> likedBy) {
         this.likedBy = likedBy;
     }
 
@@ -175,14 +177,13 @@ public class Comment extends Model {
      * 
      * @param userId
      */
-    public void addLike(String userId) {
-        this.likes++;
-        String[] newLikedBy = new String[likedBy.length + 1];
-        for (int i = 0; i < likedBy.length; i++) {
-            newLikedBy[i] = likedBy[i];
+    public boolean addLike(String userId) {
+        if (likedBy.contains(userId)) {
+            return false;
         }
-        newLikedBy[likedBy.length] = userId.toString();
-        likedBy = newLikedBy;
+        this.likes++;
+        likedBy.add(userId);
+        return true;
     }
 
     /**
@@ -190,17 +191,13 @@ public class Comment extends Model {
      * 
      * @param userId
      */
-    public void removeLike(String userId) {
-        this.likes--;
-        String[] newLikedBy = new String[likedBy.length - 1];
-        int j = 0;
-        for (int i = 0; i < likedBy.length; i++) {
-            if (!likedBy[i].equals(userId.toString())) {
-                newLikedBy[j] = likedBy[i];
-                j++;
-            }
+    public boolean removeLike(String userId) {
+        if (likedBy.contains(userId)) {
+            this.likes--;
+            likedBy.remove(userId);
+            return true;
         }
-        likedBy = newLikedBy;
+        return false;
     }
 
     /**

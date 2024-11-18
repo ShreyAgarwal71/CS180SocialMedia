@@ -22,6 +22,7 @@ public class Post extends Model {
     private Set<String> usersLiked;
     private String imageURL;
     private UUID classId;
+    private boolean isPrivate;
 
     /**
      * Constructor for Post
@@ -40,6 +41,7 @@ public class Post extends Model {
         this.imageURL = imageURL;
         this.usersLiked = new HashSet<>();
         this.classId = classId;
+        this.isPrivate = false;
     }
 
     /**
@@ -106,6 +108,15 @@ public class Post extends Model {
     }
 
     /**
+     * Getter for isPrivate
+     * 
+     * @return isPrivate
+     */
+    public boolean getIsPrivate() {
+        return isPrivate;
+    }
+
+    /**
      * Setter for messagePost
      * 
      * @param messagePost
@@ -157,6 +168,15 @@ public class Post extends Model {
      */
     public void setClassId(UUID classId) {
         this.classId = classId;
+    }
+
+    /**
+     * Setter for isPrivate
+     * 
+     * @param isPrivate
+     */
+    public void setIsPrivate(boolean isPrivate) {
+        this.isPrivate = isPrivate;
     }
 
     /**
