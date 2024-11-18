@@ -137,3 +137,11 @@ mvn test
 Tests are located in the `test` directory, this covers the main functionalities of user and post management.
 
 ---
+
+## To Run
+
+```bash
+mvn exec:java -Dexec.mainClass="com.lewall.AppServer";     
+```
+
+---
