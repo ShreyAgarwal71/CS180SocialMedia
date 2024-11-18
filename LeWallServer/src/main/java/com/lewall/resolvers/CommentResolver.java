@@ -25,6 +25,15 @@ import com.lewall.dtos.LikeCommentDTO;
 @Resolver(basePath = "/comment")
 public class CommentResolver implements BaseResolver, ICommentResolver {
 
+    /**
+     * Add a comment to a post
+     * 
+     * @param request
+     *            {@link Request} with {@link AddCommentDTO} body
+     * @throws InternalServerError
+     *             if unable to add comment
+     * @return void
+     */
     @AuthGuard()
     @Endpoint(endpoint = "/add", method = Request.EMethod.POST, requestBodyType = AddCommentDTO.class)
     public void addComment(Request<AddCommentDTO> request) {
@@ -39,6 +48,15 @@ public class CommentResolver implements BaseResolver, ICommentResolver {
         }
     }
 
+    /**
+     * Delete a comment
+     * 
+     * @param request
+     *            {@link Request} with {@link DeleteCommentDTO} body
+     * @throws InternalServerError
+     *             if unable to delete comment
+     * @return void
+     */
     @AuthGuard()
     @Endpoint(endpoint = "/delete", method = Request.EMethod.POST, requestBodyType = DeleteCommentDTO.class)
     public void deleteComment(Request<DeleteCommentDTO> request) {
@@ -50,6 +68,15 @@ public class CommentResolver implements BaseResolver, ICommentResolver {
         }
     }
 
+    /**
+     * Like a comment
+     * 
+     * @param request
+     *            {@link Request} with {@link LikeCommentDTO} body
+     * @throws InternalServerError
+     *             if unable to like comment
+     * @return void
+     */
     @AuthGuard()
     @Endpoint(endpoint = "/like", method = Request.EMethod.POST, requestBodyType = LikeCommentDTO.class)
     public void likeComment(Request<LikeCommentDTO> request) {
@@ -61,6 +88,15 @@ public class CommentResolver implements BaseResolver, ICommentResolver {
         }
     }
 
+    /**
+     * Unlike a comment
+     * 
+     * @param request
+     *            {@link Request} with {@link UnlikeCommentDTO} body
+     * @throws InternalServerError
+     *             if unable to unlike comment
+     * @return void
+     */
     @AuthGuard()
     @Endpoint(endpoint = "/unlike", method = Request.EMethod.POST, requestBodyType = UnlikeCommentDTO.class)
     public void unlikeComment(Request<UnlikeCommentDTO> request) {

@@ -36,9 +36,18 @@ import javafx.animation.RotateTransition;
 import javafx.animation.Interpolator;
 import javafx.util.Duration;
 
+/**
+ * Login page for the application
+ * 
+ * @author Mahit Mehta
+ * @version 17 November 2024
+ */
 public class Login extends Pane {
     private static final Logger logger = LogManager.getLogger(Login.class);
 
+    /**
+     * Constructor for the login page
+     */
     public Login() {
         this.getStyleClass().add("primary-bg");
 

@@ -33,9 +33,18 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
+/**
+ * Register page for the application
+ * 
+ * @author Mahit Mehta
+ * @version 17 November 2024
+ */
 public class Register extends Pane {
     private static final Logger logger = LogManager.getLogger(Register.class);
 
+    /**
+     * Constructor for the register page
+     */
     public Register() {
         this.getStyleClass().add("primary-bg");
 

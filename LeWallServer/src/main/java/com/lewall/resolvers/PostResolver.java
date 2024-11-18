@@ -42,6 +42,15 @@ public class PostResolver implements BaseResolver, IPostResolver {
         }
     }
 
+    /**
+     * Delete a post
+     * 
+     * @param request
+     *            {@link Request} with {@link DeletePostDTO} body
+     * @throws InternalServerError
+     *             if unable to delete post
+     * @return void
+     */
     @AuthGuard()
     @Endpoint(endpoint = "/delete", method = Request.EMethod.POST, requestBodyType = DeletePostDTO.class)
     public void deletePost(Request<DeletePostDTO> request) {
@@ -53,6 +62,15 @@ public class PostResolver implements BaseResolver, IPostResolver {
         }
     }
 
+    /**
+     * Like a post
+     * 
+     * @param request
+     *            {@link Request} with {@link LikePostDTO} body
+     * @throws InternalServerError
+     *             if unable to like post
+     * @return void
+     */
     @AuthGuard()
     @Endpoint(endpoint = "/like", method = Request.EMethod.POST, requestBodyType = LikePostDTO.class)
     public void likePost(Request<LikePostDTO> request) {
@@ -64,6 +82,15 @@ public class PostResolver implements BaseResolver, IPostResolver {
         }
     }
 
+    /**
+     * Unlike a post
+     * 
+     * @param request
+     *            {@link Request} with {@link UnlikePostDTO} body
+     * @throws InternalServerError
+     *             if unable to unlike post
+     * @return void
+     */
     @AuthGuard()
     @Endpoint(endpoint = "/unlike", method = Request.EMethod.POST, requestBodyType = UnlikePostDTO.class)
     public void unlikePost(Request<UnlikePostDTO> request) {
@@ -75,6 +102,15 @@ public class PostResolver implements BaseResolver, IPostResolver {
         }
     }
 
+    /**
+     * Hide a post
+     * 
+     * @param request
+     *            {@link Request} with {@link HidePostDTO} body
+     * @throws InternalServerError
+     *             if unable to hide post
+     * @return void
+     */
     @AuthGuard()
     @Endpoint(endpoint = "/hide", method = Request.EMethod.POST, requestBodyType = HidePostDTO.class)
     public void hidePost(Request<HidePostDTO> request) {
@@ -86,6 +122,15 @@ public class PostResolver implements BaseResolver, IPostResolver {
         }
     }
 
+    /**
+     * Get comments for a post
+     * 
+     * @param request
+     *            {@link Request} with {@link PostCommentsDTO} body
+     * @throws InternalServerError
+     *             if unable to get comments
+     * @return {@link CommentsDTO}
+     */
     @AuthGuard()
     @Endpoint(endpoint = "/getComments", method = Request.EMethod.GET, requestBodyType = PostCommentsDTO.class, responseBodyType = CommentsDTO.class)
     public CommentsDTO getPosts(Request<PostCommentsDTO> request) {
@@ -99,6 +144,15 @@ public class PostResolver implements BaseResolver, IPostResolver {
         return comments;
     }
 
+    /**
+     * Make a post private or public
+     * 
+     * @param request
+     *            {@link Request} with {@link PublicPrivateDTO} body
+     * @throws InternalServerError
+     *             if unable to make post private or public
+     * @return void
+     */
     @AuthGuard()
     @Endpoint(endpoint = "/makePrivate", method = Request.EMethod.POST, requestBodyType = PublicPrivateDTO.class)
     public void makePostPrivate(Request<PublicPrivateDTO> request) {

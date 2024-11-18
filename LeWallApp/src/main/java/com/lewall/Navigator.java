@@ -13,6 +13,11 @@ import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+/**
+ * Navigator class for the application
+ * 
+ * @version 17 November 2024
+ */
 public class Navigator {
     private static final Logger logger = LogManager.getLogger(Navigator.class);
 
@@ -24,10 +29,21 @@ public class Navigator {
         LOGIN, REGISTER, HOME
     }
 
+    /**
+     * Set the stage for the application
+     * 
+     * @param stage
+     *            the stage to set
+     */
     public static void setStage(Stage stage) {
         Navigator.stage = stage;
     }
 
+    /**
+     * Navigate back to the previous scene
+     * 
+     * @return true if successful, false otherwise
+     */
     public static boolean back() {
         if (stage == null) {
             logger.error("Stage not set");
@@ -45,6 +61,13 @@ public class Navigator {
         return false;
     }
 
+    /**
+     * Navigate to a specific page
+     * 
+     * @param page
+     *            the page to navigate to
+     * @return true if successful, false otherwise
+     */
     public static boolean navigateTo(EPage page) {
         if (stage == null) {
             logger.error("Stage not set");
@@ -79,6 +102,9 @@ public class Navigator {
         return true;
     }
 
+    /**
+     * Update the scene to the most recent scene
+     */
     private static void updateScene() {
         final Scene scene = history.peek();
         stage.setScene(scene);

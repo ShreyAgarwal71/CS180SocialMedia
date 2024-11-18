@@ -28,6 +28,13 @@ public class PostService implements IService {
         return posts.addElement(post);
     }
 
+    /**
+     * Delete a post
+     * 
+     * @param userId
+     * @param postId
+     * @return
+     */
     public static boolean deletePost(UUID userId, UUID postId) {
         User user = users.findOne(u -> u.getId().equals(userId));
         if (user == null) {
@@ -43,6 +50,13 @@ public class PostService implements IService {
         return posts.removeElement(postId);
     }
 
+    /**
+     * Like a post
+     * 
+     * @param userId
+     * @param postId
+     * @return
+     */
     public static boolean likePost(UUID userId, UUID postId) {
         Post post = posts.findOne(p -> p.getId().equals(postId));
         if (post == null) {
@@ -56,6 +70,13 @@ public class PostService implements IService {
         return posts.updateElement(post.getId(), post);
     }
 
+    /**
+     * Unlike a post
+     * 
+     * @param userId
+     * @param postId
+     * @return
+     */
     public static boolean unlikePost(UUID userId, UUID postId) {
         Post post = posts.findOne(p -> p.getId().equals(postId));
         if (post == null) {
@@ -69,6 +90,13 @@ public class PostService implements IService {
         return posts.updateElement(post.getId(), post);
     }
 
+    /**
+     * Hide a post
+     * 
+     * @param userId
+     * @param postId
+     * @return
+     */
     public static boolean hidePost(UUID userId, UUID postId) {
         Post post = posts.findOne(p -> p.getId().equals(postId));
         if (post == null) {
@@ -82,7 +110,13 @@ public class PostService implements IService {
         return user.hidePost(postId.toString()) && users.updateElement(user.getId(), user);
     }
 
-    // Shouldn't ever be able to unhide a post
+    /**
+     * Unhide a post, however shouldn't ever be able to unhide a post
+     * 
+     * @param userId
+     * @param postId
+     * @return
+     */
     public static boolean unhidePost(UUID userId, UUID postId) {
         Post post = posts.findOne(p -> p.getId().equals(postId));
         if (post == null) {
@@ -96,6 +130,12 @@ public class PostService implements IService {
         return user.unhidePost(postId.toString()) && users.updateElement(user.getId(), user);
     }
 
+    /**
+     * Get all comments for a post
+     * 
+     * @param postId
+     * @return
+     */
     public static List<Comment> getComments(UUID postId) {
         Post post = posts.findOne(p -> p.getId().equals(postId));
         if (post == null) {
@@ -106,6 +146,14 @@ public class PostService implements IService {
         return comments1;
     }
 
+    /**
+     * Make a post private
+     * 
+     * @param userId
+     * @param postId
+     * @param isPrivate
+     * @return
+     */
     public static boolean makePostPrivate(UUID userId, UUID postId, boolean isPrivate) {
         Post post = posts.findOne(p -> p.getId().equals(postId));
         if (post == null) {
@@ -124,5 +172,4 @@ public class PostService implements IService {
 
         return posts.updateElement(post.getId(), post);
     }
-
 }

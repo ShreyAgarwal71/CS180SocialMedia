@@ -40,6 +40,13 @@ public class Database {
 
 	private static final AtomicBoolean HAS_BEEN_INITIALIZED = new AtomicBoolean(false);
 
+	/**
+	 * This should be called before tests to initialize the test database
+	 * 
+	 * @param userFile
+	 * @param postFile
+	 * @param commentFile
+	 */
 	public static void init(String userFile, String postFile, String commentFile) {
 		Database.userFileName = userFile;
 		Database.postFileName = postFile;
@@ -48,6 +55,10 @@ public class Database {
 		init();
 	}
 
+	/**
+	 * This should be called before calling any other methods in the Database class
+	 * to initialize the database
+	 */
 	public static void init() {
 		synchronized (MAIN_LOCK) {
 			if (uc == null) {
@@ -83,6 +94,9 @@ public class Database {
 		}
 	}
 
+	/**
+	 * This should be called after calling any other methods in the Database class
+	 */
 	public Database() {
 		init();
 
@@ -99,14 +113,29 @@ public class Database {
 		}
 	}
 
+	/**
+	 * Get the UserCollection
+	 * 
+	 * @return UserCollection
+	 */
 	public UserCollection getUserCollection() {
 		return Database.uc;
 	}
 
+	/**
+	 * Get the PostCollection
+	 * 
+	 * @return PostCollection
+	 */
 	public PostCollection getPostCollection() {
 		return Database.pc;
 	}
 
+	/**
+	 * Get the CommentCollection
+	 * 
+	 * @return CommentCollection
+	 */
 	public CommentCollection getCommentCollection() {
 		return Database.cc;
 	}
