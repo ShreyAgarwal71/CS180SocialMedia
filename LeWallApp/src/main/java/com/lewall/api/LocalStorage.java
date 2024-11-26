@@ -13,8 +13,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.cloudinary.json.JSONException;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.lewall.App;
+import com.lewall.dtos.UserDTO;
 
 /**
  * Class to manage client-side storage in the application
@@ -26,6 +30,9 @@ import com.lewall.App;
 public class LocalStorage {
 	private static Logger logger = LogManager.getLogger(LocalStorage.class);
 	private static HashMap<String, String> storage;
+
+    private static final GsonBuilder builder = new GsonBuilder();
+    private static final Gson gson = builder.create();
 
 	private static final String FILE_NAME = "state.ser";
 
@@ -129,13 +136,27 @@ public class LocalStorage {
 		return storage.put(key, val);
 	}
 
+	public static String get(String key) {
+		return storage.get(key);
+	}
+
 	/**
 	 * Fethes the requested data from the storage HashMap
 	 *
 	 * @return value
 	 */
-	public static String get(String key) {
-		return storage.get(key);
+	public static <T> T get(String key, Class<T> type) {
+		String serializedJSON = storage.get(key);	
+		if (serializedJSON == null) {
+			return null;
+		}
+
+		try {
+			return gson.fromJson(serializedJSON, type);
+		} catch (JSONException e) {
+			logger.error("Type (" + type.getName() + ") mismatch for key: " + key);
+			return null;
+		}
 	}
 
 	/**

@@ -9,6 +9,7 @@ import com.lewall.Navigator;
 import com.lewall.Navigator.EPage;
 import com.lewall.api.LocalStorage;
 import com.lewall.components.Footer;
+import com.lewall.db.models.User;
 import com.lewall.dtos.UserDTO;
 
 import javafx.geometry.Orientation;
@@ -48,19 +49,14 @@ public class Home extends Pane {
         VBox column = new VBox(10);
         column.setAlignment(Pos.CENTER);
 
-        String userJSON = LocalStorage.get("/user");
-        if (userJSON != null) {
-            try {
-                UserDTO userDTO = gson.fromJson(userJSON, UserDTO.class);
-                String displayName = userDTO.getUser().getDisplayName();
+        UserDTO userDTO = LocalStorage.get("/user", UserDTO.class);
+        if (userDTO != null) {
+            String displayName = userDTO.getUser().getDisplayName();
 
-                Text welcome = new Text("Welcome, " + displayName + "!");
-                welcome.getStyleClass().add("brand-subtitle");
+            Text welcome = new Text("Welcome, " + displayName + "!");
+            welcome.getStyleClass().add("brand-subtitle");
 
-                column.getChildren().add(welcome);
-            } catch (Exception e) {
-                logger.error("Unable to parse user JSON");
-            }
+            column.getChildren().add(welcome);
         }
 
         Button logOut = new Button("Log Out");

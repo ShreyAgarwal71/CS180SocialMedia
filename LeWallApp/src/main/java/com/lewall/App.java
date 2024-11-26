@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.lewall.api.LocalStorage;
+import com.cloudinary.AuthToken;
 import com.lewall.api.Connection;
 import com.lewall.dtos.UserDTO;
 import javafx.application.Application;
