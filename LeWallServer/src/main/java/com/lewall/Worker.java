@@ -2,10 +2,8 @@ package com.lewall;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
-import java.util.Iterator;
+import java.util.concurrent.LinkedTransferQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.lang.model.type.NullType;
@@ -27,9 +25,11 @@ import com.google.gson.GsonBuilder;
  * @version November 17, 2024
  */
 public class Worker implements Runnable {
+    public static final int MTU = 1024 * 16; // 16KB
+
     private static final Logger logger = LogManager.getLogger(Worker.class);
 
-    private Selector selector;
+    private LinkedTransferQueue<WorkerRequestRef> receiver;
     private final int workerId;
 
     private static final GsonBuilder builder = new GsonBuilder();
@@ -37,78 +37,79 @@ public class Worker implements Runnable {
 
     private static final AtomicInteger workerCount = new AtomicInteger(0);
 
-    public Worker(Selector selector) {
-        this.selector = selector;
+    public static class WorkerRequestRef {
+        private final SocketChannel clientChannel;
+        private final ByteBuffer buffer;
+
+        public WorkerRequestRef(SocketChannel clientChannel, ByteBuffer buffer) {
+            this.clientChannel = clientChannel;
+            this.buffer = buffer;
+        }
+
+        public SocketChannel getClientChannel() {
+            return clientChannel;
+        }
+
+        public ByteBuffer getBuffer() {
+            return buffer;
+        }
+    }
+
+    public Worker(LinkedTransferQueue<WorkerRequestRef> receiver) {
+        this.receiver = receiver;
 
         workerId = workerCount.getAndIncrement();
     }
 
     /**
-     * Handles reading from the client
+     * Handle a single request
      * 
-     * @param key
-     *            SelectionKey for the client
+     * @param ref
      */
-    private void handleRead(SelectionKey key) {
-        SocketChannel clientChannel = (SocketChannel) key.channel();
-        ByteBuffer buffer = ByteBuffer.allocate(1024);
+    private void handleRequest(WorkerRequestRef ref) throws IOException {
+        SocketChannel clientChannel = ref.getClientChannel();
+        ByteBuffer buffer = ref.getBuffer();
+
+        buffer.flip();
+        String json = new String(buffer.array()).trim();
 
         try {
-            int bytesRead = clientChannel.read(buffer);
-            if (bytesRead == -1) {
-                logger.info("Client disconnected: " + clientChannel);
-                clientChannel.close();
-                key.cancel();
-            } else {
-                buffer.flip();
-                String json = new String(buffer.array()).trim();
-                try {
-                    @SuppressWarnings("unchecked")
-                    Request<NullType> request = gson.fromJson(json, Request.class);
+            @SuppressWarnings("unchecked")
+            Request<NullType> request = gson.fromJson(json, Request.class);
 
-                    logger.info(
-                            String.format("[%s] %s -> %s -> %s", workerId, clientChannel.getRemoteAddress(),
-                                    request.getMethod(),
-                                    request.getEndpoint()));
+            logger.info(
+                    String.format("[%s] %s -> %s -> %s", workerId, clientChannel.getRemoteAddress(),
+                            request.getMethod(),
+                            request.getEndpoint()));
 
-                    String response = ResolverTools.resolve(request, json);
+            String response = ResolverTools.resolve(request, json);
 
-                    @SuppressWarnings("unchecked")
-                    Response<NullType> responseObj = gson.fromJson(response, Response.class);
-                    logger.info(
-                            String.format("[%s] %s <- %s <- %s", workerId, clientChannel.getRemoteAddress(),
-                                    responseObj.getStatus().toString(),
-                                    request.getEndpoint()));
+            @SuppressWarnings("unchecked")
+            Response<NullType> responseObj = gson.fromJson(response, Response.class);
+            logger.info(
+                    String.format("[%s] %s <- %s <- %s", workerId, clientChannel.getRemoteAddress(),
+                            responseObj.getStatus().toString(),
+                            request.getEndpoint()));
 
-                    buffer.clear().put(response.getBytes());
-                    buffer.flip();
+            buffer.clear().put(response.getBytes());
+            buffer.flip();
+            clientChannel.write(buffer);
+        } catch (Exception e) {
+            logger.error("Unknown Exception", e);
 
-                    clientChannel.write(buffer);
-                } catch (Exception e) {
-                    logger.error("Unknown Exception", e);
+            Response<String> response = new Response<>(EMethod.UNKNOWN, "Unknown Endpoint", "Unknown Exception",
+                    Response.EStatus.SERVER_ERROR, null);
 
-                    Response<String> response = new Response<>(EMethod.UNKNOWN, "Unknown Endpoint", "Unknown Exception",
-                            Response.EStatus.SERVER_ERROR, null);
+            logger.info(
+                    String.format("[%s] %s <- %s <- %s", workerId, clientChannel.getRemoteAddress(),
+                            response.getStatus().toString(),
+                            response.getEndpoint()));
 
-                    logger.info(
-                            String.format("[%s] %s <- %s <- %s", workerId, clientChannel.getRemoteAddress(),
-                                    response.getStatus().toString(),
-                                    response.getEndpoint()));
+            String responseJSON = gson.toJson(response);
+            buffer.clear().put(responseJSON.getBytes());
+            buffer.flip();
 
-                    String responseJSON = gson.toJson(response);
-                    buffer.clear().put(responseJSON.getBytes());
-                    buffer.flip();
-
-                    clientChannel.write(buffer);
-                }
-            }
-        } catch (IOException e) {
-            logger.error(e);
-            try {
-                clientChannel.close();
-            } catch (IOException ex) {
-                logger.error("Error Closing Client Channel", ex);
-            }
+            clientChannel.write(buffer);
         }
     }
 
@@ -119,25 +120,15 @@ public class Worker implements Runnable {
      */
     @Override
     public void run() {
-        try {
-            while (true) {
-                this.selector.select();
-                Iterator<SelectionKey> keyIterator = this.selector.selectedKeys().iterator();
-                while (keyIterator.hasNext()) {
-                    SelectionKey key = keyIterator.next();
-                    keyIterator.remove();
-
-                    // Technically unnecessary since selector only registered
-                    // to accept READ events, but it's good practice to check
-                    if (!key.isReadable())
-                        continue;
-
-                    handleRead(key);
-                }
-                this.selector.selectedKeys().clear();
+        while (true) {
+            try {
+                WorkerRequestRef ref = this.receiver.take();
+                handleRequest(ref);
+            } catch (InterruptedException e) {
+                logger.error("Error Taking from Receiver: ", e);
+            } catch (IOException e) {
+                logger.error("Error Handling Request: ", e);
             }
-        } catch (IOException e) {
-            logger.error(e);
         }
     }
 }

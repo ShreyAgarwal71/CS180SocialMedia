@@ -245,6 +245,7 @@ public class Connection {
             responseQueues.remove(request.getRequestId());
 
             if (responseJSON == null) {
+                handleClose();
                 throw new CompletionException(new RuntimeException("Request Timed Out"));
             }
 

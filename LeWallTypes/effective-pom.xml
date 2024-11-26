@@ -72,22 +72,22 @@
     </pluginRepository>
   </pluginRepositories>
   <build>
-    <sourceDirectory>/Users/mahitmehta/Desktop/Career/Purdue/CS180/LeWall/LeWallTypes/src/main/java</sourceDirectory>
-    <scriptSourceDirectory>/Users/mahitmehta/Desktop/Career/Purdue/CS180/LeWall/LeWallTypes/src/main/scripts</scriptSourceDirectory>
-    <testSourceDirectory>/Users/mahitmehta/Desktop/Career/Purdue/CS180/LeWall/LeWallTypes/src/test/java</testSourceDirectory>
-    <outputDirectory>/Users/mahitmehta/Desktop/Career/Purdue/CS180/LeWall/LeWallTypes/target/classes</outputDirectory>
-    <testOutputDirectory>/Users/mahitmehta/Desktop/Career/Purdue/CS180/LeWall/LeWallTypes/target/test-classes</testOutputDirectory>
+    <sourceDirectory>/Users/mahitm/Desktop/Personal/LeWall/LeWallTypes/src/main/java</sourceDirectory>
+    <scriptSourceDirectory>/Users/mahitm/Desktop/Personal/LeWall/LeWallTypes/src/main/scripts</scriptSourceDirectory>
+    <testSourceDirectory>/Users/mahitm/Desktop/Personal/LeWall/LeWallTypes/src/test/java</testSourceDirectory>
+    <outputDirectory>/Users/mahitm/Desktop/Personal/LeWall/LeWallTypes/target/classes</outputDirectory>
+    <testOutputDirectory>/Users/mahitm/Desktop/Personal/LeWall/LeWallTypes/target/test-classes</testOutputDirectory>
     <resources>
       <resource>
-        <directory>/Users/mahitmehta/Desktop/Career/Purdue/CS180/LeWall/LeWallTypes/src/main/resources</directory>
+        <directory>/Users/mahitm/Desktop/Personal/LeWall/LeWallTypes/src/main/resources</directory>
       </resource>
     </resources>
     <testResources>
       <testResource>
-        <directory>/Users/mahitmehta/Desktop/Career/Purdue/CS180/LeWall/LeWallTypes/src/test/resources</directory>
+        <directory>/Users/mahitm/Desktop/Personal/LeWall/LeWallTypes/src/test/resources</directory>
       </testResource>
     </testResources>
-    <directory>/Users/mahitmehta/Desktop/Career/Purdue/CS180/LeWall/LeWallTypes/target</directory>
+    <directory>/Users/mahitm/Desktop/Personal/LeWall/LeWallTypes/target</directory>
     <finalName>LeWallTypes-0.0.1</finalName>
     <pluginManagement>
       <plugins>
@@ -262,7 +262,7 @@
               <goal>site</goal>
             </goals>
             <configuration>
-              <outputDirectory>/Users/mahitmehta/Desktop/Career/Purdue/CS180/LeWall/LeWallTypes/target/site</outputDirectory>
+              <outputDirectory>/Users/mahitm/Desktop/Personal/LeWall/LeWallTypes/target/site</outputDirectory>
               <reportPlugins>
                 <reportPlugin>
                   <groupId>org.apache.maven.plugins</groupId>
@@ -278,7 +278,7 @@
               <goal>deploy</goal>
             </goals>
             <configuration>
-              <outputDirectory>/Users/mahitmehta/Desktop/Career/Purdue/CS180/LeWall/LeWallTypes/target/site</outputDirectory>
+              <outputDirectory>/Users/mahitm/Desktop/Personal/LeWall/LeWallTypes/target/site</outputDirectory>
               <reportPlugins>
                 <reportPlugin>
                   <groupId>org.apache.maven.plugins</groupId>
@@ -289,7 +289,7 @@
           </execution>
         </executions>
         <configuration>
-          <outputDirectory>/Users/mahitmehta/Desktop/Career/Purdue/CS180/LeWall/LeWallTypes/target/site</outputDirectory>
+          <outputDirectory>/Users/mahitm/Desktop/Personal/LeWall/LeWallTypes/target/site</outputDirectory>
           <reportPlugins>
             <reportPlugin>
               <groupId>org.apache.maven.plugins</groupId>
@@ -301,6 +301,6 @@
     </plugins>
   </build>
   <reporting>
-    <outputDirectory>/Users/mahitmehta/Desktop/Career/Purdue/CS180/LeWall/LeWallTypes/target/site</outputDirectory>
+    <outputDirectory>/Users/mahitm/Desktop/Personal/LeWall/LeWallTypes/target/site</outputDirectory>
   </reporting>
 </project>
