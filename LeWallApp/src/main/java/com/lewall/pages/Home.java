@@ -2,14 +2,11 @@ package com.lewall.pages;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+ 
 import com.lewall.Navigator;
 import com.lewall.Navigator.EPage;
 import com.lewall.api.LocalStorage;
 import com.lewall.components.Footer;
-import com.lewall.db.models.User;
 import com.lewall.dtos.UserDTO;
 
 import javafx.geometry.Orientation;
@@ -30,9 +27,6 @@ import javafx.scene.text.Text;
  */
 public class Home extends Pane {
     private static final Logger logger = LogManager.getLogger(Login.class);
-
-    private static final GsonBuilder builder = new GsonBuilder();
-    private static final Gson gson = builder.create();
 
     /**
      * Constructor for the home page

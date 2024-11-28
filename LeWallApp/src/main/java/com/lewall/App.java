@@ -4,7 +4,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.lewall.api.LocalStorage;
-import com.cloudinary.AuthToken;
 import com.lewall.api.Connection;
 import com.lewall.dtos.UserDTO;
 import javafx.application.Application;
@@ -15,6 +14,8 @@ import javafx.stage.Stage;
  * Main class for the application
  * 
  * @version 17 November 2024
+ * 
+ * @author Mahit Mehta
  */
 public class App extends Application {
     public static final String ID = "LeWall";
