@@ -18,7 +18,6 @@ import org.cloudinary.json.JSONException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.lewall.App;
-import com.lewall.dtos.UserDTO;
 
 /**
  * Class to manage client-side storage in the application
@@ -38,7 +37,7 @@ public class LocalStorage {
 
 	private static final AtomicBoolean HAS_BEEN_INITIALIZED = new AtomicBoolean(false);
 
-	private static final ScheduledThreadPoolExecutor SCHEDULER = new ScheduledThreadPoolExecutor(3);
+	private static final ScheduledThreadPoolExecutor SCHEDULER = new ScheduledThreadPoolExecutor(1);
 	private static final AtomicBoolean NEED_WRITE = new AtomicBoolean(false);
 	private static final int ASYNC_WRITE_FREQ = 5;
 
@@ -136,12 +135,20 @@ public class LocalStorage {
 		return storage.put(key, val);
 	}
 
+	/**
+	 * Gets the requested data from the storage HashMap
+	 *
+	 * @param key
+	 * 
+	 * @param val
+	 */
+
 	public static String get(String key) {
 		return storage.get(key);
 	}
 
 	/**
-	 * Fethes the requested data from the storage HashMap
+	 * Gets the requested data from the storage HashMap and deserializes it
 	 *
 	 * @return value
 	 */
@@ -160,7 +167,7 @@ public class LocalStorage {
 	}
 
 	/**
-	 * Removes the requested data from the storage HashMap
+	 * Removes all data from the storage HashMap
 	 * 
 	 */
 	public static void clear() {

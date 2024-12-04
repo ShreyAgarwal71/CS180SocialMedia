@@ -2,7 +2,6 @@ package com.lewall.pages;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import com.lewall.Navigator;
 import com.lewall.Navigator.EPage;
 import com.lewall.api.LocalStorage;
