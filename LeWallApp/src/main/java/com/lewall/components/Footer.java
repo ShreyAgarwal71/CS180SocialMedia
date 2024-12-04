@@ -18,6 +18,7 @@ public class Footer extends HBox {
      */
     public Footer() {
         super(10);
+        this.getStyleClass().add("footer");
 
         Text bottomLabel = new Text("© 2024 Purdue LeWall");
         Text bottomLabelVersion = new Text("Build [ v0.0.1 ]");
@@ -29,6 +30,6 @@ public class Footer extends HBox {
 
         this.setMaxHeight(15);
         this.getChildren().addAll(bottomLabelVersion, spacer, bottomLabel);
-        this.setPadding(new Insets(0, 10, 10, 10));
+        this.setPadding(new Insets(5, 10, 7, 10));
     }
 }
