@@ -59,7 +59,7 @@ public class Profile extends Pane {
         profileSubtitle.setFill(Color.rgb(137, 139, 239, 1));
         VBox.setMargin(profileSubtitle, new Insets(3, 0,0,0));
 
-        Rectangle idCard = new Rectangle(250, 100);
+        Rectangle idCard = new Rectangle(270, 120);
         idCard.setFill(Color.rgb(25, 18, 35));
         idCard.setStroke(Color.rgb(255, 255, 255, 0.05));
         idCard.setStrokeWidth(1);
