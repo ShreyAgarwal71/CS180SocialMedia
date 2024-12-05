@@ -129,6 +129,9 @@ public class Navigator {
                 case PROFILE -> {
                     scene = new Scene(new Profile());
                 }
+                case SEARCH -> {
+                    scene = new Scene(new Search());
+                }
                 default -> {
                     logger.error("Unimplemented Page: " + page);
                     return false;
