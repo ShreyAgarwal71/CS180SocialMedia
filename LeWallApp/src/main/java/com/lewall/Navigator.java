@@ -22,6 +22,8 @@ import javafx.stage.Stage;
 public class Navigator {
     private static final Logger logger = LogManager.getLogger(Navigator.class);
 
+    private static Object mainLock = new Object();
+
     private static Stack<Page> history = new Stack<>();
 
     private static Stage stage;
@@ -77,20 +79,22 @@ public class Navigator {
      * @return true if successful, false otherwise
      */
     public static boolean back() {
-        if (stage == null) {
-            logger.error("Stage not set");
+        synchronized (mainLock) {
+            if (stage == null) {
+                logger.error("Stage not set");
+                return false;
+            }
+
+            if (history.size() > 1) {
+                history.pop();
+                updateScene();
+
+                return true;
+            }
+
+            logger.error("No previous scene");
             return false;
         }
-
-        if (history.size() > 1) {
-            history.pop();
-            updateScene();
-
-            return true;
-        }
-
-        logger.error("No previous scene");
-        return false;
     }
 
     /**
@@ -101,39 +105,43 @@ public class Navigator {
      * @return true if successful, false otherwise
      */
     public static boolean navigateTo(EPage page) {
-        if (stage == null) {
-            logger.error("Stage not set");
-            return false;
-        }
-
-        Scene scene = null;
-
-        switch (page) {
-            case LOGIN -> {
-                scene = new Scene(new Login());
-            }
-            case REGISTER -> {
-                scene = new Scene(new Register());
-            }
-            case HOME -> {
-                scene = new Scene(new Home());
-            }
-            case PROFILE -> {
-                scene = new Scene(new Profile());
-            }
-            default -> {
-                logger.error("Unimplemented Page: " + page);
+        synchronized (mainLock) {
+            if (stage == null) {
+                logger.error("Stage not set");
                 return false;
             }
+
+            Scene scene = null;
+
+            history.push(new Page(page, scene));
+
+            switch (page) {
+                case LOGIN -> {
+                    scene = new Scene(new Login());
+                }
+                case REGISTER -> {
+                    scene = new Scene(new Register());
+                }
+                case HOME -> {
+                    scene = new Scene(new Home());
+                }
+                case PROFILE -> {
+                    scene = new Scene(new Profile());
+                }
+                default -> {
+                    logger.error("Unimplemented Page: " + page);
+                    return false;
+                }
+            }
+
+            history.peek().scene = scene;
+
+            scene.getStylesheets().add("css/global.css");
+            scene.setFill(Color.rgb(0, 0, 0, 0));
+
+            updateScene();
+            return true;
         }
-
-        history.push(new Page(page, scene));
-
-        scene.getStylesheets().add("css/global.css");
-        scene.setFill(Color.rgb(0, 0, 0, 0));
-
-        updateScene();
-        return true;
     }
 
     /**
