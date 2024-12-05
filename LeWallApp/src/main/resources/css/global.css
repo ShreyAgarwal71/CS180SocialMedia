@@ -92,3 +92,8 @@
 .nav-item:hover .nav-label {
     -fx-fill: white;
 }
+
+.result-text {
+    -fx-font-size: 12;
+    -fx-fill: rgba(255, 255, 255, 0.5);
+}

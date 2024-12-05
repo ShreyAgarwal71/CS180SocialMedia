@@ -13,6 +13,7 @@ import com.lewall.pages.NewPost;
 import com.lewall.pages.Profile;
 >>>>>>> 8797d76b79bb1bd3f2bf0c397beacd9a1591223d
 import com.lewall.pages.Register;
+import com.lewall.pages.Search;
 
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
@@ -51,14 +52,18 @@ public class Navigator {
     }
 
     public enum EPage {
+<<<<<<< HEAD
         LOGIN, REGISTER, HOME, PROFILE, EXPLORE, NEWPOST
+=======
+        LOGIN, REGISTER, HOME, PROFILE, SEARCH, UPLOAD, EXPLORE
+>>>>>>> 37fc94aa039a5976332dff38cfc1cf180169b15f
     }
 
     /**
      * Set the stage for the application
      * 
      * @param stage
-     *            the stage to set
+     *              the stage to set
      */
     public static void setStage(Stage stage) {
         Navigator.stage = stage;
@@ -105,7 +110,7 @@ public class Navigator {
      * Navigate to a specific page
      * 
      * @param page
-     *            the page to navigate to
+     *             the page to navigate to
      * @return true if successful, false otherwise
      */
     public static boolean navigateTo(EPage page) {
@@ -156,6 +161,9 @@ public class Navigator {
                 }
                 case PROFILE -> {
                     scene = new Scene(new Profile());
+                }
+                case SEARCH -> {
+                    scene = new Scene(new Search());
                 }
                 default -> {
                     logger.error("Unimplemented Page: " + page);
