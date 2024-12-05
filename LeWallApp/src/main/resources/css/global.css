@@ -3,8 +3,9 @@
 }
 
 .brand-title {
-    -fx-font-size: 24;
+    -fx-font-size: 22;
     -fx-text-fill: white;
+    -fx-fill: white;
     -fx-font-weight: bold;
 }
 
@@ -91,7 +92,6 @@
 .nav-item:hover .nav-label {
     -fx-fill: white;
 }
-
 .profile-title {
     -fx-font-size: 15;
     
@@ -102,4 +102,9 @@
     -fx-font-size: 13;
     
     -fx-font-weight: bold;
+}
+
+.result-text {
+    -fx-font-size: 12;
+    -fx-fill: rgba(255, 255, 255, 0.5);
 }

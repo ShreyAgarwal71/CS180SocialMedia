@@ -9,6 +9,7 @@ import com.lewall.pages.Home;
 import com.lewall.pages.Login;
 import com.lewall.pages.Profile;
 import com.lewall.pages.Register;
+import com.lewall.pages.Search;
 
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
@@ -21,6 +22,8 @@ import javafx.stage.Stage;
  */
 public class Navigator {
     private static final Logger logger = LogManager.getLogger(Navigator.class);
+
+    private static Object mainLock = new Object();
 
     private static Stack<Page> history = new Stack<>();
 
@@ -45,14 +48,14 @@ public class Navigator {
     }
 
     public enum EPage {
-        LOGIN, REGISTER, HOME, PROFILE, EXPLORE
+        LOGIN, REGISTER, HOME, PROFILE, SEARCH, UPLOAD, EXPLORE
     }
 
     /**
      * Set the stage for the application
      * 
      * @param stage
-     *            the stage to set
+     *              the stage to set
      */
     public static void setStage(Stage stage) {
         Navigator.stage = stage;
@@ -77,63 +80,72 @@ public class Navigator {
      * @return true if successful, false otherwise
      */
     public static boolean back() {
-        if (stage == null) {
-            logger.error("Stage not set");
+        synchronized (mainLock) {
+            if (stage == null) {
+                logger.error("Stage not set");
+                return false;
+            }
+
+            if (history.size() > 1) {
+                history.pop();
+                updateScene();
+
+                return true;
+            }
+
+            logger.error("No previous scene");
             return false;
         }
-
-        if (history.size() > 1) {
-            history.pop();
-            updateScene();
-
-            return true;
-        }
-
-        logger.error("No previous scene");
-        return false;
     }
 
     /**
      * Navigate to a specific page
      * 
      * @param page
-     *            the page to navigate to
+     *             the page to navigate to
      * @return true if successful, false otherwise
      */
     public static boolean navigateTo(EPage page) {
-        if (stage == null) {
-            logger.error("Stage not set");
-            return false;
-        }
-
-        Scene scene = null;
-
-        switch (page) {
-            case LOGIN -> {
-                scene = new Scene(new Login());
-            }
-            case REGISTER -> {
-                scene = new Scene(new Register());
-            }
-            case HOME -> {
-                scene = new Scene(new Home());
-            }
-            case PROFILE -> {
-                scene = new Scene(new Profile());
-            }
-            default -> {
-                logger.error("Unimplemented Page: " + page);
+        synchronized (mainLock) {
+            if (stage == null) {
+                logger.error("Stage not set");
                 return false;
             }
+
+            Scene scene = null;
+
+            history.push(new Page(page, scene));
+
+            switch (page) {
+                case LOGIN -> {
+                    scene = new Scene(new Login());
+                }
+                case REGISTER -> {
+                    scene = new Scene(new Register());
+                }
+                case HOME -> {
+                    scene = new Scene(new Home());
+                }
+                case PROFILE -> {
+                    scene = new Scene(new Profile());
+                }
+                case SEARCH -> {
+                    scene = new Scene(new Search());
+                }
+                default -> {
+                    logger.error("Unimplemented Page: " + page);
+                    return false;
+                }
+            }
+
+            history.peek().scene = scene;
+
+            scene.getStylesheets().add("css/global.css");
+            scene.setFill(Color.rgb(0, 0, 0, 0));
+
+            updateScene();
+            return true;
         }
-
-        history.push(new Page(page, scene));
-
-        scene.getStylesheets().add("css/global.css");
-        scene.setFill(Color.rgb(0, 0, 0, 0));
-
-        updateScene();
-        return true;
     }
 
     /**
