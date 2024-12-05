@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.lewall.pages.Home;
 import com.lewall.pages.Login;
+import com.lewall.pages.NewPost;
 import com.lewall.pages.Register;
 
 import javafx.scene.Scene;
@@ -44,7 +45,7 @@ public class Navigator {
     }
 
     public enum EPage {
-        LOGIN, REGISTER, HOME, PROFILE, EXPLORE
+        LOGIN, REGISTER, HOME, PROFILE, EXPLORE, NEWPOST
     }
 
     /**
@@ -117,6 +118,9 @@ public class Navigator {
             case HOME -> {
                 scene = new Scene(new Home());
             }
+			case NEWPOST -> {
+				scene = new Scene(new NewPost());
+			}
             default -> {
                 logger.error("Unimplemented Page: " + page);
                 return false;

@@ -77,7 +77,7 @@ public class Navbar extends VBox {
 
         this.getChildren().addAll(
                 // logo,
-                new NavIcon("Inscribe", "add.png", EPage.HOME),
+                new NavIcon("Inscribe", "add.png", EPage.NEWPOST),
                 new NavIcon("Home", "home.png", EPage.HOME),
                 new NavIcon("Explore", "search.png", EPage.EXPLORE),
                 new NavIcon("Profile", "user.png", EPage.PROFILE));
