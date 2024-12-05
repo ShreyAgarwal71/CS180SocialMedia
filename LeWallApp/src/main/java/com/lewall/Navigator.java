@@ -112,32 +112,13 @@ public class Navigator {
             return false;
         }
 
-        Scene scene = null;
-
-        switch (page) {
-            case LOGIN -> {
-                scene = new Scene(new Login());
-            }
-            case REGISTER -> {
-                scene = new Scene(new Register());
-            }
-            case HOME -> {
-                scene = new Scene(new Home());
-            }
-			case NEWPOST -> {
-				scene = new Scene(new NewPost());
-			}
-            default -> {
-                logger.error("Unimplemented Page: " + page);
-			}
-		}
         synchronized (mainLock) {
             if (stage == null) {
                 logger.error("Stage not set");
                 return false;
             }
 
-            scene = null;
+            Scene scene = null;
 
             history.push(new Page(page, scene));
 
@@ -157,6 +138,9 @@ public class Navigator {
                 case SEARCH -> {
                     scene = new Scene(new Search());
                 }
+				case NEWPOST -> {
+					scene = new Scene(new NewPost());
+				}
                 default -> {
                     logger.error("Unimplemented Page: " + page);
                     return false;

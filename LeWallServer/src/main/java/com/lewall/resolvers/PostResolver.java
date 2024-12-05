@@ -173,7 +173,7 @@ public class PostResolver implements BaseResolver, IPostResolver {
      */
     @AuthGuard()
     @Endpoint(endpoint = "/getClasses", method = Request.EMethod.GET, responseBodyType = ClassesDTO.class)
-    public ClassesDTO getClasses() {
+    public ClassesDTO getClasses(Request<Void> request) {
         return new ClassesDTO();
     }
 }
