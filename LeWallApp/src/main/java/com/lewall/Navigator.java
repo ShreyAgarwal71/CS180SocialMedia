@@ -7,11 +7,8 @@ import org.apache.logging.log4j.Logger;
 
 import com.lewall.pages.Home;
 import com.lewall.pages.Login;
-<<<<<<< HEAD
 import com.lewall.pages.NewPost;
-=======
 import com.lewall.pages.Profile;
->>>>>>> 8797d76b79bb1bd3f2bf0c397beacd9a1591223d
 import com.lewall.pages.Register;
 import com.lewall.pages.Search;
 
@@ -52,11 +49,7 @@ public class Navigator {
     }
 
     public enum EPage {
-<<<<<<< HEAD
-        LOGIN, REGISTER, HOME, PROFILE, EXPLORE, NEWPOST
-=======
-        LOGIN, REGISTER, HOME, PROFILE, SEARCH, UPLOAD, EXPLORE
->>>>>>> 37fc94aa039a5976332dff38cfc1cf180169b15f
+        LOGIN, REGISTER, HOME, PROFILE, SEARCH, UPLOAD, EXPLORE, NEWPOST
     }
 
     /**
@@ -114,7 +107,6 @@ public class Navigator {
      * @return true if successful, false otherwise
      */
     public static boolean navigateTo(EPage page) {
-<<<<<<< HEAD
         if (stage == null) {
             logger.error("Stage not set");
             return false;
@@ -137,15 +129,15 @@ public class Navigator {
 			}
             default -> {
                 logger.error("Unimplemented Page: " + page);
-=======
+			}
+		}
         synchronized (mainLock) {
             if (stage == null) {
                 logger.error("Stage not set");
->>>>>>> 8797d76b79bb1bd3f2bf0c397beacd9a1591223d
                 return false;
             }
 
-            Scene scene = null;
+            scene = null;
 
             history.push(new Page(page, scene));
 

@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.lewall.api.Connection;
 import com.lewall.api.LocalStorage;
+import com.lewall.dtos.ClassesDTO;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.control.Button;
@@ -45,7 +46,7 @@ public class NewPost extends Pane {
 		if (LocalStorage.get("Courses") == null) {
 			Connection.get("/idk", true);
 		} else {
-			classes = LocalStorage.get("Courses", null);
+			classes = LocalStorage.get("Courses", ClassesDTO.getclass());
 		}
 
 		Label courseLabel = new Label("Classes:");
