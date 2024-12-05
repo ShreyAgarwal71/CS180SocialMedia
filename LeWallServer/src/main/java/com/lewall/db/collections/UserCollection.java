@@ -1,5 +1,6 @@
 package com.lewall.db.collections;
 
+import java.util.List;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 import com.lewall.db.helpers.BaseCollection;
@@ -63,5 +64,17 @@ public class UserCollection extends BaseCollection<User> {
      */
     public User findByUsername(String username) {
         return this.findOne(user -> user.getUsername().equals(username));
+    }
+
+    /**
+     * Search a user by username
+     * 
+     * @param username
+     * @return List<User>
+     *         Return all the users with the similar username
+     *         Returns null if none of the users have similar usernames
+     */
+    public List<User> searchByUsername(String username) {
+        return this.findAll(user -> user.getUsername().contains(username));
     }
 }

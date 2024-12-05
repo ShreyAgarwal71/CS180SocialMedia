@@ -231,7 +231,25 @@ public class UserService implements IService {
             }
         }
 
-        return posts1;
+        return posts2;
+    }
+
+    public static List<User> getUsersSearched(UUID userId, String search) {
+        User user = users.findOne(u -> u.getId().equals(userId));
+        if (user == null) {
+            throw new BadRequest("User not found");
+        }
+
+        List<User> users1 = users.searchByUsername(search);
+        List<User> users2 = new ArrayList<>();
+        for (int i = 0; i < users1.size(); i++) {
+            if (!(user.getBlockedUsers().contains(users1.get(i).getId().toString()))
+                    && !(user.getHiddenPosts().contains(users1.get(i).getId().toString()))) {
+                users2.add(users1.get(i));
+            }
+        }
+
+        return users2;
     }
 
 }
