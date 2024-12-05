@@ -50,8 +50,10 @@ public class Profile extends Pane {
         StackPane.setAlignment(navbar, Pos.TOP_LEFT);
         StackPane.setMargin(navbar, new Insets(10));
 
-        Rectangle profileCard = new Rectangle(250, 120);
-        
+        Text profileTitle = new Text("Inscriber Profile");
+        profileTitle.getStyleClass().add("brand-title");
+        profileTitle.setFill(Color.WHITE);
+        VBox.setMargin(profileTitle, new Insets(3,0,0,0));
 
         StackPane mainStack = new StackPane();
         mainStack.getChildren().add(navbar);
