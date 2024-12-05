@@ -207,7 +207,7 @@ public class Register extends Pane {
             Navigator.navigateTo(Navigator.EPage.LOGIN);
         });
         loginButton.getStyleClass().add("brand-text-button");
-        VBox.setMargin(loginButton, new Insets(5, 0, 20, 0));
+        VBox.setMargin(loginButton, new Insets(10, 0, 20, 0));
 
         registerForm.getChildren().addAll(
                 title,
