@@ -38,30 +38,30 @@ public class Home extends Pane {
         FlowPane flowPane = new FlowPane(10, 10);
         flowPane.prefWidthProperty().bind(this.widthProperty());
         flowPane.prefHeightProperty().bind(this.heightProperty());
-        flowPane.setAlignment(Pos.CENTER);
+        // flowPane.setAlignment(Pos.CENTER);
         flowPane.setOrientation(Orientation.VERTICAL);
 
         VBox column = new VBox(10);
-        column.setAlignment(Pos.CENTER);
+        FlowPane.setMargin(column, new Insets(10, 0, 0, 85));
+        // column.setAlignment(Pos.CENTER);
 
-        UserDTO userDTO = LocalStorage.get("/user", UserDTO.class);
-        if (userDTO != null) {
-            String displayName = userDTO.getUser().getDisplayName();
+        // UserDTO userDTO = LocalStorage.get("/user", UserDTO.class);
+        // if (userDTO != null) {
+        // String displayName = userDTO.getUser().getDisplayName();
 
-            Text welcome = new Text("Welcome, " + displayName + "!");
-            welcome.getStyleClass().add("brand-subtitle");
+        Text fyp = new Text("Your LeWall");
+        VBox.setMargin(fyp, new Insets(0, 0, 0, 10));
+        fyp.getStyleClass().add("brand-title");
+        column.getChildren().add(fyp);
 
-            column.getChildren().add(welcome);
-        }
-
-        Button logOut = new Button("Log Out");
-        logOut.getStyleClass().add("brand-button");
-        logOut.setOnAction(e -> {
-            logger.info("Logging out");
-            LocalStorage.clear();
-            Navigator.navigateTo(EPage.LOGIN);
-        });
-        column.getChildren().add(logOut);
+        // Button logOut = new Button("Log Out");
+        // logOut.getStyleClass().add("brand-button");
+        // logOut.setOnAction(e -> {
+        // logger.info("Logging out");
+        // LocalStorage.clear();
+        // Navigator.navigateTo(EPage.LOGIN);
+        // });
+        // column.getChildren().add(logOut);
 
         flowPane.getChildren().add(column);
 
