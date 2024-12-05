@@ -26,6 +26,12 @@ public class Navbar extends VBox {
             super(5);
 
             this.setAlignment(Pos.CENTER);
+            this.onMouseClickedProperty().set(e -> {
+                if (page.equals(Navigator.getCurrentPage())) {
+                    return;
+                }
+                Navigator.navigateTo(page);
+            });
 
             Image icon = new Image("imgs/" + relativeIconPath);
             ImageView iconView = new ImageView(icon);
@@ -39,6 +45,10 @@ public class Navbar extends VBox {
             } else {
                 textLabel.setFill(Color.web(Theme.TEXT_GREY));
             }
+
+            this.getStyleClass().add("nav-item");
+            iconView.getStyleClass().add("nav-icon");
+            textLabel.getStyleClass().add("nav-label");
 
             this.getChildren().addAll(
                     iconView,
@@ -67,6 +77,7 @@ public class Navbar extends VBox {
 
         this.getChildren().addAll(
                 // logo,
+                new NavIcon("Inscribe", "add.png", EPage.HOME),
                 new NavIcon("Home", "home.png", EPage.HOME),
                 new NavIcon("Explore", "search.png", EPage.EXPLORE),
                 new NavIcon("Profile", "user.png", EPage.PROFILE));
