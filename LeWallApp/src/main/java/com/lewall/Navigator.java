@@ -117,7 +117,9 @@ public class Navigator {
             }
             case HOME -> {
                 scene = new Scene(new Home());
-                history.push(scene);
+            }
+            case PROFILE -> {
+                scene = new Scene(new Profile());
             }
             default -> {
                 logger.error("Unimplemented Page: " + page);

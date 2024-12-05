@@ -11,6 +11,7 @@ import com.lewall.dtos.AuthTokenDTO;
 import com.lewall.dtos.LoginDTO;
 import com.lewall.dtos.UserDTO;
 import com.lewall.components.Footer;
+import com.lewall.components.Navbar;
 import com.lewall.components.PasswordField;
 
 import javafx.application.Platform;
@@ -45,7 +46,15 @@ public class Profile extends Pane {
     public Profile() {
         this.getStyleClass().add("primary-bg");
 
+        VBox navbar = new Navbar();
+        StackPane.setAlignment(navbar, Pos.TOP_LEFT);
+        StackPane.setMargin(navbar, new Insets(10));
+
         Rectangle profileCard = new Rectangle(250, 120);
-        this.getChildren().add(profileCard);
+        
+
+        StackPane mainStack = new StackPane();
+        mainStack.getChildren().add(navbar);
+        this.getChildren().add(mainStack);
     }
 }
