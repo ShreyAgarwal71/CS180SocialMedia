@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.lewall.pages.Home;
 import com.lewall.pages.Login;
+import com.lewall.pages.Profile;
 import com.lewall.pages.Register;
 
 import javafx.scene.Scene;
@@ -116,6 +117,9 @@ public class Navigator {
             }
             case HOME -> {
                 scene = new Scene(new Home());
+            }
+            case PROFILE -> {
+                scene = new Scene(new Profile());
             }
             default -> {
                 logger.error("Unimplemented Page: " + page);
