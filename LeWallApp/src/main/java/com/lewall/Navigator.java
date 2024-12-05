@@ -22,12 +22,30 @@ import javafx.stage.Stage;
 public class Navigator {
     private static final Logger logger = LogManager.getLogger(Navigator.class);
 
-    private static Stack<Scene> history = new Stack<>();
+    private static Stack<Page> history = new Stack<>();
 
     private static Stage stage;
 
+    private static class Page {
+        private EPage page;
+        private Scene scene;
+
+        public Page(EPage page, Scene scene) {
+            this.page = page;
+            this.scene = scene;
+        }
+
+        public EPage getPage() {
+            return page;
+        }
+
+        public Scene getScene() {
+            return scene;
+        }
+    }
+
     public enum EPage {
-        LOGIN, REGISTER, HOME, PROFILE
+        LOGIN, REGISTER, HOME, PROFILE, EXPLORE
     }
 
     /**
@@ -38,6 +56,19 @@ public class Navigator {
      */
     public static void setStage(Stage stage) {
         Navigator.stage = stage;
+    }
+
+    /**
+     * Get the current page {@link EPage} enum value
+     * 
+     * @return the current stage page enum, returns null if no page is set
+     */
+    public static EPage getCurrentPage() {
+        if (history.size() == 0) {
+            return null;
+        }
+
+        return history.peek().getPage();
     }
 
     /**
@@ -80,18 +111,12 @@ public class Navigator {
         switch (page) {
             case LOGIN -> {
                 scene = new Scene(new Login());
-                history.push(scene);
             }
             case REGISTER -> {
                 scene = new Scene(new Register());
-                history.push(scene);
             }
             case HOME -> {
                 scene = new Scene(new Home());
-                history.push(scene);
-            }   
-            case PROFILE -> {
-                scene = new Scene(new Profile());
                 history.push(scene);
             }
             default -> {
@@ -99,6 +124,8 @@ public class Navigator {
                 return false;
             }
         }
+
+        history.push(new Page(page, scene));
 
         scene.getStylesheets().add("css/global.css");
         scene.setFill(Color.rgb(0, 0, 0, 0));
@@ -111,7 +138,7 @@ public class Navigator {
      * Update the scene to the most recent scene
      */
     private static void updateScene() {
-        final Scene scene = history.peek();
+        final Scene scene = history.peek().getScene();
         stage.setScene(scene);
     }
 }

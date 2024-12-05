@@ -6,8 +6,10 @@ import com.lewall.Navigator;
 import com.lewall.Navigator.EPage;
 import com.lewall.api.LocalStorage;
 import com.lewall.components.Footer;
+import com.lewall.components.Navbar;
 import com.lewall.dtos.UserDTO;
 
+import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -68,7 +70,15 @@ public class Home extends Pane {
 
         HBox footer = new Footer();
         StackPane.setAlignment(footer, Pos.BOTTOM_CENTER);
+
+        VBox navbar = new Navbar();
+        StackPane.setAlignment(navbar, Pos.TOP_LEFT);
+        StackPane.setMargin(navbar, new Insets(10));
+
         mainStack.getChildren().add(footer);
+        mainStack.getChildren().add(navbar);
+        System.out.println(Navigator.getCurrentPage());
+        System.out.println("Home page loaded");
 
         this.getChildren().add(mainStack);
     }
