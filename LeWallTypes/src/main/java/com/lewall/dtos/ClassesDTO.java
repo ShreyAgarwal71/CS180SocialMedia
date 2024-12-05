@@ -13,4 +13,8 @@ public class ClassesDTO {
         classes.add("CS 250");
         classes.add("CS 251");
     }
+
+    public List<String> getClasses() {
+        return classes;
+    }
 }
