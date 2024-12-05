@@ -91,3 +91,15 @@
 .nav-item:hover .nav-label {
     -fx-fill: white;
 }
+
+.profile-title {
+    -fx-font-size: 15;
+    
+    -fx-font-weight: bold;
+}
+
+.profile-subtitle {
+    -fx-font-size: 13;
+    
+    -fx-font-weight: bold;
+}
