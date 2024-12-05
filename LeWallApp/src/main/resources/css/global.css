@@ -79,3 +79,15 @@
     -fx-border-width: 1 0 0 0;
     -fx-border-style: solid; */
 }
+
+.nav-item:hover .nav-icon {
+    -fx-fill: white; 
+}
+
+.nav-label {
+    transition: all 150ms ease;
+}
+
+.nav-item:hover .nav-label {
+    -fx-fill: white;
+}
