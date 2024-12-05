@@ -3,8 +3,9 @@
 }
 
 .brand-title {
-    -fx-font-size: 24;
+    -fx-font-size: 22;
     -fx-text-fill: white;
+    -fx-fill: white;
     -fx-font-weight: bold;
 }
 
