@@ -240,7 +240,10 @@ public class UserService implements IService {
             throw new BadRequest("User not found");
         }
 
+        System.out.println(search);
         List<User> users1 = users.searchByUsername(search);
+        System.out.println(users1.size());
+
         List<User> users2 = new ArrayList<>();
         for (int i = 0; i < users1.size(); i++) {
             if (!(user.getBlockedUsers().contains(users1.get(i).getId().toString()))

@@ -18,6 +18,7 @@ import com.lewall.dtos.CommentsDTO;
 import com.lewall.dtos.PostCommentsDTO;
 import com.lewall.dtos.HidePostDTO;
 import com.lewall.dtos.PublicPrivateDTO;
+import com.lewall.dtos.ClassesDTO;
 
 /**
  * A class to resolve Post-related requests
@@ -46,9 +47,9 @@ public class PostResolver implements BaseResolver, IPostResolver {
      * Delete a post
      * 
      * @param request
-     *            {@link Request} with {@link DeletePostDTO} body
+     *                {@link Request} with {@link DeletePostDTO} body
      * @throws InternalServerError
-     *             if unable to delete post
+     *                             if unable to delete post
      * @return void
      */
     @AuthGuard()
@@ -66,9 +67,9 @@ public class PostResolver implements BaseResolver, IPostResolver {
      * Like a post
      * 
      * @param request
-     *            {@link Request} with {@link LikePostDTO} body
+     *                {@link Request} with {@link LikePostDTO} body
      * @throws InternalServerError
-     *             if unable to like post
+     *                             if unable to like post
      * @return void
      */
     @AuthGuard()
@@ -86,9 +87,9 @@ public class PostResolver implements BaseResolver, IPostResolver {
      * Unlike a post
      * 
      * @param request
-     *            {@link Request} with {@link UnlikePostDTO} body
+     *                {@link Request} with {@link UnlikePostDTO} body
      * @throws InternalServerError
-     *             if unable to unlike post
+     *                             if unable to unlike post
      * @return void
      */
     @AuthGuard()
@@ -106,9 +107,9 @@ public class PostResolver implements BaseResolver, IPostResolver {
      * Hide a post
      * 
      * @param request
-     *            {@link Request} with {@link HidePostDTO} body
+     *                {@link Request} with {@link HidePostDTO} body
      * @throws InternalServerError
-     *             if unable to hide post
+     *                             if unable to hide post
      * @return void
      */
     @AuthGuard()
@@ -126,9 +127,9 @@ public class PostResolver implements BaseResolver, IPostResolver {
      * Get comments for a post
      * 
      * @param request
-     *            {@link Request} with {@link PostCommentsDTO} body
+     *                {@link Request} with {@link PostCommentsDTO} body
      * @throws InternalServerError
-     *             if unable to get comments
+     *                             if unable to get comments
      * @return {@link CommentsDTO}
      */
     @AuthGuard()
@@ -148,9 +149,9 @@ public class PostResolver implements BaseResolver, IPostResolver {
      * Make a post private or public
      * 
      * @param request
-     *            {@link Request} with {@link PublicPrivateDTO} body
+     *                {@link Request} with {@link PublicPrivateDTO} body
      * @throws InternalServerError
-     *             if unable to make post private or public
+     *                             if unable to make post private or public
      * @return void
      */
     @AuthGuard()
@@ -163,5 +164,16 @@ public class PostResolver implements BaseResolver, IPostResolver {
         if (!PostService.makePostPrivate(userId, postId, isPrivate)) {
             throw new InternalServerError("Failed to make Post Private or Public");
         }
+    }
+
+    /**
+     * Get classes
+     * 
+     * @return {@link ClassesDTO}
+     */
+    @AuthGuard()
+    @Endpoint(endpoint = "/getClasses", method = Request.EMethod.GET, responseBodyType = ClassesDTO.class)
+    public ClassesDTO getClasses() {
+        return new ClassesDTO();
     }
 }

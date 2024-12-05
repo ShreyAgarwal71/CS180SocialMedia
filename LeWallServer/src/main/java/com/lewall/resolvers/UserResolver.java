@@ -245,7 +245,7 @@ public class UserResolver implements BaseResolver, IUserResolver {
      * @return {@link UsersFoundDTO}
      */
     @AuthGuard()
-    @Endpoint(endpoint = "/userSearches", method = Request.EMethod.GET, requestBodyType = UserSearchDTO.class, responseBodyType = UsersFoundDTO.class)
+    @Endpoint(endpoint = "/userSearches", method = Request.EMethod.POST, requestBodyType = UserSearchDTO.class, responseBodyType = UsersFoundDTO.class)
     public UsersFoundDTO userSearches(Request<UserSearchDTO> request) {
         UUID userId = request.getUserId();
         String search = request.getBody().getSearch();

@@ -72,9 +72,12 @@ public class UserCollection extends BaseCollection<User> {
      * @param username
      * @return List<User>
      *         Return all the users with the similar username
-     *         Returns null if none of the users have similar usernames
+     *         Returns empty list if none of the users have similar usernames
      */
     public List<User> searchByUsername(String username) {
-        return this.findAll(user -> user.getUsername().contains(username));
+        return this.findAll(user -> {
+            logger.debug("Searching for: " + user.getUsername());
+            return user.getDisplayName().contains(username);
+        });
     }
 }

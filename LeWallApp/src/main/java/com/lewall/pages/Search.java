@@ -51,17 +51,6 @@ public class Search extends Pane {
         VBox column = new VBox(10);
         column.setAlignment(Pos.CENTER);
 
-        // User greeting
-        UserDTO userDTO = LocalStorage.get("/user", UserDTO.class);
-        if (userDTO != null) {
-            String displayName = userDTO.getUser().getDisplayName();
-
-            Text welcome = new Text("Welcome, " + displayName + "!");
-            welcome.getStyleClass().add("brand-subtitle");
-
-            column.getChildren().add(welcome);
-        }
-
         Text searchError = new Text();
         searchError.getStyleClass().add("error-text");
         searchError.setWrappingWidth(300);
@@ -81,87 +70,69 @@ public class Search extends Pane {
 
         Button searchButton = new Button("Search");
         searchButton.getStyleClass().add("brand-button");
+        logger.debug(LocalStorage.get("token"));
         searchButton.setOnAction(event -> {
             String query = searchField.getText().trim();
             if (query.isEmpty()) {
                 searchError.setText("Search query cannot be empty.");
+                searchResults.getChildren().clear();
                 return;
+            } else {
+                searchError.setText("");
             }
 
-            Connection.<UserSearchDTO, AuthTokenDTO>post("/auth/userSearches", new UserSearchDTO(query))
-                    .thenAccept(response -> {
-                        String token = response.getBody().getToken();
-                        if (token != null) {
-                            logger.debug("Search Successful");
-                            LocalStorage.set("token", token);
-                            Connection.<UsersFoundDTO>get("/userSearches", true).thenAccept(userResponse -> {
-                                UsersFoundDTO usersFound = userResponse.getBody();
-                                Platform.runLater(() -> {
-                                    searchResults.getChildren().clear(); // Clear previous results
-                                    List<User> users = usersFound.getUsers();
-                                    if (users != null && !users.isEmpty()) {
-                                        Text resultsTitle = new Text("Top Matches:");
-                                        resultsTitle.getStyleClass().add("brand-subtitle");
-                                        searchResults.getChildren().add(resultsTitle);
+            Connection.<UserSearchDTO, UsersFoundDTO>post("/user/userSearches", new UserSearchDTO(query))
+                    .thenAccept(userResponse -> {
+                        UsersFoundDTO usersFound = userResponse.getBody();
+                        Platform.runLater(() -> {
+                            searchResults.getChildren().clear(); // Clear previous results
+                            List<User> users = usersFound.getUsers();
+                            if (users != null && !users.isEmpty()) {
+                                Text resultsTitle = new Text("Top Matches:");
+                                resultsTitle.getStyleClass().add("brand-subtitle");
+                                searchResults.getChildren().add(resultsTitle);
 
-                                        users.stream().limit(10).forEach(user -> {
-                                            Text userText = new Text(
-                                                    user.getDisplayName() + " (" + user.getEmail() + ")");
-                                            userText.getStyleClass().add("result-text");
-                                            searchResults.getChildren().add(userText);
-                                        });
-                                    } else {
-                                        searchResults.getChildren().add(new Text("No matches found."));
-                                    }
+                                users.stream().limit(10).forEach(user -> {
+                                    Text userText = new Text(
+                                            user.getDisplayName() + " (" + user.getEmail() + ")");
+                                    userText.getStyleClass().add("result-text");
+                                    searchResults.getChildren().add(userText);
                                 });
-                            }).exceptionally(e -> {
-                                logger.error(e.getMessage(), e);
-                                Platform.runLater(() -> searchError.setText("Failed to fetch search results."));
-                                return null;
-                            });
-                        } else {
-                            logger.debug("Search Failed");
-                            Platform.runLater(() -> searchError.setText("No searches found."));
-                        }
-                    }).exceptionally(ex -> {
-                        logger.error(ex.getMessage(), ex);
-                        Platform.runLater(
-                                () -> searchError.setText("Error occurred during search: " + ex.getMessage()));
+                            } else {
+                                Text noResults = new Text("No matches found.");
+                                noResults.getStyleClass().add("brand-subtitle");
+                                searchResults.getChildren().add(noResults);
+                            }
+                        });
+                    }).exceptionally(e -> {
+                        logger.error(e.getMessage(), e);
+                        Platform.runLater(() -> searchError.setText("Failed to fetch search results."));
                         return null;
                     });
         });
 
-        searchBox.getChildren().addAll(searchField, searchButton);
-        column.getChildren().addAll(searchBox, searchError, searchResults);
-
-        // Log out button
-        Button logOut = new Button("Home");
-        logOut.getStyleClass().add("brand-button");
-        logOut.setOnAction(e -> {
-            logger.info("Going Home page");
-            LocalStorage.remove("/user");
-            Navigator.navigateTo(EPage.HOME);
-        });
-
-        HBox buttonBox = new HBox(10);
-        buttonBox.setAlignment(Pos.CENTER);
-        buttonBox.getChildren().add(logOut);
-
-        column.getChildren().add(buttonBox);
+        // searchBox.getChildren().addAll(searchField, searchButton);
+        column.getChildren().addAll(searchField, searchButton, searchError, searchResults);
 
         flowPane.getChildren().add(column);
 
         // Stack pane to centralize content
         StackPane stackPane = new StackPane();
         stackPane.getChildren().add(flowPane);
-        stackPane.setPadding(new Insets(20));
+        // stackPane.setPadding(new Insets(20));
 
-        // Page layout with Navbar, content, and Footer
-        VBox page = new VBox();
-        page.getChildren().add(new Navbar());
-        page.getChildren().add(stackPane);
-        page.getChildren().add(new Footer());
+        HBox footer = new Footer();
+        StackPane.setAlignment(footer, Pos.BOTTOM_CENTER);
 
-        this.getChildren().add(page);
+        VBox navbar = new Navbar();
+        StackPane.setAlignment(navbar, Pos.TOP_LEFT);
+        StackPane.setMargin(navbar, new Insets(10));
+
+        stackPane.getChildren().add(footer);
+        stackPane.getChildren().add(navbar);
+        System.out.println(Navigator.getCurrentPage());
+        System.out.println("Home page loaded");
+
+        this.getChildren().add(stackPane);
     }
 }

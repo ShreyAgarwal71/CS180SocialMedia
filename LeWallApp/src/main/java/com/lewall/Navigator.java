@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import com.lewall.pages.Home;
 import com.lewall.pages.Login;
 import com.lewall.pages.Register;
+import com.lewall.pages.Search;
 
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
@@ -116,6 +117,9 @@ public class Navigator {
             }
             case HOME -> {
                 scene = new Scene(new Home());
+            }
+            case SEARCH -> {
+                scene = new Scene(new Search());
             }
             default -> {
                 logger.error("Unimplemented Page: " + page);
