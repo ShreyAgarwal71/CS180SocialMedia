@@ -108,6 +108,13 @@ public class ResolverTools {
                                 fullPath, resolver.getClass(), endpointMap.get(fullPath).getResolver().getClass()));
                     }
 
+                    // Validate endpoint method has a `Request` parameter
+                    if (m.getParameterCount() != 1 || !m.getParameterTypes()[0].equals(Request.class)) {
+                        throw new RuntimeException(String.format(
+                                "Endpoint %s on %s does not have a `Request` parameter",
+                                fullPath, resolver.getClass()));
+                    }
+
                     // Validate method return type
                     boolean defaultVoidResponse = m.getReturnType().equals(Void.TYPE)
                             && endpointAnnotation.responseBodyType().equals(String.class);
