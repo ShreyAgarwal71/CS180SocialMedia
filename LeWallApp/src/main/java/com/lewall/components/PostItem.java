@@ -41,16 +41,11 @@ public class PostItem extends VBox {
         Image image = new Image(item.getImageURL(), true);
         ImageView imageView = new ImageView(image);
 
+        imageView.setPreserveRatio(true);
+        imageView.setSmooth(true);
+
         imageView.setFitWidth(200 - 15);
         imageView.setFitHeight(200 - 15);
-
-        Rectangle clip = new Rectangle(imageView.getFitWidth(), imageView.getFitWidth());
-        clip.setArcWidth(5);
-        clip.setArcHeight(5);
-        imageView.setClip(clip);
-
-        StackPane.setMargin(imageView, new Insets(10, 5, 10, 10));
-        StackPane.setAlignment(imageView, Pos.CENTER_LEFT);
 
         VBox postContents = new VBox(5);
         VBox postQuote = getPostQuoteComponent(item.getMessagePost(), imageView.getFitWidth());
@@ -69,9 +64,23 @@ public class PostItem extends VBox {
         blurLayer.setEffect(blur);
         blurLayer.setFill(new Color(1, 1, 1, 0.01));
 
+        VBox imageContainer = new VBox();
+        imageContainer.setMaxWidth(200 - 15);
+        imageContainer.setAlignment(Pos.CENTER);
+        imageContainer.getStyleClass().addAll("grey-border", "grey-bg");
+        imageContainer.getChildren().add(imageView);
+
+        Rectangle clip = new Rectangle(imageView.getFitWidth(), imageView.getFitWidth());
+        clip.setArcWidth(5);
+        clip.setArcHeight(5);
+        imageView.setClip(clip);
+
+        StackPane.setMargin(imageContainer, new Insets(10, 5, 10, 10));
+        StackPane.setAlignment(imageContainer, Pos.CENTER_LEFT);
+
         mainStack.getChildren().add(blurLayer);
         mainStack.getChildren().add(container);
-        mainStack.getChildren().addAll(imageView, postContents);
+        mainStack.getChildren().addAll(imageContainer, postContents);
 
         HBox postClass = new HBox(5);
         postClass.setPadding(new Insets(0, 0, 0, 10));

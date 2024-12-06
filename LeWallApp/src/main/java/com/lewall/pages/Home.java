@@ -50,7 +50,7 @@ public class Home extends Pane {
         // imageURL, UUID classId)
         Post[] posts = new Post[] {
                 new Post(UUID.randomUUID(), "I learned the difference between Stacks and Queues", "11/17/2024", 1,
-                        "https://www.teachhub.com/wp-content/uploads/2020/05/Classroom-Management-for-an-Effective-Learning-Environment-768x512.jpg",
+                        "https://www.purdue.edu/uns/images/2020/pt-bell-towerOG.jpg",
                         UUID.randomUUID()),
                 new Post(UUID.randomUUID(), "I learned the difference between Stacks and Queues", "11/17/2024", 2,
                         "https://www.teachhub.com/wp-content/uploads/2020/05/Classroom-Management-for-an-Effective-Learning-Environment-768x512.jpg",
