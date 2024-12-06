@@ -1,0 +1,16 @@
+services:
+  lewall_server:
+    container_name: lewall_server
+    image: lewall_server:latest
+    build: .
+    networks:
+      - proxy
+    ports:
+      - 8559:8559
+    labels:
+      - "traefik.enable=true"
+
+networks:
+  proxy:
+    name: proxy
+    external: true

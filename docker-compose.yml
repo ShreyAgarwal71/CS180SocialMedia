@@ -1,0 +1,7 @@
+services:
+  lewall_server:
+    container_name: lewall_server
+    image: lewall_server:latest
+    build: .
+    ports:
+      - 8559:8559

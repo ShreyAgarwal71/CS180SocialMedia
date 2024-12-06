@@ -35,7 +35,7 @@ public class Connection {
     private static final Logger logger = LogManager.getLogger(Connection.class);
 
     private static final String HOST = "localhost";
-    private static final int PORT = 8080;
+    private static final int PORT = 8559;
 
     private static SocketChannel serverChannel;
 
