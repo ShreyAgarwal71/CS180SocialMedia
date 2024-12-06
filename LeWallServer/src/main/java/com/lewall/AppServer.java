@@ -37,7 +37,7 @@ import com.lewall.resolvers.UserResolver;
 public class AppServer {
     private static final Logger logger = LogManager.getLogger(AppServer.class);
 
-    private static final int PORT = 8080;
+    private static final int PORT = 8559;
     private static final int PHYSICAL_THREAD_COUNT = 4;
 
     private ExecutorService workers;

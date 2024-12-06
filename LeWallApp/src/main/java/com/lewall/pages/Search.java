@@ -3,13 +3,10 @@ package com.lewall.pages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.lewall.Navigator;
-import com.lewall.Navigator.EPage;
 import com.lewall.api.Connection;
 import com.lewall.api.LocalStorage;
 import com.lewall.components.Footer;
 import com.lewall.components.Navbar;
-import com.lewall.dtos.AuthTokenDTO;
-import com.lewall.dtos.UserDTO;
 import com.lewall.dtos.UserSearchDTO;
 import com.lewall.dtos.UsersFoundDTO;
 import com.lewall.db.models.User;
@@ -70,7 +67,6 @@ public class Search extends Pane {
 
         Button searchButton = new Button("Search");
         searchButton.getStyleClass().add("brand-button");
-        logger.debug(LocalStorage.get("token"));
         searchButton.setOnAction(event -> {
             String query = searchField.getText().trim();
             if (query.isEmpty()) {
@@ -130,8 +126,6 @@ public class Search extends Pane {
 
         stackPane.getChildren().add(footer);
         stackPane.getChildren().add(navbar);
-        System.out.println(Navigator.getCurrentPage());
-        System.out.println("Home page loaded");
 
         this.getChildren().add(stackPane);
     }

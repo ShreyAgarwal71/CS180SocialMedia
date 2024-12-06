@@ -2,6 +2,16 @@
     -fx-background-color: radial-gradient(center 50% 50%, radius 75%, rgb(25, 18, 38), black);
 }
 
+.grey-border {
+    -fx-border-color: #ffffff06;
+    -fx-border-width: 1;
+    -fx-border-radius: 3;
+}
+
+.grey-bg {
+    -fx-background-color: #0E0E0E;
+}
+
 .brand-title {
     -fx-font-size: 22;
     -fx-text-fill: white;
@@ -93,7 +103,52 @@
     -fx-fill: white;
 }
 
+.nax-item:hover .nav-label-active {
+    -fx-fill: #898BEF;
+}
+
+.profile-title {
+    -fx-font-size: 15;
+    
+    -fx-font-weight: bold;
+}
+
+.profile-subtitle {
+    -fx-font-size: 13;
+    
+    -fx-font-weight: bold;
+}
+
 .result-text {
     -fx-font-size: 12;
     -fx-fill: rgba(255, 255, 255, 0.5);
+}
+
+.list-view {
+    -fx-padding: 0; /* Remove padding */
+    -fx-background-color: transparent; /* Remove background */
+    -fx-border-color: transparent; /* Remove border */
+}
+
+.list-cell {
+    -fx-background-color: transparent; /* Remove cell background */
+    -fx-padding: 0; /* Remove cell padding */
+    -fx-border-color: transparent; /* Remove cell border */
+}
+
+.list-cell:filled:selected, .list-cell:filled:hover {
+    -fx-background-color: transparent; /* Remove selection/highlight color */
+}
+
+.virtual-flow {    
+    -fx-background-color: transparent;
+    -fx-padding: 0; 
+    -fx-border-color: transparent;
+}
+
+
+.list-view .scroll-bar:vertical {
+    -fx-scale-x: 0;
+    -fx-opacity: 0;
+    /* -fx-padding: -10; */
 }

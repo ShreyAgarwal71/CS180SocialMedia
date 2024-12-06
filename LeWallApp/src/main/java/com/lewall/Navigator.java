@@ -56,7 +56,7 @@ public class Navigator {
      * Set the stage for the application
      * 
      * @param stage
-     *              the stage to set
+     *            the stage to set
      */
     public static void setStage(Stage stage) {
         Navigator.stage = stage;
@@ -103,7 +103,7 @@ public class Navigator {
      * Navigate to a specific page
      * 
      * @param page
-     *             the page to navigate to
+     *            the page to navigate to
      * @return true if successful, false otherwise
      */
     public static boolean navigateTo(EPage page) {
@@ -138,9 +138,9 @@ public class Navigator {
                 case SEARCH -> {
                     scene = new Scene(new Search());
                 }
-				case NEWPOST -> {
-					scene = new Scene(new NewPost());
-				}
+				        case NEWPOST -> {
+					          scene = new Scene(new NewPost());
+				        }
                 default -> {
                     logger.error("Unimplemented Page: " + page);
                     return false;

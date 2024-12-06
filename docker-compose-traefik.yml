@@ -1,0 +1,23 @@
+services:
+  lewall_server:
+    container_name: lewall_server
+    image: lewall_server:latest
+    build: .
+    restart: always
+    networks:
+      - proxy
+    ports:
+      - 8559:8559
+    labels:
+      - "traefik.enable=true"
+
+      - "traefik.tcp.routers.lewall-tcp-router.tls=true"
+      - "traefik.tcp.routers.lewal-tcp-router.tls.certresolver=letsencrypt"
+      - "traefik.tcp.routers.lewall-tcp-router.entrypoints=websecure"  
+      - "traefik.tcp.routers.lewall-tcp-router.rule=HostSNI(`lewall.mahitm.com`)"  
+      - "traefik.tcp.services.lewall-tcp-service.loadbalancer.server.port=8559" 
+
+networks:
+  proxy:
+    name: proxy
+    external: true

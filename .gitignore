@@ -28,4 +28,4 @@ replay_pid*
 .DS_Store
 
 target
-effective-pom.xml
+*-pom.xml

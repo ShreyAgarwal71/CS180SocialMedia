@@ -47,16 +47,35 @@ public class Profile extends Pane {
         this.getStyleClass().add("primary-bg");
 
         VBox navbar = new Navbar();
-        StackPane.setAlignment(navbar, Pos.TOP_LEFT);
-        StackPane.setMargin(navbar, new Insets(10));
+        HBox.setMargin(navbar, new Insets(10, 10, 10, 10));
 
         Text profileTitle = new Text("Inscriber Profile");
-        profileTitle.getStyleClass().add("brand-title");
+        profileTitle.getStyleClass().add("profile-title");
         profileTitle.setFill(Color.WHITE);
-        VBox.setMargin(profileTitle, new Insets(3,0,0,0));
+        VBox.setMargin(profileTitle, new Insets(10,0,0,0));
+
+        Text profileSubtitle = new Text("@notzayan"); // TODO: take user data to show their name
+        profileSubtitle.getStyleClass().add("profile-subtitle");
+        profileSubtitle.setFill(Color.rgb(137, 139, 239, 1));
+        VBox.setMargin(profileSubtitle, new Insets(3, 0,0,0));
+
+        Rectangle idCard = new Rectangle(270, 120);
+        idCard.setFill(Color.rgb(25, 18, 35));
+        idCard.setStroke(Color.rgb(255, 255, 255, 0.05));
+        idCard.setStrokeWidth(1);
+        idCard.setArcWidth(10);
+        idCard.setArcHeight(10);
+        VBox.setMargin(idCard, new Insets(10, 0,0,0));
+
+        VBox idCardBox = new VBox();
+        idCardBox.getChildren().addAll(profileTitle, profileSubtitle, idCard);
+        HBox.setMargin(idCardBox, new Insets(0,200, 0, 10));
+
+        HBox topHalf = new HBox();
+        topHalf.getChildren().addAll(navbar, idCardBox);
 
         StackPane mainStack = new StackPane();
-        mainStack.getChildren().add(navbar);
+        mainStack.getChildren().add(topHalf);
         this.getChildren().add(mainStack);
     }
 }
