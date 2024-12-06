@@ -1,6 +1,7 @@
 package com.lewall.pages;
 
 import java.time.format.DateTimeFormatter;
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
@@ -20,7 +21,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
@@ -88,7 +88,8 @@ public class NewPost extends Pane {
 							"New post created: Title = {}, Body = {}, Date = {}, Class = {}", 
 							title, body, date, selectedClass);
 				// TODO: IMG-URL
-				CreatePostDTO post = new CreatePostDTO(body, date, null, UUID.fromString(selectedClass));
+				UUID validUUID = UUID.nameUUIDFromBytes(selectedClass.getBytes(StandardCharsets.US_ASCII));
+				CreatePostDTO post = new CreatePostDTO(body, date, null, validUUID);
 				Connection.post("/post/create", post);
 			} else {
 				logger.warn("Post creation failed: Title or Body is empty");
@@ -102,23 +103,12 @@ public class NewPost extends Pane {
         StackPane.setAlignment(navbar, Pos.TOP_LEFT);
         StackPane.setMargin(navbar, new Insets(10));
 
-		Rectangle postBox = new Rectangle(235, 300);
-        postBox.setFill(new Color(0, 0, 0, 0));
-        postBox.setStroke(Color.rgb(255, 255, 255, 0.05));
-        postBox.setStrokeWidth(1);
-        postBox.setArcWidth(10);
-        postBox.setArcHeight(10);
-
         DropShadow shadow = new DropShadow();
         shadow.setColor(Color.BLACK);
         shadow.setOffsetX(0);
         shadow.setOffsetY(0);
         shadow.setRadius(15);
         shadow.setSpread(0.5);
-
-        Group group = new Group();
-        group.setEffect(shadow);
-        group.getChildren().add(postBox);
 
 		FlowPane fp = new FlowPane(10, 10);
         fp.prefWidthProperty().bind(this.widthProperty());
@@ -135,6 +125,10 @@ public class NewPost extends Pane {
 		postForm.getChildren().addAll(titleField, bodyArea, lastLine);
 
 		fp.getChildren().add(postForm);
+
+        Group group = new Group();
+        group.setEffect(shadow);
+		group.getChildren().add(fp);
 
 		StackPane mainStack = new StackPane();
 		mainStack.getChildren().addAll(group, fp, navbar);
