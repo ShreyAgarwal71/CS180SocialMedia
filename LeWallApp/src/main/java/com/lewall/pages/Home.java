@@ -11,6 +11,7 @@ import com.lewall.components.PostItem;
 import com.lewall.db.models.Post;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -48,18 +49,25 @@ public class Home extends Pane {
         // Post(UUID userId, String messagePost, String date, int likes, String
         // imageURL, UUID classId)
         Post[] posts = new Post[] {
-                new Post(UUID.randomUUID(), "Hello World", "11/17/2024", 0, "https://via.placeholder.com/150",
+                new Post(UUID.randomUUID(), "I learned the difference between Stacks and Queues", "11/17/2024", 1,
+                        "https://www.teachhub.com/wp-content/uploads/2020/05/Classroom-Management-for-an-Effective-Learning-Environment-768x512.jpg",
                         UUID.randomUUID()),
-                new Post(UUID.randomUUID(), "Hello World", "11/17/2024", 0, "https://via.placeholder.com/150",
+                new Post(UUID.randomUUID(), "I learned the difference between Stacks and Queues", "11/17/2024", 2,
+                        "https://www.teachhub.com/wp-content/uploads/2020/05/Classroom-Management-for-an-Effective-Learning-Environment-768x512.jpg",
                         UUID.randomUUID()),
-                new Post(UUID.randomUUID(), "Hello World", "11/17/2024", 0, "https://via.placeholder.com/150",
-                        UUID.randomUUID())
+                new Post(UUID.randomUUID(), "I learned the difference between Stacks and Queues", "11/17/2024", 3,
+                        "https://www.teachhub.com/wp-content/uploads/2020/05/Classroom-Management-for-an-Effective-Learning-Environment-768x512.jpg",
+                        UUID.randomUUID()),
+                new Post(UUID.randomUUID(), "I learned the difference between Stacks and Queues", "11/17/2024", 4,
+                        "https://www.teachhub.com/wp-content/uploads/2020/05/Classroom-Management-for-an-Effective-Learning-Environment-768x512.jpg",
+                        UUID.randomUUID()),
         };
 
         ObservableList<Post> items = FXCollections.observableArrayList(
                 posts);
+
         ListView<Post> postListView = new ListView<>(items);
-        postListView.setPrefWidth(ListView.USE_COMPUTED_SIZE);
+        postListView.setPrefWidth(420);
 
         postListView.setCellFactory(param -> new ListCell<Post>() {
             @Override
@@ -69,8 +77,9 @@ public class Home extends Pane {
                     setText(null);
                     setGraphic(null);
                 } else {
-                    StackPane post = new PostItem(item);
-                    post.setPadding(new Insets(0, 0, 10, 0));
+                    boolean isLast = getIndex() == items.size() - 1;
+                    VBox post = new PostItem(item);
+                    post.setPadding(new Insets(0, 0, isLast ? 40 : 10, 0));
                     setGraphic(post);
                 }
             }

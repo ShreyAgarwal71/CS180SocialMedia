@@ -41,14 +41,15 @@ public class Navbar extends VBox {
             Text textLabel = new Text(label);
 
             if (page.equals(Navigator.getCurrentPage())) {
-                textLabel.setFill(Color.WHITE);
+                textLabel.setFill(Color.web(Theme.ACCENT));
+                textLabel.getStyleClass().add("nav-label-active");
             } else {
                 textLabel.setFill(Color.web(Theme.TEXT_GREY));
+                textLabel.getStyleClass().add("nav-label");
             }
 
             this.getStyleClass().add("nav-item");
             iconView.getStyleClass().add("nav-icon");
-            textLabel.getStyleClass().add("nav-label");
 
             this.getChildren().addAll(
                     iconView,

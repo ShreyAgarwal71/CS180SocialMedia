@@ -67,7 +67,6 @@ public class Search extends Pane {
 
         Button searchButton = new Button("Search");
         searchButton.getStyleClass().add("brand-button");
-        logger.debug(LocalStorage.get("token"));
         searchButton.setOnAction(event -> {
             String query = searchField.getText().trim();
             if (query.isEmpty()) {
@@ -127,8 +126,6 @@ public class Search extends Pane {
 
         stackPane.getChildren().add(footer);
         stackPane.getChildren().add(navbar);
-        System.out.println(Navigator.getCurrentPage());
-        System.out.println("Home page loaded");
 
         this.getChildren().add(stackPane);
     }
