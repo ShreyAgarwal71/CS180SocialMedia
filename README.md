@@ -79,3 +79,14 @@ LeWall is a modern, Java-based, social media application. The platform is a digi
    ```
 
 ---
+
+### Docker 
+
+Run the LeWall Server in a docker container
+- `docker compose up --build -d`
+
+Run the LeWall Server in a docker container for traefik
+- `docker compose -f "docker-compose-traefik.yml" up`
+
+View server logs
+- `docker logs -f lewall_server`
