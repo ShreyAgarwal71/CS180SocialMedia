@@ -108,3 +108,19 @@
     -fx-font-size: 12;
     -fx-fill: rgba(255, 255, 255, 0.5);
 }
+
+.list-view {
+    -fx-padding: 0; /* Remove padding */
+    -fx-background-color: transparent; /* Remove background */
+    -fx-border-color: transparent; /* Remove border */
+}
+
+.list-cell {
+    -fx-background-color: transparent; /* Remove cell background */
+    -fx-padding: 0; /* Remove cell padding */
+    -fx-border-color: transparent; /* Remove cell border */
+}
+
+.list-cell:filled:selected, .list-cell:filled:hover {
+    -fx-background-color: transparent; /* Remove selection/highlight color */
+}

@@ -48,14 +48,14 @@ public class Navigator {
     }
 
     public enum EPage {
-        LOGIN, REGISTER, HOME, PROFILE, SEARCH, UPLOAD, EXPLORE
+        LOGIN, REGISTER, HOME, PROFILE, SEARCH, UPLOAD
     }
 
     /**
      * Set the stage for the application
      * 
      * @param stage
-     *              the stage to set
+     *            the stage to set
      */
     public static void setStage(Stage stage) {
         Navigator.stage = stage;
@@ -102,7 +102,7 @@ public class Navigator {
      * Navigate to a specific page
      * 
      * @param page
-     *             the page to navigate to
+     *            the page to navigate to
      * @return true if successful, false otherwise
      */
     public static boolean navigateTo(EPage page) {

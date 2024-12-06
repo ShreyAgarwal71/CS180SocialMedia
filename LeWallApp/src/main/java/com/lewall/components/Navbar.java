@@ -79,7 +79,7 @@ public class Navbar extends VBox {
                 // logo,
                 new NavIcon("Inscribe", "add.png", EPage.HOME),
                 new NavIcon("Home", "home.png", EPage.HOME),
-                new NavIcon("Explore", "search.png", EPage.EXPLORE),
+                new NavIcon("Explore", "search.png", EPage.SEARCH),
                 new NavIcon("Profile", "user.png", EPage.PROFILE));
 
         this.getStyleClass().add("navbar");

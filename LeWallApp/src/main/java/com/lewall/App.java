@@ -40,7 +40,7 @@ public class App extends Application {
         if (LocalStorage.get("token") != null) {
             Connection.<UserDTO>get("/user", true).thenAccept(response -> {
                 Platform.runLater(() -> {
-                    Navigator.navigateTo(Navigator.EPage.PROFILE);
+                    Navigator.navigateTo(Navigator.EPage.HOME);
                     stage.show();
                 });
             }).exceptionally(e -> {

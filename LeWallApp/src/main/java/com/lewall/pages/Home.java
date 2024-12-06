@@ -1,18 +1,23 @@
 package com.lewall.pages;
 
+import java.util.UUID;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.lewall.Navigator;
-import com.lewall.Navigator.EPage;
-import com.lewall.api.LocalStorage;
 import com.lewall.components.Footer;
 import com.lewall.components.Navbar;
-import com.lewall.dtos.UserDTO;
+import com.lewall.components.PostItem;
+import com.lewall.db.models.Post;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.image.Image;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -40,6 +45,36 @@ public class Home extends Pane {
         flowPane.prefHeightProperty().bind(this.heightProperty());
         // flowPane.setAlignment(Pos.CENTER);
         flowPane.setOrientation(Orientation.VERTICAL);
+        // Post(UUID userId, String messagePost, String date, int likes, String
+        // imageURL, UUID classId)
+        Post[] posts = new Post[] {
+                new Post(UUID.randomUUID(), "Hello World", "11/17/2024", 0, "https://via.placeholder.com/150",
+                        UUID.randomUUID()),
+                new Post(UUID.randomUUID(), "Hello World", "11/17/2024", 0, "https://via.placeholder.com/150",
+                        UUID.randomUUID()),
+                new Post(UUID.randomUUID(), "Hello World", "11/17/2024", 0, "https://via.placeholder.com/150",
+                        UUID.randomUUID())
+        };
+
+        ObservableList<Post> items = FXCollections.observableArrayList(
+                posts);
+        ListView<Post> postListView = new ListView<>(items);
+        postListView.setPrefWidth(ListView.USE_COMPUTED_SIZE);
+
+        postListView.setCellFactory(param -> new ListCell<Post>() {
+            @Override
+            protected void updateItem(Post item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    setGraphic(null);
+                } else {
+                    StackPane post = new PostItem(item);
+                    post.setPadding(new Insets(0, 0, 10, 0));
+                    setGraphic(post);
+                }
+            }
+        });
 
         VBox column = new VBox(10);
         FlowPane.setMargin(column, new Insets(10, 0, 0, 85));
@@ -53,6 +88,7 @@ public class Home extends Pane {
         VBox.setMargin(fyp, new Insets(0, 0, 0, 10));
         fyp.getStyleClass().add("brand-title");
         column.getChildren().add(fyp);
+        column.getChildren().add(postListView);
 
         // Button logOut = new Button("Log Out");
         // logOut.getStyleClass().add("brand-button");
@@ -77,8 +113,6 @@ public class Home extends Pane {
 
         mainStack.getChildren().add(footer);
         mainStack.getChildren().add(navbar);
-        System.out.println(Navigator.getCurrentPage());
-        System.out.println("Home page loaded");
 
         this.getChildren().add(mainStack);
     }
