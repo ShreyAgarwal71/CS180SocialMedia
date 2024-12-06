@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.lewall.pages.Home;
 import com.lewall.pages.Login;
+import com.lewall.pages.NewPost;
 import com.lewall.pages.Profile;
 import com.lewall.pages.Register;
 import com.lewall.pages.Search;
@@ -48,7 +49,7 @@ public class Navigator {
     }
 
     public enum EPage {
-        LOGIN, REGISTER, HOME, PROFILE, SEARCH, UPLOAD
+        LOGIN, REGISTER, HOME, PROFILE, SEARCH, UPLOAD, EXPLORE, NEWPOST
     }
 
     /**
@@ -106,6 +107,11 @@ public class Navigator {
      * @return true if successful, false otherwise
      */
     public static boolean navigateTo(EPage page) {
+        if (stage == null) {
+            logger.error("Stage not set");
+            return false;
+        }
+
         synchronized (mainLock) {
             if (stage == null) {
                 logger.error("Stage not set");
@@ -132,6 +138,9 @@ public class Navigator {
                 case SEARCH -> {
                     scene = new Scene(new Search());
                 }
+				        case NEWPOST -> {
+					          scene = new Scene(new NewPost());
+				        }
                 default -> {
                     logger.error("Unimplemented Page: " + page);
                     return false;
