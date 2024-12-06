@@ -10,15 +10,26 @@ import org.apache.logging.log4j.Logger;
 
 import com.lewall.api.Connection;
 import com.lewall.api.LocalStorage;
+import com.lewall.components.Navbar;
 import com.lewall.dtos.ClassesDTO;
 import com.lewall.dtos.CreatePostDTO;
 
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.DropShadow;
 
 /**
  * A class to create a new post
@@ -35,14 +46,15 @@ public class NewPost extends Pane {
 	 */
 	public NewPost() {
 		// Create UI components
-		Label titleLabel = new Label("Title:");
 		TextField titleField = new TextField();
-		titleField.setPromptText("...");
+		titleField.setPromptText("Write your title here...");
+		titleField.getStyleClass().add("brand-field");
 
-		Label bodyLabel = new Label("Body:");
 		TextArea bodyArea = new TextArea();
-		bodyArea.setPromptText("...");
+		bodyArea.setPromptText("Write your post's body here...");
 		bodyArea.setWrapText(true);
+		bodyArea.getStyleClass().add("brand-field");
+		// TODO: CSS
 
 		// I love null-unsafe code
 
@@ -54,11 +66,12 @@ public class NewPost extends Pane {
 			classes = LocalStorage.get("/post/getClasses", ClassesDTO.class).getClasses();
 
 
-		Label courseLabel = new Label("Classes:");
 		ComboBox<String> courseDropdown = new ComboBox<String>();
 		courseDropdown.getItems().addAll(classes);
+		// TODO: CSS
 
 		Button submitButton = new Button("Submit");
+		submitButton.getStyleClass().add("brand-button");
 		submitButton.setOnAction(e -> {
 			String title = titleField.getText();
 			String body = bodyArea.getText();
@@ -82,6 +95,52 @@ public class NewPost extends Pane {
 			}
 		});
 
-		// TODO: create layout or smth idk
+		// Graphical stuff
+		this.getStyleClass().add("primary-bg");
+
+		VBox navbar = new Navbar();
+        StackPane.setAlignment(navbar, Pos.TOP_LEFT);
+        StackPane.setMargin(navbar, new Insets(10));
+
+		Rectangle postBox = new Rectangle(235, 300);
+        postBox.setFill(new Color(0, 0, 0, 0));
+        postBox.setStroke(Color.rgb(255, 255, 255, 0.05));
+        postBox.setStrokeWidth(1);
+        postBox.setArcWidth(10);
+        postBox.setArcHeight(10);
+
+        DropShadow shadow = new DropShadow();
+        shadow.setColor(Color.BLACK);
+        shadow.setOffsetX(0);
+        shadow.setOffsetY(0);
+        shadow.setRadius(15);
+        shadow.setSpread(0.5);
+
+        Group group = new Group();
+        group.setEffect(shadow);
+        group.getChildren().add(postBox);
+
+		FlowPane fp = new FlowPane(10, 10);
+        fp.prefWidthProperty().bind(this.widthProperty());
+        fp.prefHeightProperty().bind(this.heightProperty());
+        fp.setAlignment(Pos.CENTER);
+        fp.setOrientation(Orientation.VERTICAL);
+
+		HBox lastLine = new HBox(2);
+		lastLine.setAlignment(Pos.CENTER);
+		lastLine.getChildren().addAll(courseDropdown, submitButton);
+
+		VBox postForm = new VBox(3);
+		postForm.setAlignment(Pos.CENTER);
+		postForm.getChildren().addAll(titleField, bodyArea, lastLine);
+
+		fp.getChildren().add(postForm);
+
+		StackPane mainStack = new StackPane();
+		mainStack.getChildren().addAll(group, fp, navbar);
+
+		this.getChildren().add(mainStack);
+
+		logger.info("Finished loading page: NEWPOST");
 	}
 }
