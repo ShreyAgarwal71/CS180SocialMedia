@@ -33,8 +33,8 @@ public class App extends Application {
         Navigator.setStage(stage);
 
         stage.setTitle("LeWall");
-        stage.setWidth(650);
-        stage.setHeight(480);
+        stage.setWidth(700);
+        stage.setHeight(520);
         stage.setResizable(false);
 
         if (LocalStorage.get("token") != null) {

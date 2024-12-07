@@ -34,7 +34,8 @@ import com.google.gson.reflect.TypeToken;
 public class Connection {
     private static final Logger logger = LogManager.getLogger(Connection.class);
 
-    private static final String HOST = "localhost";
+    private static final String REMOTE_HOST = "lewall.mahitm.com";
+    private static final String LOCAL_HOST = "localhost";
     private static final int PORT = 8559;
 
     private static SocketChannel serverChannel;
@@ -60,11 +61,14 @@ public class Connection {
         try {
             selector = Selector.open();
             serverChannel = SocketChannel.open();
-            serverChannel.connect(new InetSocketAddress(HOST, PORT));
+
+            String host = System.getenv("REMOTE") != null ? REMOTE_HOST : LOCAL_HOST;
+
+            serverChannel.connect(new InetSocketAddress(host, PORT));
             serverChannel.configureBlocking(false);
             serverChannel.register(selector, SelectionKey.OP_READ);
 
-            logger.info("Connected to Server");
+            logger.info("Connected to Host: " + host);
 
             executor.submit(() -> {
                 while (true) {

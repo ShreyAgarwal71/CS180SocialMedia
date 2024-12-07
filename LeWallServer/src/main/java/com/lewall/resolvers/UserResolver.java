@@ -165,8 +165,8 @@ public class UserResolver implements BaseResolver, IUserResolver {
      * @return {@link PostsDTO}
      */
     @AuthGuard()
-    @Endpoint(endpoint = "/getPosts", method = Request.EMethod.GET, requestBodyType = UserPostsDTO.class, responseBodyType = PostsDTO.class)
-    public PostsDTO getPosts(Request<UserPostsDTO> request) {
+    @Endpoint(endpoint = "/getPosts", method = Request.EMethod.GET, responseBodyType = PostsDTO.class)
+    public PostsDTO getPosts(Request<Void> request) {
         UUID userId = request.getUserId();
 
         PostsDTO posts = new PostsDTO(UserService.getPosts(userId));

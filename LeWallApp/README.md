@@ -20,7 +20,9 @@
 
 > cd into LeWallApp/ before running this command
 
-- mvn clean compile javafx:run
+- `mvn clean compile javafx:run` (Local Server)
+
+- `REMOTE=1 mvn clean compile javafx:run` (Remote Server)
 
 ---
 
@@ -32,7 +34,7 @@ LeWall/
 ├── pom.xml                     # Maven configuration file
 └── src/main/
     ├── java/com/lewall/
-    │   ├── api/ 
+    │   ├── api/
     │   │   ├── Connection.java
     │   │   └── LocalStorage.java
     │   ├── components/
@@ -45,9 +47,9 @@ LeWall/
     │   ├── App.java
     │   └── Navigator.java
     └── resources/
-        ├── css/ 
+        ├── css/
         │   └── global.css
-        ├── imgs/ 
+        ├── imgs/
         │   ├── eye-hide.png
         │   ├── eye-reveal.png
         │   ├── google-icon.png

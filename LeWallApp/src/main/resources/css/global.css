@@ -2,6 +2,27 @@
     -fx-background-color: radial-gradient(center 50% 50%, radius 75%, rgb(25, 18, 38), black);
 }
 
+.logout-container .logout-text {
+    transition: all 275ms ease;
+    -fx-opacity: 1.0;
+}
+
+
+.logout-container .logout-icon {
+    transition: all 275ms ease;
+    -fx-opacity: 1.0;
+}
+
+.logout-container:hover .logout-text {
+    transition: all 275ms ease;
+    -fx-opacity: 0.75;
+}
+
+.logout-container:hover .logout-icon {
+    transition: all 275ms ease;
+    -fx-opacity: 0.75;
+}
+
 .grey-border {
     -fx-border-color: #ffffff06;
     -fx-border-width: 1;
