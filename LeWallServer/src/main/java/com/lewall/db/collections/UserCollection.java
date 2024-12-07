@@ -76,8 +76,7 @@ public class UserCollection extends BaseCollection<User> {
      */
     public List<User> searchByUsername(String username) {
         return this.findAll(user -> {
-            logger.debug("Searching for: " + user.getUsername());
-            return user.getDisplayName().contains(username);
+            return user.getDisplayName().toLowerCase().contains(username.toLowerCase());
         });
     }
 }

@@ -3,18 +3,25 @@ package com.lewall.pages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.lewall.Navigator;
+import com.lewall.Navigator.EPage;
 import com.lewall.api.Connection;
 import com.lewall.api.LocalStorage;
 import com.lewall.components.Footer;
 import com.lewall.components.Navbar;
+import com.lewall.components.UserCard;
 import com.lewall.dtos.UserSearchDTO;
 import com.lewall.dtos.UsersFoundDTO;
+import com.lewall.db.models.Post;
 import com.lewall.db.models.User;
 
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
@@ -86,14 +93,44 @@ public class Search extends Pane {
                             if (users != null && !users.isEmpty()) {
                                 Text resultsTitle = new Text("Top Matches:");
                                 resultsTitle.getStyleClass().add("brand-subtitle");
+                                /*
+                                 * searchResults.getChildren().add(resultsTitle);
+                                 * 
+                                 * users.stream().limit(10).forEach(user -> {
+                                 * Text userText = new Text(
+                                 * user.getDisplayName() + " (" + user.getEmail() + ")");
+                                 * userText.getStyleClass().add("result-text");
+                                 * searchResults.getChildren().add(userText);
+                                 * 
+                                 * /* TODO: Implement user profile page
+                                 * userText.setOnMouseClicked(e -> {
+                                 * LocalStorage.put("/user", user);
+                                 * Navigator.navigateTo(EPage.PROFILE);
+                                 * });
+                                 * 
+                                 * });
+                                 */
+
+                                resultsTitle.getStyleClass().add("brand-subtitle");
                                 searchResults.getChildren().add(resultsTitle);
 
                                 users.stream().limit(10).forEach(user -> {
-                                    Text userText = new Text(
-                                            user.getDisplayName() + " (" + user.getEmail() + ")");
-                                    userText.getStyleClass().add("result-text");
-                                    searchResults.getChildren().add(userText);
+                                    UserCard userCard = new UserCard(user);
+                                    searchResults.getChildren().add(userCard);
+                                    userCard.setOnMouseClicked(e -> {
+                                        // LocalStorage.put("/user", user);
+                                        /*
+                                         * if (user.getId() == LocalStorage.getLoggedInUser().getId()) {
+                                         * Navigator.navigateTo(EPage.PROFILE);
+                                         * } else {
+                                         * 
+                                         * //LocalStorage.put("/user", user);
+                                         * //Navigator.navigateTo(EPage.USER_PROFILE);
+                                         * }
+                                         */
+                                    });
                                 });
+
                             } else {
                                 Text noResults = new Text("No matches found.");
                                 noResults.getStyleClass().add("brand-subtitle");
