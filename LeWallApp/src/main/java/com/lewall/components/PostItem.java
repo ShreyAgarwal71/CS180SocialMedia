@@ -1,10 +1,18 @@
 package com.lewall.components;
 
+import com.lewall.Navigator;
+import com.lewall.Navigator.EPage;
+import com.lewall.api.Connection;
+import com.lewall.api.LocalStorage;
 import com.lewall.common.Theme;
 import com.lewall.db.models.Post;
+import com.lewall.dtos.UserDTO;
+import com.lewall.dtos.DeletePostDTO;
 
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -19,6 +27,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -93,13 +102,39 @@ public class PostItem extends VBox {
         mainStack.getChildren().add(postContents);
 
         HBox postClass = new HBox(5);
-        postClass.setPadding(new Insets(0, 0, 0, 10));
+        postClass.setPadding(new Insets(5, 0, 0, 10));
 
         Text postClassText = new Text("@" + item.getClassId() + " • 2 days ago");
         postClassText.setFill(Color.web(Theme.TEXT_GREY));
         postClass.getChildren().add(postClassText);
 
-        this.getChildren().addAll(postClass, mainStack);
+        UserDTO userDTO = LocalStorage.get("/user", UserDTO.class);
+        if (userDTO != null) {
+            if (userDTO.getUser().getId().equals(item.getUserId())) {
+                Button deleteButton = new Button("Delete");
+                deleteButton.getStyleClass().add("brand-button");
+                deleteButton.setPadding(new Insets(0, 0, 10, 10));
+                // deleteButton.setPrefWidth(100);
+                // deleteButton.setPrefHeight(5);
+                deleteButton.setOnAction(event -> {
+                    Connection.post("/post/delete", new DeletePostDTO(item.getId())).thenAccept(response -> {
+                        Platform.runLater(() -> {
+                            Navigator.navigateTo(Navigator.EPage.PROFILE);
+                        });
+
+                    });
+                });
+
+                HBox classAndDelete = new HBox(5);
+                classAndDelete.getChildren().addAll(postClass, deleteButton);
+
+                this.getChildren().addAll(classAndDelete, mainStack);
+            } else {
+                this.getChildren().addAll(postClass, mainStack);
+            }
+        }
+
+        // this.getChildren().addAll(postClass, mainStack);
     }
 
     private HBox getPostReactionsComponent(int likes, int comments) {
