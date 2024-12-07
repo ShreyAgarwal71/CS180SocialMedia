@@ -39,9 +39,7 @@ public class PostItem extends VBox {
         super(5);
 
         StackPane mainStack = new StackPane();
-        String imageURL = "https://www.oberlin.edu/sites/default/files/styles/width_1160/public/content/facility/image/craig_lecture_hall.jpg";//
-        // item.getImageURL();
-
+        String imageURL = item.getImageURL();
         int width = 450;
         int height = 225;
 

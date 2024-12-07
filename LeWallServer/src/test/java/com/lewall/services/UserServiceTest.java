@@ -1,6 +1,7 @@
 package com.lewall.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -48,7 +49,8 @@ public class UserServiceTest {
 		UserService.db.getUserCollection().addUser(u1);
 		UserService.db.getUserCollection().addUser(u2);
 
-		assertTrue(UserService.follow(u1.getId(), u2.getId()));
+		User u2Updated = UserService.follow(u1.getId(), u2.getId());
+		assertTrue(u2Updated.getFollowers().contains(u1.getId().toString()));
 
 		// Invalid follow
 		Executable e = new Executable() {
@@ -76,7 +78,8 @@ public class UserServiceTest {
 		UserService.db.getUserCollection().addUser(u2);
 
 		UserService.follow(u1.getId(), u2.getId());
-		assertTrue(UserService.unfollow(u1.getId(), u2.getId()));
+		User u2Updated = UserService.unfollow(u1.getId(), u2.getId());
+		assertFalse(u2Updated.getFollowers().contains(u1.getId().toString()));
 
 		// Invalid Unfollow
 		Executable e = new Executable() {

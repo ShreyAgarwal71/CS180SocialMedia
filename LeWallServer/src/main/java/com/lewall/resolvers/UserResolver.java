@@ -23,6 +23,7 @@ import com.lewall.dtos.UserDTO;
 import com.lewall.dtos.UserPostsDTO;
 import com.lewall.interfaces.IUserResolver;
 import com.lewall.dtos.UserFollowingPostsDTO;
+import com.lewall.dtos.UserIdDTO;
 import com.lewall.dtos.FollowingPostsDTO;
 import com.lewall.dtos.ClassPostsDTO;
 import com.lewall.dtos.ClassesDTO;
@@ -88,14 +89,17 @@ public class UserResolver implements BaseResolver, IUserResolver {
      * @return void
      */
     @AuthGuard()
-    @Endpoint(endpoint = "/follow", method = Request.EMethod.POST, requestBodyType = FollowUserDTO.class)
-    public void followUser(Request<FollowUserDTO> request) {
+    @Endpoint(endpoint = "/follow", method = Request.EMethod.POST, requestBodyType = FollowUserDTO.class, responseBodyType = UserDTO.class)
+    public UserDTO followUser(Request<FollowUserDTO> request) {
         UUID followUserId = request.getBody().getFollowUserId();
         UUID userId = request.getUserId();
 
-        if (!UserService.follow(userId, followUserId)) {
+        User updatedUser = UserService.follow(userId, followUserId);
+        if (updatedUser == null) {
             throw new InternalServerError("Failed to Add User to Follow List");
         }
+
+        return new UserDTO(updatedUser);
     }
 
     /**
@@ -105,17 +109,20 @@ public class UserResolver implements BaseResolver, IUserResolver {
      *            {@link Request} with {@link UnfollowUserDTO} body
      * @throws InternalServerError
      *             if unable to unfollow user
-     * @return void
+     * @return UserDTO
      */
     @AuthGuard()
-    @Endpoint(endpoint = "/unfollow", method = Request.EMethod.POST, requestBodyType = UnfollowUserDTO.class)
-    public void unfollowUser(Request<UnfollowUserDTO> request) {
+    @Endpoint(endpoint = "/unfollow", method = Request.EMethod.POST, requestBodyType = UnfollowUserDTO.class, responseBodyType = UserDTO.class)
+    public UserDTO unfollowUser(Request<UnfollowUserDTO> request) {
         UUID followUserId = request.getBody().getFollowUserId();
         UUID userId = request.getUserId();
 
-        if (!UserService.unfollow(userId, followUserId)) {
+        User updatedUser = UserService.unfollow(userId, followUserId);
+        if (updatedUser == null) {
             throw new InternalServerError("Failed to Add User to Follow List");
         }
+
+        return new UserDTO(updatedUser);
     }
 
     /**

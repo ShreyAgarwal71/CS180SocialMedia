@@ -50,17 +50,23 @@ public class UserService implements IService {
      * 
      * @param userId
      * @param followUserId
-     * @return boolean
+     * @return user
      */
-    public static boolean follow(UUID userId, UUID followUserId) {
+    public static User follow(UUID userId, UUID followUserId) {
         User user = users.findOne(u -> u.getId().equals(userId));
         User userToFollow = users.findOne(u -> u.getId().equals(followUserId));
         if (userToFollow == null) {
             throw new BadRequest("User not found");
         }
 
-        return userToFollow.addFollower(user.getId().toString()) && user.followUser(followUserId.toString())
+        boolean followStatus = userToFollow.addFollower(user.getId().toString())
+                && user.followUser(followUserId.toString())
                 && users.updateElement(user.getId(), user);
+
+        if (!followStatus)
+            return null;
+
+        return users.findById(followUserId);
     }
 
     /**
@@ -68,17 +74,23 @@ public class UserService implements IService {
      * 
      * @param userId
      * @param unfollowUserId
-     * @return boolean
+     * @return User
      */
-    public static boolean unfollow(UUID userId, UUID unfollowUserId) {
+    public static User unfollow(UUID userId, UUID unfollowUserId) {
         User user = users.findOne(u -> u.getId().equals(userId));
         User userToUnfollow = users.findOne(u -> u.getId().equals(unfollowUserId));
         if (userToUnfollow == null) {
             throw new BadRequest("User not found");
         }
 
-        return userToUnfollow.removeFollower(user.getId().toString()) && user.unfollowUser(unfollowUserId.toString())
+        boolean unfollowStatus = userToUnfollow.removeFollower(user.getId().toString())
+                && user.unfollowUser(unfollowUserId.toString())
                 && users.updateElement(user.getId(), user);
+
+        if (!unfollowStatus)
+            return null;
+
+        return users.findById(unfollowUserId);
     }
 
     /**

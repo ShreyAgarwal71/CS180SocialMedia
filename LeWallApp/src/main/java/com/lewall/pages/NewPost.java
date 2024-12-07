@@ -10,6 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.lewall.Navigator;
+import com.lewall.Navigator.NavigatorPageState;
 import com.lewall.api.Connection;
 import com.lewall.api.LocalStorage;
 import com.lewall.components.Footer;
@@ -47,7 +48,7 @@ public class NewPost extends Pane {
 	/**
 	 * Constructor for the NewPost page
 	 */
-	public NewPost() {
+	public NewPost(NavigatorPageState state) {
 		Text areaTitle = new Text("Inscribe Quote");
 		areaTitle.getStyleClass().add("brand-title");
 
@@ -63,15 +64,18 @@ public class NewPost extends Pane {
 		quoteArea.setPrefWidth(400);
 		quoteGroup.getChildren().addAll(quoteAreaLabel, quoteArea);
 
+		ComboBox<String> courseDropdown = new ComboBox<String>();
 		if (LocalStorage.get("/post/getClasses") == null)
 			Connection.get("/post/getClasses", true).thenAccept(response -> {
 				classes = LocalStorage.get("/post/getClasses", ClassesDTO.class).getClasses();
+				Platform.runLater(() -> {
+					courseDropdown.getItems().addAll(classes);
+				});
 			});
-		else
+		else {
 			classes = LocalStorage.get("/post/getClasses", ClassesDTO.class).getClasses();
-
-		ComboBox<String> courseDropdown = new ComboBox<String>();
-		courseDropdown.getItems().addAll(classes);
+			courseDropdown.getItems().addAll(classes);
+		}
 
 		Button submitButton = new Button("Inscribe Quote");
 		submitButton.getStyleClass().add("brand-button");

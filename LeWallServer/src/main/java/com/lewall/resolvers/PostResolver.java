@@ -9,13 +9,17 @@ import com.lewall.resolvers.ResolverTools.BaseResolver;
 import com.lewall.resolvers.ResolverTools.Endpoint;
 import com.lewall.resolvers.ResolverTools.Resolver;
 import com.lewall.services.PostService;
+import com.lewall.services.UserService;
 import com.lewall.dtos.CreatePostDTO;
 import com.lewall.dtos.DeletePostDTO;
 import com.lewall.dtos.UnlikePostDTO;
+import com.lewall.dtos.UserDTO;
+import com.lewall.dtos.UserIdDTO;
 import com.lewall.interfaces.IPostResolver;
 import com.lewall.dtos.LikePostDTO;
 import com.lewall.dtos.CommentsDTO;
 import com.lewall.dtos.PostCommentsDTO;
+import com.lewall.dtos.PostsDTO;
 import com.lewall.dtos.HidePostDTO;
 import com.lewall.dtos.PublicPrivateDTO;
 import com.lewall.dtos.ClassesDTO;
@@ -28,6 +32,19 @@ import com.lewall.dtos.ClassesDTO;
  */
 @Resolver(basePath = "/post")
 public class PostResolver implements BaseResolver, IPostResolver {
+    /**
+     * Get posts of a user
+     * 
+     * @return {@link PostsDTO}
+     */
+
+    @AuthGuard()
+    @Endpoint(endpoint = "/all", method = Request.EMethod.POST, requestBodyType = UserIdDTO.class, responseBodyType = PostsDTO.class)
+    public PostsDTO getPosts(Request<UserIdDTO> request) {
+        UUID userId = request.getBody().getUserId();
+        return new PostsDTO(UserService.getPosts(userId));
+    }
+
     @AuthGuard()
     @Endpoint(endpoint = "/create", method = Request.EMethod.POST, requestBodyType = CreatePostDTO.class)
     public void createPost(Request<CreatePostDTO> request) {
@@ -47,9 +64,9 @@ public class PostResolver implements BaseResolver, IPostResolver {
      * Delete a post
      * 
      * @param request
-     *                {@link Request} with {@link DeletePostDTO} body
+     *            {@link Request} with {@link DeletePostDTO} body
      * @throws InternalServerError
-     *                             if unable to delete post
+     *             if unable to delete post
      * @return void
      */
     @AuthGuard()
@@ -67,9 +84,9 @@ public class PostResolver implements BaseResolver, IPostResolver {
      * Like a post
      * 
      * @param request
-     *                {@link Request} with {@link LikePostDTO} body
+     *            {@link Request} with {@link LikePostDTO} body
      * @throws InternalServerError
-     *                             if unable to like post
+     *             if unable to like post
      * @return void
      */
     @AuthGuard()
@@ -87,9 +104,9 @@ public class PostResolver implements BaseResolver, IPostResolver {
      * Unlike a post
      * 
      * @param request
-     *                {@link Request} with {@link UnlikePostDTO} body
+     *            {@link Request} with {@link UnlikePostDTO} body
      * @throws InternalServerError
-     *                             if unable to unlike post
+     *             if unable to unlike post
      * @return void
      */
     @AuthGuard()
@@ -107,9 +124,9 @@ public class PostResolver implements BaseResolver, IPostResolver {
      * Hide a post
      * 
      * @param request
-     *                {@link Request} with {@link HidePostDTO} body
+     *            {@link Request} with {@link HidePostDTO} body
      * @throws InternalServerError
-     *                             if unable to hide post
+     *             if unable to hide post
      * @return void
      */
     @AuthGuard()
@@ -127,14 +144,14 @@ public class PostResolver implements BaseResolver, IPostResolver {
      * Get comments for a post
      * 
      * @param request
-     *                {@link Request} with {@link PostCommentsDTO} body
+     *            {@link Request} with {@link PostCommentsDTO} body
      * @throws InternalServerError
-     *                             if unable to get comments
+     *             if unable to get comments
      * @return {@link CommentsDTO}
      */
     @AuthGuard()
     @Endpoint(endpoint = "/getComments", method = Request.EMethod.GET, requestBodyType = PostCommentsDTO.class, responseBodyType = CommentsDTO.class)
-    public CommentsDTO getPosts(Request<PostCommentsDTO> request) {
+    public CommentsDTO getComments(Request<PostCommentsDTO> request) {
         UUID postId = request.getBody().getPostId();
 
         CommentsDTO comments = new CommentsDTO(PostService.getComments(postId));
@@ -149,9 +166,9 @@ public class PostResolver implements BaseResolver, IPostResolver {
      * Make a post private or public
      * 
      * @param request
-     *                {@link Request} with {@link PublicPrivateDTO} body
+     *            {@link Request} with {@link PublicPrivateDTO} body
      * @throws InternalServerError
-     *                             if unable to make post private or public
+     *             if unable to make post private or public
      * @return void
      */
     @AuthGuard()

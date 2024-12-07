@@ -75,6 +75,28 @@
     transition: all 175ms ease;
 }
 
+.accent-button {
+    -fx-background-color: #898BEF;
+    -fx-background-radius: 5;
+    -fx-background-insets: 0;
+    -fx-text-fill: white;
+    -fx-font-size: 12;
+    -fx-padding: 5 10;
+    -fx-opacity: 1.0;
+    -fx-border-radius: 5;
+    -fx-border-width: 1;
+    -fx-border-color: rgba(255, 255, 255, 0);
+
+    transition: all 250ms ease;
+}
+
+.accent-button:hover {
+    -fx-opacity: 0.5;
+    -fx-border-color: rgba(255, 255, 255, 0.05);
+    -fx-cursor: hand;
+
+    transition: all 250ms ease;
+}
 
 .brand-field {
     -fx-background-color: rgba(255, 255, 255, 0.05);

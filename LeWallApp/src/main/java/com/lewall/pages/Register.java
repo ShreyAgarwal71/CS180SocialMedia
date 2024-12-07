@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.lewall.Navigator;
+import com.lewall.Navigator.NavigatorPageState;
 import com.lewall.api.Connection;
 import com.lewall.api.LocalStorage;
 import com.lewall.api.Validation;
@@ -45,7 +46,7 @@ public class Register extends Pane {
     /**
      * Constructor for the register page
      */
-    public Register() {
+    public Register(NavigatorPageState state) {
         this.getStyleClass().add("primary-bg");
 
         FlowPane flowPane = new FlowPane(10, 10);

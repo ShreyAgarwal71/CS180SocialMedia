@@ -5,6 +5,8 @@ import java.util.Stack;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.lewall.pages.Home;
 import com.lewall.pages.Login;
 import com.lewall.pages.NewPost;
@@ -45,6 +47,22 @@ public class Navigator {
 
 		public Scene getScene() {
 			return scene;
+		}
+	}
+
+	public static class NavigatorPageState {
+		private Object state;
+
+		public NavigatorPageState() {
+			this.state = null;
+		}
+
+		public NavigatorPageState(Object state) {
+			this.state = state;
+		}
+
+		public Object getState() {
+			return state;
 		}
 	}
 
@@ -99,6 +117,10 @@ public class Navigator {
 		}
 	}
 
+	public static boolean navigateTo(EPage page) {
+		return navigateTo(page, new NavigatorPageState());
+	}
+
 	/**
 	 * Navigate to a specific page
 	 * 
@@ -106,7 +128,7 @@ public class Navigator {
 	 *            the page to navigate to
 	 * @return true if successful, false otherwise
 	 */
-	public static boolean navigateTo(EPage page) {
+	public static boolean navigateTo(EPage page, NavigatorPageState state) {
 		if (stage == null) {
 			logger.error("Stage not set");
 			return false;
@@ -124,22 +146,22 @@ public class Navigator {
 
 			switch (page) {
 				case LOGIN -> {
-					scene = new Scene(new Login());
+					scene = new Scene(new Login(state));
 				}
 				case REGISTER -> {
-					scene = new Scene(new Register());
+					scene = new Scene(new Register(state));
 				}
 				case HOME -> {
-					scene = new Scene(new Home());
+					scene = new Scene(new Home(state));
 				}
 				case PROFILE -> {
-					scene = new Scene(new Profile());
+					scene = new Scene(new Profile(state));
 				}
 				case SEARCH -> {
-					scene = new Scene(new Search());
+					scene = new Scene(new Search(state));
 				}
 				case NEWPOST -> {
-					scene = new Scene(new NewPost());
+					scene = new Scene(new NewPost(state));
 				}
 				default -> {
 					logger.error("Unimplemented Page: " + page);
