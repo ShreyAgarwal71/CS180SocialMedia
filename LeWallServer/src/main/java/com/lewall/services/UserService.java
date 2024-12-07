@@ -203,6 +203,9 @@ public class UserService implements IService {
             }
         }
 
+        List<Post> userPosts = UserService.getPosts(userId);
+        posts2.addAll(userPosts);
+
         PostSort.quickSort(posts2, 0, posts2.size() - 1);
 
         return posts2;

@@ -24,6 +24,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
@@ -72,7 +73,7 @@ public class NewPost extends Pane {
 		ComboBox<String> courseDropdown = new ComboBox<String>();
 		courseDropdown.getItems().addAll(classes);
 
-		Button submitButton = new Button("Submit");
+		Button submitButton = new Button("Inscribe Quote");
 		submitButton.getStyleClass().add("brand-button");
 		submitButton.setPrefWidth(400);
 		submitButton.setOnAction(e -> {
@@ -90,10 +91,13 @@ public class NewPost extends Pane {
 						"New post created: Body = {}, Date = {}, Class = {}",
 						body, date, selectedClass);
 				// TODO: IMG-URL
-				UUID validUUID = UUID.nameUUIDFromBytes(selectedClass.getBytes(StandardCharsets.US_ASCII));
+
 				CreatePostDTO post = new CreatePostDTO(body, date, null, "Class");
-				Connection.post("/post/create", post);
-				Navigator.navigateTo(Navigator.EPage.PROFILE);
+				Connection.post("/post/create", post).thenAccept(response -> {
+					Platform.runLater(() -> {
+						Navigator.navigateTo(Navigator.EPage.PROFILE);
+					});
+				});
 			} else {
 				logger.warn("Post creation failed: Title or Body is empty");
 			}

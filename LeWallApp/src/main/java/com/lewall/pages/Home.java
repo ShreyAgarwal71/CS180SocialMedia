@@ -7,6 +7,7 @@ import com.lewall.components.Footer;
 import com.lewall.components.Navbar;
 import com.lewall.components.PostItem;
 import com.lewall.db.models.Post;
+import com.lewall.dtos.FollowingPostsDTO;
 import com.lewall.dtos.UserFollowingPostsDTO;
 
 import javafx.collections.FXCollections;
@@ -43,30 +44,20 @@ public class Home extends Pane {
         flowPane.setOrientation(Orientation.VERTICAL);
         // Post(UUID userId, String messagePost, String date, int likes, String
         // imageURL, UUID classId)
-        Post[] posts = new Post[] {
-                new Post(UUID.randomUUID(), "I learned the difference between Stacks and Queues", "11/17/2024", 1,
-                        "https://www.purdue.edu/uns/images/2020/pt-bell-towerOG.jpg",
-                        "ClassID"),
-                new Post(UUID.randomUUID(), "I learned the difference between Stacks and Queues", "11/17/2024", 2,
-                        "https://www.teachhub.com/wp-content/uploads/2020/05/Classroom-Management-for-an-Effective-Learning-Environment-768x512.jpg",
-                        "ClassID"),
-                new Post(UUID.randomUUID(), "I learned the difference between Stacks and Queues", "11/17/2024", 3,
-                        "https://www.teachhub.com/wp-content/uploads/2020/05/Classroom-Management-for-an-Effective-Learning-Environment-768x512.jpg",
-                        "ClassID"),
-                new Post(UUID.randomUUID(), "I learned the difference between Stacks and Queues", "11/17/2024", 4,
-                        "https://www.teachhub.com/wp-content/uploads/2020/05/Classroom-Management-for-an-Effective-Learning-Environment-768x512.jpg",
-                        "ClassID"),
-        };
 
         // Connection.<MainFeed>get("/getFollowerPosts", false).thenAccept(response -> {
         // System.out.println(response.getBody().);
         // });
 
-        ObservableList<Post> items = FXCollections.observableArrayList(
-                posts);
+        ObservableList<Post> items = FXCollections.observableArrayList();
+
+        Connection.<FollowingPostsDTO>get("/user/getFollowerPosts", false).thenAccept(response -> {
+            FollowingPostsDTO followingPostsDTO = response.getBody();
+            items.addAll(followingPostsDTO.getPosts());
+        });
 
         ListView<Post> postListView = new ListView<>(items);
-        postListView.setPrefWidth(420);
+        postListView.setPrefWidth(475);
 
         postListView.setCellFactory(param -> new ListCell<Post>() {
             @Override

@@ -27,35 +27,31 @@ import javafx.scene.text.TextAlignment;
 
 public class PostItem extends VBox {
     public PostItem(Post item) {
-        super(3);
+        super(5);
 
         StackPane mainStack = new StackPane();
+        String imageURL = "https://www.oberlin.edu/sites/default/files/styles/width_1160/public/content/facility/image/craig_lecture_hall.jpg";//
+        // item.getImageURL();
 
-        Rectangle container = new Rectangle(400, 200);
+        int width = 450;
+        int height = 225;
+
+        Rectangle container = new Rectangle(width, height);
         container.setFill(new Color(0, 0, 0, 0));
         container.setStroke(Color.rgb(255, 255, 255, 0.05));
         container.setStrokeWidth(1);
-        container.setArcWidth(5);
-        container.setArcHeight(5);
-
-        Image image = new Image(item.getImageURL(), true);
-        ImageView imageView = new ImageView(image);
-
-        imageView.setPreserveRatio(true);
-        imageView.setSmooth(true);
-
-        imageView.setFitWidth(200 - 15);
-        imageView.setFitHeight(200 - 15);
+        container.setArcWidth(0);
+        container.setArcHeight(0);
 
         VBox postContents = new VBox(5);
-        VBox postQuote = getPostQuoteComponent(item.getMessagePost(), imageView.getFitWidth());
+        VBox postQuote = getPostQuoteComponent(item.getMessagePost(), imageURL == null ? width - 20 : height - 10);
 
-        StackPane.setMargin(postContents, new Insets(10, 10, 10, 5));
-        StackPane.setAlignment(postContents, Pos.CENTER_RIGHT);
+        if (imageURL != null) {
+            StackPane.setAlignment(postContents, Pos.CENTER_RIGHT);
+        }
 
         HBox postReactions = getPostReactionsComponent(item.getLikes(), 10);
 
-        postContents.setMaxWidth(imageView.getFitWidth());
         postContents.getChildren().addAll(postQuote, postReactions);
 
         Rectangle blurLayer = new Rectangle(container.getWidth(), container.getHeight());
@@ -64,28 +60,42 @@ public class PostItem extends VBox {
         blurLayer.setEffect(blur);
         blurLayer.setFill(new Color(1, 1, 1, 0.01));
 
-        VBox imageContainer = new VBox();
-        imageContainer.setMaxWidth(200 - 15);
-        imageContainer.setAlignment(Pos.CENTER);
-        imageContainer.getStyleClass().addAll("grey-border", "grey-bg");
-        imageContainer.getChildren().add(imageView);
-
-        Rectangle clip = new Rectangle(imageView.getFitWidth(), imageView.getFitWidth());
-        clip.setArcWidth(5);
-        clip.setArcHeight(5);
-        imageView.setClip(clip);
-
-        StackPane.setMargin(imageContainer, new Insets(10, 5, 10, 10));
-        StackPane.setAlignment(imageContainer, Pos.CENTER_LEFT);
-
         mainStack.getChildren().add(blurLayer);
         mainStack.getChildren().add(container);
-        mainStack.getChildren().addAll(imageContainer, postContents);
+
+        if (imageURL != null) {
+            Image image = new Image(imageURL, true);
+            ImageView imageView = new ImageView(image);
+
+            imageView.setPreserveRatio(true);
+            imageView.setSmooth(true);
+
+            imageView.setFitWidth(container.getHeight() - 15);
+            imageView.setFitHeight(container.getHeight() - 15);
+
+            VBox imageContainer = new VBox();
+            imageContainer.setMaxWidth(container.getHeight() - 15);
+            imageContainer.setAlignment(Pos.CENTER);
+            imageContainer.getStyleClass().addAll("grey-border", "semi-grey-bg");
+            imageContainer.getChildren().add(imageView);
+
+            StackPane.setMargin(imageContainer, new Insets(10, 5, 10, 10));
+            StackPane.setAlignment(imageContainer, Pos.CENTER_LEFT);
+            StackPane.setMargin(postContents, new Insets(10, 10, 10, 5));
+            postContents.setMaxWidth(container.getHeight() - 10);
+
+            mainStack.getChildren().add(imageContainer);
+        } else {
+            postContents.setMaxWidth(width - 20);
+            StackPane.setMargin(postContents, new Insets(10));
+        }
+
+        mainStack.getChildren().add(postContents);
 
         HBox postClass = new HBox(5);
         postClass.setPadding(new Insets(0, 0, 0, 10));
 
-        Text postClassText = new Text("@cl50 • 2 days ago");
+        Text postClassText = new Text("@" + item.getClassId() + " • 2 days ago");
         postClassText.setFill(Color.web(Theme.TEXT_GREY));
         postClass.getChildren().add(postClassText);
 
@@ -96,7 +106,7 @@ public class PostItem extends VBox {
         HBox postReactions = new HBox(10);
         postReactions.setAlignment(Pos.CENTER);
 
-        postReactions.getStyleClass().addAll("grey-border", "grey-bg");
+        postReactions.getStyleClass().addAll("grey-border", "semi-grey-bg");
 
         Text postLikes = new Text(likes + "");
         postLikes.setFont(Theme.INRIA_SERIF_SMALL);
@@ -140,13 +150,13 @@ public class PostItem extends VBox {
         VBox.setVgrow(postQuote, Priority.ALWAYS);
 
         postQuote.setBackground(new Background(new BackgroundFill(
-                Color.web(Theme.PRIMARY_GREY),
-                new CornerRadii(3),
+                Color.web(Theme.TRANSLUCENT_GREY),
+                new CornerRadii(0),
                 null)));
         postQuote.setBorder(new Border(new BorderStroke(
                 Color.web(Theme.BORDER),
                 BorderStrokeStyle.SOLID,
-                new CornerRadii(3),
+                new CornerRadii(0),
                 new BorderWidths(1))));
 
         quote = String.format("\"%s\"", quote);

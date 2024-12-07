@@ -106,7 +106,7 @@ public class Register extends Pane {
         displayNameField.setFocusTraversable(false);
         displayNameField.getStyleClass().add("brand-field");
         displayNameField.setMaxSize(200, 30);
-        displayNameField.setPromptText("Display Name");
+        displayNameField.setPromptText("Full Name");
         displayNameField.onKeyPressedProperty().set(e -> {
             registerError.setText("");
         });

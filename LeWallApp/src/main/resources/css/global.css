@@ -26,11 +26,14 @@
 .grey-border {
     -fx-border-color: #ffffff06;
     -fx-border-width: 1;
-    -fx-border-radius: 3;
 }
 
 .grey-bg {
     -fx-background-color: #0E0E0E;
+}
+
+.semi-grey-bg {
+    -fx-background-color: #0e0e0ea8;
 }
 
 .brand-title {

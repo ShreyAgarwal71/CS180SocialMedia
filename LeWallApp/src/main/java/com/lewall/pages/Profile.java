@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.lewall.api.Connection;
 import com.lewall.api.LocalStorage;
+import com.lewall.common.Theme;
 import com.lewall.components.Footer;
 import com.lewall.components.Navbar;
 import com.lewall.db.models.Post;
@@ -41,6 +42,7 @@ public class Profile extends Pane {
 	private User user;
 	private List<Post> posts;
 
+	private StringProperty userUsername = new SimpleStringProperty("");
 	private StringProperty userDisplayName = new SimpleStringProperty("");
 	private StringProperty userQuotes = new SimpleStringProperty("");
 	private StringProperty userFollowers = new SimpleStringProperty("");
@@ -49,28 +51,26 @@ public class Profile extends Pane {
 	public Profile() {
 		this.getStyleClass().add("primary-bg");
 
-		VBox navbar = new Navbar();
-		HBox.setMargin(navbar, new Insets(10, 10, 10, 10));
-
 		Text profileTitle = new Text("Inscriber Profile");
-		profileTitle.getStyleClass().add("profile-title");
+		profileTitle.getStyleClass().add("brand-title");
 		profileTitle.setFill(Color.WHITE);
 		VBox.setMargin(profileTitle, new Insets(10, 0, 0, 0));
 
 		Connection.get("/user", true).thenAccept(response -> {
 			user = LocalStorage.get("/user", UserDTO.class).getUser();
 
-			userDisplayName.set("@" + user.getDisplayName());
-			userFollowers.set(user.getFollowers().size() + " Followers");
-			userFollowing.set(user.getFollowing().size() + " Following");
+			userUsername.set("@" + user.getUsername().split("@")[0]);
+			userDisplayName.set(user.getDisplayName());
+			userFollowers.set(user.getFollowers().size() + "");
+			userFollowing.set(user.getFollowing().size() + "");
 		});
 
 		Text profileSubtitle = new Text();
-		profileSubtitle.textProperty().bind(userDisplayName);
-		profileSubtitle.setFill(Color.rgb(137, 139, 239, 1));
+		profileSubtitle.textProperty().bind(userUsername);
+		profileSubtitle.setFill(Color.web(Theme.ACCENT));
 		VBox.setMargin(profileSubtitle, new Insets(3, 0, 0, 0));
 
-		Rectangle idCard = new Rectangle(270, 90);
+		Rectangle idCard = new Rectangle(315, 115);
 		idCard.setFill(Color.rgb(25, 18, 35));
 		idCard.setStroke(Color.rgb(255, 255, 255, 0.05));
 		idCard.setStrokeWidth(1);
@@ -79,59 +79,80 @@ public class Profile extends Pane {
 		VBox.setMargin(idCard, new Insets(20, 0, 0, 0));
 
 		Text nFollowers = new Text();
+		nFollowers.setStyle("-fx-font-weight: bold;");
 		nFollowers.textProperty().bind(userFollowers);
 		nFollowers.setFill(Color.WHITE);
 
+		VBox nFollowersBox = new VBox();
+		Text followers = new Text("Followers");
+		followers.setFill(Color.web(Theme.TEXT_GREY));
+		nFollowersBox.getChildren().addAll(nFollowers, followers);
+
 		Text nFollowing = new Text();
+		nFollowing.setStyle("-fx-font-weight: bold;");
 		nFollowing.textProperty().bind(userFollowing);
 		nFollowing.setFill(Color.WHITE);
 
+		VBox nFollowingBox = new VBox();
+		Text following = new Text("Following");
+		following.setFill(Color.web(Theme.TEXT_GREY));
+		nFollowingBox.getChildren().addAll(nFollowing, following);
+
 		Connection.get("/user/getPosts", true).thenAccept(response -> {
 			posts = LocalStorage.get("/user/getPosts", PostsDTO.class).getPosts();
-			userQuotes.set(posts.size() + " Posts");
+			userQuotes.set(posts.size() + "");
 		});
 
 		Text nPosts = new Text();
 		nPosts.textProperty().bind(userQuotes);
+		nPosts.setStyle("-fx-font-weight: bold;");
 		nPosts.setFill(Color.WHITE);
 
-		HBox userStats = new HBox();
-		HBox.setMargin(nPosts, new Insets(5, 12, 0, 5));
-		HBox.setMargin(nFollowers, new Insets(5, 12, 0, 5));
-		HBox.setMargin(nFollowing, new Insets(5, 0, 0, 5));
-		userStats.getChildren().addAll(nPosts, nFollowers, nFollowing);
+		VBox nPostsBox = new VBox();
+		Text posts = new Text("Quotes");
+		posts.setFill(Color.web(Theme.TEXT_GREY));
+		nPostsBox.getChildren().addAll(nPosts, posts);
+
+		HBox userStats = new HBox(15);
+		userStats.getChildren().addAll(nPostsBox, nFollowersBox, nFollowingBox);
 
 		Text displayName = new Text();
 		displayName.textProperty().bind(userDisplayName);
 		displayName.getStyleClass().add("profile-title");
 		displayName.setFill(Color.WHITE);
 
-		Text uName = new Text();
-		uName.textProperty().bind(userDisplayName);
-		uName.setFill(Color.rgb(137, 139, 239, 1));
-		VBox.setMargin(uName, new Insets(3, 0, 0, 0));
+		HBox profileDetails = new HBox(5);
+		Text pronouns = new Text("Un/known");
+		pronouns.setFill(Color.web(Theme.TEXT_GREY));
 
-		VBox userNames = new VBox();
-		userNames.getChildren().addAll(displayName, uName);
+		Text separator = new Text(" | ");
+		separator.setFill(Color.web(Theme.TEXT_GREY));
+
+		Text purdueTag = new Text("@lifeatpurdue");
+		purdueTag.setFill(Color.web(Theme.ACCENT));
+
+		profileDetails.getChildren().addAll(pronouns, separator, purdueTag);
+
+		VBox nameAndDetails = new VBox(5);
+		nameAndDetails.getChildren().addAll(displayName, profileDetails);
+
+		VBox userDetails = new VBox(15);
+		userDetails.getChildren().addAll(nameAndDetails, userStats);
 
 		ImageView pfp = new ImageView(new Image("./imgs/pfp.png"));
-		HBox.setMargin(pfp, new Insets(5, 5, 0, 5));
-		HBox pfpAndNames = new HBox();
-		pfpAndNames.getChildren().addAll(pfp, userNames);
+		pfp.setFitWidth(65);
+		pfp.setFitHeight(65);
 
-		VBox cardNStats = new VBox();
-		cardNStats.getChildren().addAll(pfpAndNames, userStats);
+		HBox content = new HBox(15);
+		StackPane.setMargin(content, new Insets(15));
+		content.getChildren().addAll(pfp, userDetails);
 
 		StackPane idCardItems = new StackPane();
-		idCardItems.getChildren().addAll(idCard, cardNStats);
+		idCardItems.getChildren().addAll(idCard, content);
 		VBox.setMargin(idCardItems, new Insets(20, 0, 0, 0));
 
 		VBox idCardBox = new VBox();
 		idCardBox.getChildren().addAll(profileTitle, profileSubtitle, idCardItems);
-		HBox.setMargin(idCardBox, new Insets(0, 200, 0, 10));
-
-		HBox topHalf = new HBox();
-		topHalf.getChildren().addAll(navbar, idCardBox);
 
 		HBox footer = new Footer();
 		StackPane.setAlignment(footer, Pos.BOTTOM_CENTER);
@@ -139,11 +160,21 @@ public class Profile extends Pane {
 		FlowPane fp = new FlowPane(10, 10);
 		fp.prefWidthProperty().bind(this.widthProperty());
 		fp.prefHeightProperty().bind(this.heightProperty());
-		fp.setAlignment(Pos.CENTER);
 		fp.setOrientation(Orientation.VERTICAL);
 
+		FlowPane.setMargin(idCardBox, new Insets(0, 0, 0, 90));
+		fp.getChildren().add(idCardBox);
+
 		StackPane mainStack = new StackPane();
-		mainStack.getChildren().addAll(fp, topHalf, footer);
+		mainStack.getChildren().addAll(fp);
+
+		VBox navbar = new Navbar();
+		StackPane.setAlignment(navbar, Pos.TOP_LEFT);
+		StackPane.setMargin(navbar, new Insets(10));
+
+		mainStack.getChildren().add(footer);
+		mainStack.getChildren().add(navbar);
+
 		this.getChildren().add(mainStack);
 	}
 }

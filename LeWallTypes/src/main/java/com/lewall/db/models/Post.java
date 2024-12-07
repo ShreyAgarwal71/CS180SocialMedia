@@ -219,9 +219,7 @@ public class Post extends Model {
     public boolean equals(Object obj) {
         if (obj instanceof Post) {
             Post post = (Post) obj;
-            return post.getUserId().equals(this.userId) && post.getMessagePost().equals(this.messagePost)
-                    && post.getDate().equals(this.date) && post.getLikes() == this.likes
-                    && post.getImageURL().equals(this.imageURL);
+            return post.getId().equals(post.getId());
         }
         return false;
     }
