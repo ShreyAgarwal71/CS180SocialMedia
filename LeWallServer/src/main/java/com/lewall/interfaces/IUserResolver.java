@@ -9,6 +9,7 @@ import com.lewall.dtos.FollowUserDTO;
 import com.lewall.dtos.PostsDTO;
 import com.lewall.dtos.ProfileNameDTO;
 import com.lewall.dtos.UnfollowUserDTO;
+import com.lewall.dtos.UserDTO;
 import com.lewall.dtos.UserFollowingPostsDTO;
 import com.lewall.dtos.FollowingPostsDTO;
 import com.lewall.dtos.ClassPostsDTO;
@@ -27,61 +28,61 @@ public interface IUserResolver {
 	 *
 	 * @param request
 	 */
-    public void deleteUser(Request<DeleteUserDTO> request);
+	public void deleteUser(Request<DeleteUserDTO> request);
 
 	/**
 	 * Resolves a follow user request;
 	 *
 	 * @param request
 	 */
-    public void followUser(Request<FollowUserDTO> request);
+	public UserDTO followUser(Request<FollowUserDTO> request);
 
 	/**
 	 * Resolves an unfollow user request;
 	 *
 	 * @param request
 	 */
-    public void unfollowUser(Request<UnfollowUserDTO> request);
+	public UserDTO unfollowUser(Request<UnfollowUserDTO> request);
 
 	/**
 	 * Resolves a block user request;
 	 *
 	 * @param request
 	 */
-    public void blockUser(Request<BlockUserDTO> request);
+	public void blockUser(Request<BlockUserDTO> request);
 
 	/**
 	 * Resolves an unblock user request;
 	 *
 	 * @param request
 	 */
-    public void unblockUser(Request<UnblockUserDTO> request);
+	public void unblockUser(Request<UnblockUserDTO> request);
 
 	/**
 	 * Resolves a getPosts request;
 	 *
 	 * @param request
 	 */
-    public PostsDTO getPosts(Request<Void> request);
+	public PostsDTO getPosts(Request<Void> request);
 
 	/**
 	 * Resolves a update profile name request;
 	 *
 	 * @param request
 	 */
-    public void updateProfileName(Request<ProfileNameDTO> request);
+	public void updateProfileName(Request<ProfileNameDTO> request);
 
 	/**
 	 * Resolves a get follower posts request;
 	 *
 	 * @param request
 	 */
-    public FollowingPostsDTO getFollowerPosts(Request<UserFollowingPostsDTO> request);
+	public FollowingPostsDTO getFollowerPosts(Request<UserFollowingPostsDTO> request);
 
 	/**
 	 * Resolves a get main feed request;
 	 *
 	 * @param request
 	 */
-    public ClassFeedDTO getMainFeed(Request<ClassPostsDTO> request);
+	public ClassFeedDTO getMainFeed(Request<ClassPostsDTO> request);
 }

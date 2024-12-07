@@ -13,7 +13,9 @@ import com.lewall.components.Footer;
 import com.lewall.components.Navbar;
 import com.lewall.db.models.Post;
 import com.lewall.db.models.User;
+import com.lewall.dtos.FollowUserDTO;
 import com.lewall.dtos.PostsDTO;
+import com.lewall.dtos.UnfollowUserDTO;
 import com.lewall.dtos.UserDTO;
 import com.lewall.dtos.UserIdDTO;
 
@@ -22,8 +24,12 @@ import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -63,6 +69,8 @@ public class Profile extends Pane {
 			profileUser = authenicatedUser;
 		}
 
+		boolean otherUser = profileUser.getId() != authenicatedUser.getId();
+
 		userUsername.set("@" + profileUser.getUsername().split("@")[0]);
 		userDisplayName.set(profileUser.getDisplayName());
 		userFollowers.set(profileUser.getFollowers().size() + "");
@@ -85,7 +93,7 @@ public class Profile extends Pane {
 		profileSubtitle.setFill(Color.web(Theme.ACCENT));
 		VBox.setMargin(profileSubtitle, new Insets(3, 0, 0, 0));
 
-		Rectangle idCard = new Rectangle(315, 115);
+		Rectangle idCard = new Rectangle(315, otherUser ? 150 : 115);
 		idCard.setFill(Color.rgb(25, 18, 35));
 		idCard.setStroke(Color.rgb(255, 255, 255, 0.05));
 		idCard.setStrokeWidth(1);
@@ -153,9 +161,46 @@ public class Profile extends Pane {
 		pfp.setFitWidth(65);
 		pfp.setFitHeight(65);
 
-		HBox content = new HBox(15);
+		HBox profile = new HBox(15);
+		profile.getChildren().addAll(pfp, userDetails);
+
+		VBox content = new VBox(15);
+		content.getChildren().add(profile);
 		StackPane.setMargin(content, new Insets(15));
-		content.getChildren().addAll(pfp, userDetails);
+
+		if (otherUser) {
+			boolean isFollowingProfileUser = authenicatedUser.getFollowers().contains(profileUser.getId().toString());
+
+			Button followButton = new Button(isFollowingProfileUser ? "Unfollow" : "Follow");
+			followButton.getStyleClass().add("accent-button");
+			followButton.setPrefWidth(300);
+			followButton.setOnAction(e -> {
+				if (isFollowingProfileUser) {
+					Connection.<UnfollowUserDTO, UserDTO>post("/unfollow", new UnfollowUserDTO(profileUser.getId()))
+							.thenAccept(response -> {
+								followButton.setText("Follow");
+
+								profileUser = response.getBody().getUser();
+								userFollowers.set(profileUser.getFollowers().size() + "");
+
+								// Update the user in local storage
+								Connection.get("/user", true);
+							});
+				} else {
+					Connection.<FollowUserDTO, UserDTO>post("/follow", new FollowUserDTO(profileUser.getId()))
+							.thenAccept(response -> {
+								followButton.setText("Unfollow");
+
+								profileUser = response.getBody().getUser();
+								userFollowers.set(profileUser.getFollowers().size() + "");
+
+								// Update the user in local storage
+								Connection.get("/user", true);
+							});
+				}
+			});
+			content.getChildren().add(followButton);
+		}
 
 		StackPane idCardItems = new StackPane();
 		idCardItems.getChildren().addAll(idCard, content);
