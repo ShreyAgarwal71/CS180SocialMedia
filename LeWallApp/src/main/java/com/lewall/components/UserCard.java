@@ -25,7 +25,7 @@ public class UserCard extends HBox {
      * Constructs a UserCard for the given user.
      * 
      * @param user
-     *            the user to display
+     *             the user to display
      */
     public UserCard(User user) {
         this.user = user;
@@ -53,17 +53,18 @@ public class UserCard extends HBox {
             UserDTO userDTO = LocalStorage.get("/user", UserDTO.class);
             if (userDTO != null) {
                 String loggedInUser = userDTO.getUser().getDisplayName();
+
                 if (!displayName.equals(user.getDisplayName())) {
-                    if (user.getFollowing().contains(loggedInUser)) {
+                    if (user.getFollowers().contains(userDTO.getUser().getId().toString())
+                            && user.getFollowing().contains(userDTO.getUser().getId().toString())) {
                         mutual = new Label("Follows you");
                         mutual.getStyleClass().add("user-text");
                         userDetails.getChildren().addAll(displayName, mutual);
-                    } else if (user.getFollowers().contains(loggedInUser)) {
+                    } else if (user.getFollowers().contains(userDTO.getUser().getId().toString())) {
                         mutual = new Label("You follow");
                         mutual.getStyleClass().add("user-text");
                         userDetails.getChildren().addAll(displayName, mutual);
-                    } else if (user.getFollowers().contains(loggedInUser)
-                            && user.getFollowing().contains(loggedInUser)) {
+                    } else if (user.getFollowing().contains(userDTO.getUser().getId().toString())) {
                         mutual = new Label("Mutuals");
                         mutual.getStyleClass().add("user-text");
                         userDetails.getChildren().addAll(displayName, mutual);
@@ -93,7 +94,8 @@ public class UserCard extends HBox {
         this.setOnMouseEntered(e -> {
             // this.getChildren().forEach(child ->
             // child.getStyleClass().remove("user-card"));
-            this.setStyle("-fx-background-color: #f0f0f0;");
+            this.getStyleClass().add("user-text-hover");
+            // this.setStyle("-fx-background-color: #f0f0f0;");
             // this.getChildren().forEach(child -> child.forEach(child ->
             // child.setStyle("user-text-hover"));
         });
