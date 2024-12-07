@@ -19,6 +19,7 @@ import com.lewall.dtos.UnfollowUserDTO;
 import com.lewall.dtos.UserDTO;
 import com.lewall.dtos.UserIdDTO;
 
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
@@ -48,7 +49,6 @@ import javafx.scene.text.Text;
 public class Profile extends Pane {
 	private static final Logger logger = LogManager.getLogger(Login.class);
 	private User profileUser;
-	private User authenicatedUser;
 	private List<Post> posts;
 
 	private StringProperty userUsername = new SimpleStringProperty("");
@@ -60,7 +60,7 @@ public class Profile extends Pane {
 	public Profile(NavigatorPageState state) {
 		super();
 
-		authenicatedUser = LocalStorage.get("/user", UserDTO.class).getUser();
+		User authenicatedUser = LocalStorage.get("/user", UserDTO.class).getUser();
 
 		// If the state is a user, then we are viewing someone else's profile
 		if (state.getState() instanceof User) {
@@ -169,34 +169,39 @@ public class Profile extends Pane {
 		StackPane.setMargin(content, new Insets(15));
 
 		if (otherUser) {
-			boolean isFollowingProfileUser = authenicatedUser.getFollowers().contains(profileUser.getId().toString());
+			boolean isFollowingProfileUser = getAuthenicatedUser().getFollowing()
+					.contains(profileUser.getId().toString());
 
 			Button followButton = new Button(isFollowingProfileUser ? "Unfollow" : "Follow");
 			followButton.getStyleClass().add("accent-button");
 			followButton.setPrefWidth(300);
 			followButton.setOnAction(e -> {
-				if (isFollowingProfileUser) {
+				if (getAuthenicatedUser().getFollowing().contains(profileUser.getId().toString())) {
 					Connection
 							.<UnfollowUserDTO, UserDTO>post("/user/unfollow", new UnfollowUserDTO(profileUser.getId()))
 							.thenAccept(response -> {
-								followButton.setText("Follow");
+								Platform.runLater(() -> {
+									followButton.setText("Follow");
+								});
 
 								profileUser = response.getBody().getUser();
 								userFollowers.set(profileUser.getFollowers().size() + "");
 
 								// Update the user in local storage
-								Connection.get("/user", true);
+								Connection.<UserDTO>get("/user", true);
 							});
 				} else {
 					Connection.<FollowUserDTO, UserDTO>post("/user/follow", new FollowUserDTO(profileUser.getId()))
 							.thenAccept(response -> {
-								followButton.setText("Unfollow");
+								Platform.runLater(() -> {
+									followButton.setText("Unfollow");
+								});
 
 								profileUser = response.getBody().getUser();
 								userFollowers.set(profileUser.getFollowers().size() + "");
 
 								// Update the user in local storage
-								Connection.get("/user", true);
+								Connection.<UserDTO>get("/user", true);
 							});
 				}
 			});
@@ -232,5 +237,9 @@ public class Profile extends Pane {
 		mainStack.getChildren().add(navbar);
 
 		this.getChildren().add(mainStack);
+	}
+
+	private User getAuthenicatedUser() {
+		return LocalStorage.get("/user", UserDTO.class).getUser();
 	}
 }
