@@ -119,7 +119,6 @@ public class PostItem extends VBox {
                         Platform.runLater(() -> {
                             Navigator.navigateTo(Navigator.EPage.PROFILE);
                         });
-
                     });
                 });
 

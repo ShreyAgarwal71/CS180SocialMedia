@@ -58,7 +58,7 @@ public class Home extends Pane {
         });
 
         ListView<Post> postListView = new ListView<>(items);
-        postListView.setPrefWidth(460);
+        postListView.setPrefWidth(480);
 
         postListView.setCellFactory(param -> new ListCell<Post>() {
             @Override
