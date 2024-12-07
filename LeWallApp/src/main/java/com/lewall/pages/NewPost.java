@@ -23,6 +23,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
@@ -47,18 +48,20 @@ public class NewPost extends Pane {
 	 * Constructor for the NewPost page
 	 */
 	public NewPost() {
-		// Create UI components
-		TextField titleField = new TextField();
-		titleField.setPromptText("Write your title here...");
-		titleField.getStyleClass().add("brand-field");
+		Text areaTitle = new Text("Inscribe Quote");
+		areaTitle.getStyleClass().add("brand-title");
 
-		TextArea bodyArea = new TextArea();
-		bodyArea.setPromptText("Write your post's body here...");
-		bodyArea.setWrapText(true);
-		bodyArea.getStyleClass().add("brand-field");
-		// TODO: CSS
-
-		// I love null-unsafe code
+		VBox quoteGroup = new VBox(3);
+		Text quoteAreaLabel = new Text("Enter Quote");
+		VBox.setMargin(quoteAreaLabel, new Insets(0, 0, 0, 5));
+		quoteAreaLabel.getStyleClass().add("brand-label");
+		TextArea quoteArea = new TextArea();
+		quoteArea.setPromptText("Write your post's body here...");
+		quoteArea.setWrapText(true);
+		quoteArea.getStyleClass().add("brand-text-area");
+		quoteArea.setPrefHeight(75);
+		quoteArea.setPrefWidth(400);
+		quoteGroup.getChildren().addAll(quoteAreaLabel, quoteArea);
 
 		if (LocalStorage.get("/post/getClasses") == null)
 			Connection.get("/post/getClasses", true).thenAccept(response -> {
@@ -67,16 +70,15 @@ public class NewPost extends Pane {
 		else
 			classes = LocalStorage.get("/post/getClasses", ClassesDTO.class).getClasses();
 
-
 		ComboBox<String> courseDropdown = new ComboBox<String>();
 		courseDropdown.getItems().addAll(classes);
-		// TODO: CSS
 
 		Button submitButton = new Button("Submit");
 		submitButton.getStyleClass().add("brand-button");
+		submitButton.setPrefWidth(400);
 		submitButton.setOnAction(e -> {
-			String title = titleField.getText();
-			String body = bodyArea.getText();
+			// Stringitle = titleField.getText();
+			String body = quoteArea.getText();
 
 			// Sends date in UTC
 			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy");
@@ -84,11 +86,10 @@ public class NewPost extends Pane {
 
 			String selectedClass = courseDropdown.getValue();
 
-
-			if (!title.isEmpty() && !body.isEmpty() && !selectedClass.isEmpty() && selectedClass != null) {
+			if (!body.isEmpty() && !selectedClass.isEmpty() && selectedClass != null) {
 				logger.info(
-							"New post created: Title = {}, Body = {}, Date = {}, Class = {}", 
-							title, body, date, selectedClass);
+						"New post created: Body = {}, Date = {}, Class = {}",
+						body, date, selectedClass);
 				// TODO: IMG-URL
 				UUID validUUID = UUID.nameUUIDFromBytes(selectedClass.getBytes(StandardCharsets.US_ASCII));
 				CreatePostDTO post = new CreatePostDTO(body, date, null, validUUID);
@@ -103,38 +104,35 @@ public class NewPost extends Pane {
 		this.getStyleClass().add("primary-bg");
 
 		VBox navbar = new Navbar();
-        StackPane.setAlignment(navbar, Pos.TOP_LEFT);
-        StackPane.setMargin(navbar, new Insets(10));
+		StackPane.setAlignment(navbar, Pos.TOP_LEFT);
+		StackPane.setMargin(navbar, new Insets(10));
 
-        DropShadow shadow = new DropShadow();
-        shadow.setColor(Color.BLACK);
-        shadow.setOffsetX(0);
-        shadow.setOffsetY(0);
-        shadow.setRadius(15);
-        shadow.setSpread(0.5);
+		DropShadow shadow = new DropShadow();
+		shadow.setColor(Color.BLACK);
+		shadow.setOffsetX(0);
+		shadow.setOffsetY(0);
+		shadow.setRadius(15);
+		shadow.setSpread(0.5);
 
 		FlowPane fp = new FlowPane(10, 10);
-        fp.prefWidthProperty().bind(this.widthProperty());
-        fp.prefHeightProperty().bind(this.heightProperty());
-        fp.setAlignment(Pos.CENTER);
-        fp.setOrientation(Orientation.VERTICAL);
+		fp.prefWidthProperty().bind(this.widthProperty());
+		fp.prefHeightProperty().bind(this.heightProperty());
+		fp.setAlignment(Pos.TOP_LEFT);
+		fp.setOrientation(Orientation.VERTICAL);
 
-		HBox lastLine = new HBox(2);
-		lastLine.setAlignment(Pos.CENTER);
-		lastLine.getChildren().addAll(courseDropdown, submitButton);
-
-		VBox postForm = new VBox(3);
-		postForm.setAlignment(Pos.CENTER);
-		postForm.getChildren().addAll(titleField, bodyArea, lastLine);
+		VBox postForm = new VBox(10);
+		FlowPane.setMargin(postForm, new Insets(10, 0, 0, 90));
+		postForm.setAlignment(Pos.TOP_LEFT);
+		postForm.getChildren().addAll(areaTitle, quoteGroup, courseDropdown, submitButton);
 
 		fp.getChildren().add(postForm);
 
-        Group group = new Group();
-        group.setEffect(shadow);
+		Group group = new Group();
+		group.setEffect(shadow);
 		group.getChildren().add(fp);
 
-        HBox footer = new Footer();
-        StackPane.setAlignment(footer, Pos.BOTTOM_CENTER);
+		HBox footer = new Footer();
+		StackPane.setAlignment(footer, Pos.BOTTOM_CENTER);
 
 		StackPane mainStack = new StackPane();
 		mainStack.getChildren().addAll(group, fp, navbar, footer);

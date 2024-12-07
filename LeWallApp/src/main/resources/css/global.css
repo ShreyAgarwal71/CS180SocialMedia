@@ -40,6 +40,11 @@
     -fx-font-weight: bold;
 }
 
+.brand-label {
+    -fx-font-size: 12;
+    -fx-fill: #858585;
+}
+
 .brand-subtitle {
     -fx-font-size: 12;
     -fx-fill: rgba(255, 255, 255, 0.5);
@@ -78,6 +83,30 @@
     -fx-border-radius: 5;
     -fx-border-width: 1;
     -fx-border-color: rgba(255, 255, 255, 0.1);
+}
+
+.brand-text-area {
+    -fx-fill: transparent;
+    -fx-control-inner-background: transparent; 
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-background-radius: 5;
+    -fx-background-insets: 0;
+    -fx-border-radius: 5;
+    -fx-border-width: 1;
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+}
+
+.brand-text-area .scroll-pane {
+    -fx-background-color: transparent;
+}
+
+.brand-text-area .scroll-pane .viewport{
+    -fx-background-color: transparent;
+}
+
+
+.brand-text-area .scroll-pane .content{
+    -fx-background-color: transparent;
 }
 
 .brand-text-button {

@@ -2,10 +2,12 @@ package com.lewall.pages;
 
 import java.util.UUID;
 
+import com.lewall.api.Connection;
 import com.lewall.components.Footer;
 import com.lewall.components.Navbar;
 import com.lewall.components.PostItem;
 import com.lewall.db.models.Post;
+import com.lewall.dtos.UserFollowingPostsDTO;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -55,6 +57,10 @@ public class Home extends Pane {
                         "https://www.teachhub.com/wp-content/uploads/2020/05/Classroom-Management-for-an-Effective-Learning-Environment-768x512.jpg",
                         UUID.randomUUID()),
         };
+
+        // Connection.<MainFeed>get("/getFollowerPosts", false).thenAccept(response -> {
+        // System.out.println(response.getBody().);
+        // });
 
         ObservableList<Post> items = FXCollections.observableArrayList(
                 posts);
