@@ -176,7 +176,8 @@ public class Profile extends Pane {
 			followButton.setPrefWidth(300);
 			followButton.setOnAction(e -> {
 				if (isFollowingProfileUser) {
-					Connection.<UnfollowUserDTO, UserDTO>post("/unfollow", new UnfollowUserDTO(profileUser.getId()))
+					Connection
+							.<UnfollowUserDTO, UserDTO>post("/user/unfollow", new UnfollowUserDTO(profileUser.getId()))
 							.thenAccept(response -> {
 								followButton.setText("Follow");
 
@@ -187,7 +188,7 @@ public class Profile extends Pane {
 								Connection.get("/user", true);
 							});
 				} else {
-					Connection.<FollowUserDTO, UserDTO>post("/follow", new FollowUserDTO(profileUser.getId()))
+					Connection.<FollowUserDTO, UserDTO>post("/user/follow", new FollowUserDTO(profileUser.getId()))
 							.thenAccept(response -> {
 								followButton.setText("Unfollow");
 
