@@ -2,10 +2,12 @@ package com.lewall.components;
 
 import com.lewall.Navigator;
 import com.lewall.Navigator.EPage;
+import com.lewall.api.LocalStorage;
 import com.lewall.common.Theme;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
@@ -58,15 +60,17 @@ public class Navbar extends VBox {
     }
 
     public Navbar() {
-        super(35);
+        super(15);
 
-        this.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
-        this.setBackground(new Background(new BackgroundFill(
+        VBox itemsColumn = new VBox(35);
+
+        itemsColumn.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+        itemsColumn.setBackground(new Background(new BackgroundFill(
                 Color.web(Theme.PRIMARY_GREY),
                 new CornerRadii(3),
                 null)));
-        this.setPadding(new Insets(25, 10, 25, 10));
-        this.setBorder(new Border(new BorderStroke(
+        itemsColumn.setPadding(new Insets(25, 10, 25, 10));
+        itemsColumn.setBorder(new Border(new BorderStroke(
                 Color.web(Theme.BORDER),
                 BorderStrokeStyle.SOLID,
                 new CornerRadii(3),
@@ -76,13 +80,39 @@ public class Navbar extends VBox {
         // logo.setFitWidth(54);
         // logo.setFitHeight(28);
 
-        this.getChildren().addAll(
+        itemsColumn.getChildren().addAll(
                 // logo,
                 new NavIcon("Inscribe", "add.png", EPage.NEWPOST),
                 new NavIcon("Home", "home.png", EPage.HOME),
                 new NavIcon("Explore", "search.png", EPage.SEARCH),
                 new NavIcon("Profile", "user.png", EPage.PROFILE));
 
-        this.getStyleClass().add("navbar");
+        itemsColumn.getStyleClass().add("navbar");
+
+        Text logoutText = new Text("Log Out");
+        logoutText.setFill(Color.web(Theme.TEXT_GREY));
+
+        Image logoutIcon = new Image("imgs/logout.png");
+        ImageView logoutIconView = new ImageView(logoutIcon);
+        logoutIconView.setFitWidth(24);
+        logoutIconView.setFitHeight(24);
+
+        VBox logoutColumn = new VBox(5);
+        logoutColumn.setAlignment(Pos.CENTER);
+        logoutColumn.getChildren().addAll(logoutIconView, logoutText);
+
+        logoutColumn.getStyleClass().add("logout-container");
+        logoutText.getStyleClass().add("logout-text");
+        logoutIconView.getStyleClass().add("logout-icon");
+        logoutColumn.setCursor(Cursor.HAND);
+
+        logoutColumn.onMouseClickedProperty().set(e -> {
+            LocalStorage.clear();
+            Navigator.navigateTo(EPage.LOGIN);
+        });
+
+        this.setAlignment(Pos.TOP_CENTER);
+        this.setMaxWidth(70);
+        this.getChildren().addAll(itemsColumn, logoutColumn);
     }
 }

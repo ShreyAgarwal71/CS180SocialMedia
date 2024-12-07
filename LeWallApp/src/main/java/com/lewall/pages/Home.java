@@ -5,6 +5,8 @@ import java.util.UUID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.lewall.Navigator;
+import com.lewall.Navigator.EPage;
+import com.lewall.api.LocalStorage;
 import com.lewall.components.Footer;
 import com.lewall.components.Navbar;
 import com.lewall.components.PostItem;
@@ -16,6 +18,7 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
@@ -98,15 +101,6 @@ public class Home extends Pane {
         fyp.getStyleClass().add("brand-title");
         column.getChildren().add(fyp);
         column.getChildren().add(postListView);
-
-        // Button logOut = new Button("Log Out");
-        // logOut.getStyleClass().add("brand-button");
-        // logOut.setOnAction(e -> {
-        // logger.info("Logging out");
-        // LocalStorage.clear();
-        // Navigator.navigateTo(EPage.LOGIN);
-        // });
-        // column.getChildren().add(logOut);
 
         flowPane.getChildren().add(column);
 
