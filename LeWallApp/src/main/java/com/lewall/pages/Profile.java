@@ -3,29 +3,13 @@ package com.lewall.pages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.lewall.Navigator;
 import com.lewall.api.Connection;
 import com.lewall.api.LocalStorage;
-import com.lewall.api.Validation;
-import com.lewall.dtos.AuthTokenDTO;
-import com.lewall.dtos.LoginDTO;
-import com.lewall.dtos.UserDTO;
-import com.lewall.components.Footer;
 import com.lewall.components.Navbar;
-import com.lewall.components.PasswordField;
+import com.lewall.db.models.User;
+import com.lewall.dtos.UserDTO;
 
-import javafx.application.Platform;
 import javafx.geometry.Insets;
-import javafx.geometry.Orientation;
-import javafx.geometry.Pos;
-import javafx.scene.Group;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.GaussianBlur;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -33,15 +17,10 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-import javafx.animation.RotateTransition;
-import javafx.animation.Interpolator;
-import javafx.util.Duration;
-
-
-
 
 public class Profile extends Pane {
     private static final Logger logger = LogManager.getLogger(Login.class);
+	private User user;
     
     public Profile() {
         this.getStyleClass().add("primary-bg");
@@ -54,8 +33,21 @@ public class Profile extends Pane {
         profileTitle.setFill(Color.WHITE);
         VBox.setMargin(profileTitle, new Insets(10,0,0,0));
 
-        Text profileSubtitle = new Text("@notzayan"); // TODO: take user data to show their name
-        profileSubtitle.getStyleClass().add("profile-subtitle");
+		Connection.get("/user", true).thenAccept(response -> {
+			user = LocalStorage.get("/user", UserDTO.class).getUser();
+			logger.info("User " + user.getEmail() + " loaded");
+		});
+
+		while (user == null) {
+			try {
+				Thread.sleep(100);
+			} catch (Exception e) {
+				logger.error(e);
+			}
+		}
+
+        Text profileSubtitle = new Text("@" + user.getDisplayName());
+        profileSubtitle.getStyleClass().add(user.getBio());
         profileSubtitle.setFill(Color.rgb(137, 139, 239, 1));
         VBox.setMargin(profileSubtitle, new Insets(3, 0,0,0));
 
