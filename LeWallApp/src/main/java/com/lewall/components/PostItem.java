@@ -57,7 +57,7 @@ public class PostItem extends VBox {
             StackPane.setAlignment(postContents, Pos.CENTER_RIGHT);
         }
 
-        HBox postReactions = getPostReactionsComponent(item.getLikes(), 10);
+        HBox postReactions = getPostReactionsComponent(item.getLikes(), 10, mainStack);
 
         postContents.getChildren().addAll(postQuote, postReactions);
 
@@ -135,7 +135,7 @@ public class PostItem extends VBox {
         // this.getChildren().addAll(postClass, mainStack);
     }
 
-    private HBox getPostReactionsComponent(int likes, int comments) {
+    private HBox getPostReactionsComponent(int likes, int comments, StackPane mainStack) {
         HBox postReactions = new HBox(10);
         postReactions.setAlignment(Pos.CENTER);
 
@@ -154,17 +154,41 @@ public class PostItem extends VBox {
         likedIcon.setFitWidth(18);
         likedIcon.setFitHeight(18);
 
-        Text postComments = new Text(comments + "");
-        postComments.setFont(Theme.INRIA_SERIF_SMALL);
-        postComments.setFill(Color.web(Theme.TEXT_GREY));
-
         ImageView commentIcon = new ImageView(new Image("imgs/comment.png"));
 
         commentIcon.setFitWidth(22);
         commentIcon.setFitHeight(22);
 
+        Text postComments = new Text(comments + "");
+        postComments.setFont(Theme.INRIA_SERIF_SMALL);
+        postComments.setFill(Color.web(Theme.TEXT_GREY));
+
+        Button seeCommentsButton = new Button();
+        seeCommentsButton.setGraphic(commentIcon);
+
+        seeCommentsButton.setOnAction(event -> {
+            Rectangle dimBackground = new Rectangle(450, 225);
+            dimBackground.setFill(new Color(0, 0, 0, 0.5));
+            mainStack.getChildren().addAll(dimBackground);
+
+            VBox mainStackCopy = new VBox();
+            Rectangle commentBackground = new Rectangle(200, 200);
+            commentBackground.setFill(new Color(1, 1, 1, 1));
+            Button closeButton = new Button("Close");
+            closeButton.getStyleClass().add("brand-button");
+            closeButton.setAlignment(Pos.BOTTOM_CENTER);
+            mainStackCopy.getChildren().addAll(commentBackground, closeButton);
+            mainStackCopy.setAlignment(Pos.CENTER);
+            mainStack.getChildren().addAll(mainStackCopy);
+            closeButton.setOnAction(e -> {
+                mainStack.getChildren().remove(dimBackground);
+                mainStack.getChildren().remove(mainStackCopy);
+                // mainStack.getChildren().remove(closeButton);
+            });
+        });
+
         HBox likeGroup = new HBox(5, postLikes, likeIcon);
-        HBox commentGroup = new HBox(5, postComments, commentIcon);
+        HBox commentGroup = new HBox(5, postComments, seeCommentsButton);
 
         likeGroup.setAlignment(Pos.CENTER);
         commentGroup.setAlignment(Pos.CENTER);
