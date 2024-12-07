@@ -2,26 +2,18 @@ package com.lewall.pages;
 
 import java.util.UUID;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import com.lewall.Navigator;
-import com.lewall.Navigator.EPage;
-import com.lewall.api.LocalStorage;
 import com.lewall.components.Footer;
 import com.lewall.components.Navbar;
 import com.lewall.components.PostItem;
 import com.lewall.db.models.Post;
 
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.image.Image;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -36,8 +28,6 @@ import javafx.scene.text.Text;
  * @version 17 November 2024
  */
 public class Home extends Pane {
-    private static final Logger logger = LogManager.getLogger(Login.class);
-
     /**
      * Constructor for the home page
      */

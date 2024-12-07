@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.lewall.api.Connection;
 import com.lewall.api.LocalStorage;
+import com.lewall.components.Footer;
 import com.lewall.components.Navbar;
 import com.lewall.dtos.ClassesDTO;
 import com.lewall.dtos.CreatePostDTO;
@@ -130,8 +131,11 @@ public class NewPost extends Pane {
         group.setEffect(shadow);
 		group.getChildren().add(fp);
 
+        HBox footer = new Footer();
+        StackPane.setAlignment(footer, Pos.BOTTOM_CENTER);
+
 		StackPane mainStack = new StackPane();
-		mainStack.getChildren().addAll(group, fp, navbar);
+		mainStack.getChildren().addAll(group, fp, navbar, footer);
 
 		this.getChildren().add(mainStack);
 
