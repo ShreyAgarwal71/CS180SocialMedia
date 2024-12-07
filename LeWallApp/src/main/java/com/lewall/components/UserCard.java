@@ -57,16 +57,16 @@ public class UserCard extends HBox {
                 if (!displayName.equals(user.getDisplayName())) {
                     if (user.getFollowers().contains(userDTO.getUser().getId().toString())
                             && user.getFollowing().contains(userDTO.getUser().getId().toString())) {
-                        mutual = new Label("Follows you");
-                        mutual.getStyleClass().add("user-text");
+                        mutual = new Label("    Follows you");
+                        mutual.getStyleClass().add("user-mutual-text");
                         userDetails.getChildren().addAll(displayName, mutual);
                     } else if (user.getFollowers().contains(userDTO.getUser().getId().toString())) {
-                        mutual = new Label("You follow");
-                        mutual.getStyleClass().add("user-text");
+                        mutual = new Label("    You follow");
+                        mutual.getStyleClass().add("user-mutual-text");
                         userDetails.getChildren().addAll(displayName, mutual);
                     } else if (user.getFollowing().contains(userDTO.getUser().getId().toString())) {
-                        mutual = new Label("Mutuals");
-                        mutual.getStyleClass().add("user-text");
+                        mutual = new Label("    Mutuals");
+                        mutual.getStyleClass().add("user-mutual-text");
                         userDetails.getChildren().addAll(displayName, mutual);
                     } else {
                         userDetails.getChildren().addAll(displayName);
