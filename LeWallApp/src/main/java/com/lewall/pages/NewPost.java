@@ -9,6 +9,7 @@ import java.util.UUID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.lewall.Navigator;
 import com.lewall.api.Connection;
 import com.lewall.api.LocalStorage;
 import com.lewall.components.Footer;
@@ -92,6 +93,7 @@ public class NewPost extends Pane {
 				UUID validUUID = UUID.nameUUIDFromBytes(selectedClass.getBytes(StandardCharsets.US_ASCII));
 				CreatePostDTO post = new CreatePostDTO(body, date, null, validUUID);
 				Connection.post("/post/create", post);
+				Navigator.navigateTo(Navigator.EPage.PROFILE);
 			} else {
 				logger.warn("Post creation failed: Title or Body is empty");
 			}
