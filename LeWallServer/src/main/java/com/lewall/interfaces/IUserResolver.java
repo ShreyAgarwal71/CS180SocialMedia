@@ -9,7 +9,6 @@ import com.lewall.dtos.FollowUserDTO;
 import com.lewall.dtos.PostsDTO;
 import com.lewall.dtos.ProfileNameDTO;
 import com.lewall.dtos.UnfollowUserDTO;
-import com.lewall.dtos.UserPostsDTO;
 import com.lewall.dtos.UserFollowingPostsDTO;
 import com.lewall.dtos.FollowingPostsDTO;
 import com.lewall.dtos.ClassPostsDTO;
@@ -63,7 +62,7 @@ public interface IUserResolver {
 	 *
 	 * @param request
 	 */
-    public PostsDTO getPosts(Request<UserPostsDTO> request);
+    public PostsDTO getPosts(Request<Void> request);
 
 	/**
 	 * Resolves a update profile name request;
