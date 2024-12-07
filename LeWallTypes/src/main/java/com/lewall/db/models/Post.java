@@ -21,7 +21,7 @@ public class Post extends Model {
     private int likes;
     private Set<String> usersLiked;
     private String imageURL;
-    private UUID classId;
+    private String classId;
     private boolean isPrivate;
 
     /**
@@ -33,7 +33,7 @@ public class Post extends Model {
      * @param postId
      * @param likes
      */
-    public Post(UUID userId, String messagePost, String date, int likes, String imageURL, UUID classId) {
+    public Post(UUID userId, String messagePost, String date, int likes, String imageURL, String classId) {
         this.userId = userId;
         this.messagePost = messagePost;
         this.date = date; // MM/DD/YYYY
@@ -103,7 +103,7 @@ public class Post extends Model {
      * 
      * @return classId
      */
-    public UUID getClassId() {
+    public String getClassId() {
         return classId;
     }
 
@@ -166,7 +166,7 @@ public class Post extends Model {
      * 
      * @param classId
      */
-    public void setClassId(UUID classId) {
+    public void setClassId(String classId) {
         this.classId = classId;
     }
 

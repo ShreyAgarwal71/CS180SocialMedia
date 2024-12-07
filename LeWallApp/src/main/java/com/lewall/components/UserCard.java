@@ -1,6 +1,11 @@
 package com.lewall.components;
 
+import com.lewall.Navigator;
+import com.lewall.Navigator.EPage;
+import com.lewall.api.LocalStorage;
 import com.lewall.db.models.User;
+import com.lewall.dtos.UserDTO;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -34,20 +39,51 @@ public class UserCard extends HBox {
         userDetails.setAlignment(Pos.CENTER_LEFT);
         // userDetails.getStyleClass().add("user-card");
 
-        Label displayName = new Label(user.getDisplayName());
-        displayName.getStyleClass().add("user-text");
+        if (user.getPassword().isEmpty()) {
+            Label displayName = new Label(user.getUsername());
+            displayName.getStyleClass().add("user-text");
+            userDetails.getChildren().addAll(displayName);
+        } else {
+            Label displayName = new Label(user.getDisplayName());
+            displayName.getStyleClass().add("user-text");
 
-        Label email = new Label(user.getEmail());
-        email.getStyleClass().add("user-text");
+            Label mutual = new Label("");
 
-        Label followers = new Label(user.getFollowers().size() + " followers");
-        followers.getStyleClass().add("user-text");
-
-        Label following = new Label(user.getFollowing().size() + " following");
-        following.getStyleClass().add("user-text");
-
-        userDetails.getChildren().addAll(displayName, email, followers, following);
-
+            UserDTO userDTO = LocalStorage.get("/user", UserDTO.class);
+            if (userDTO != null) {
+                String loggedInUser = userDTO.getUser().getDisplayName();
+                if (!displayName.equals(user.getDisplayName())) {
+                    if (user.getFollowing().contains(loggedInUser)) {
+                        mutual = new Label("Follows you");
+                        mutual.getStyleClass().add("user-text");
+                        userDetails.getChildren().addAll(displayName, mutual);
+                    } else if (user.getFollowers().contains(loggedInUser)) {
+                        mutual = new Label("You follow");
+                        mutual.getStyleClass().add("user-text");
+                        userDetails.getChildren().addAll(displayName, mutual);
+                    } else if (user.getFollowers().contains(loggedInUser)
+                            && user.getFollowing().contains(loggedInUser)) {
+                        mutual = new Label("Mutuals");
+                        mutual.getStyleClass().add("user-text");
+                        userDetails.getChildren().addAll(displayName, mutual);
+                    } else {
+                        userDetails.getChildren().addAll(displayName);
+                    }
+                }
+            }
+            /*
+             * Label email = new Label(user.getEmail());
+             * email.getStyleClass().add("user-text");
+             * 
+             * Label followers = new Label(user.getFollowers().size() + " followers");
+             * followers.getStyleClass().add("user-text");
+             * 
+             * Label following = new Label(user.getFollowing().size() + " following");
+             * following.getStyleClass().add("user-text");
+             * 
+             * userDetails.getChildren().addAll(displayName, email, followers, following);
+             */
+        }
         this.getChildren().addAll(userDetails);
 
         // this.getStyleClass().add("user-card");

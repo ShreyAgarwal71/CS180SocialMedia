@@ -65,7 +65,6 @@ public class NewPost extends Pane {
 		else
 			classes = LocalStorage.get("/post/getClasses", ClassesDTO.class).getClasses();
 
-
 		ComboBox<String> courseDropdown = new ComboBox<String>();
 		courseDropdown.getItems().addAll(classes);
 		// TODO: CSS
@@ -82,14 +81,13 @@ public class NewPost extends Pane {
 
 			String selectedClass = courseDropdown.getValue();
 
-
 			if (!title.isEmpty() && !body.isEmpty() && !selectedClass.isEmpty() && selectedClass != null) {
 				logger.info(
-							"New post created: Title = {}, Body = {}, Date = {}, Class = {}", 
-							title, body, date, selectedClass);
+						"New post created: Title = {}, Body = {}, Date = {}, Class = {}",
+						title, body, date, selectedClass);
 				// TODO: IMG-URL
 				UUID validUUID = UUID.nameUUIDFromBytes(selectedClass.getBytes(StandardCharsets.US_ASCII));
-				CreatePostDTO post = new CreatePostDTO(body, date, null, validUUID);
+				CreatePostDTO post = new CreatePostDTO(body, date, null, "Class");
 				Connection.post("/post/create", post);
 			} else {
 				logger.warn("Post creation failed: Title or Body is empty");
@@ -100,21 +98,21 @@ public class NewPost extends Pane {
 		this.getStyleClass().add("primary-bg");
 
 		VBox navbar = new Navbar();
-        StackPane.setAlignment(navbar, Pos.TOP_LEFT);
-        StackPane.setMargin(navbar, new Insets(10));
+		StackPane.setAlignment(navbar, Pos.TOP_LEFT);
+		StackPane.setMargin(navbar, new Insets(10));
 
-        DropShadow shadow = new DropShadow();
-        shadow.setColor(Color.BLACK);
-        shadow.setOffsetX(0);
-        shadow.setOffsetY(0);
-        shadow.setRadius(15);
-        shadow.setSpread(0.5);
+		DropShadow shadow = new DropShadow();
+		shadow.setColor(Color.BLACK);
+		shadow.setOffsetX(0);
+		shadow.setOffsetY(0);
+		shadow.setRadius(15);
+		shadow.setSpread(0.5);
 
 		FlowPane fp = new FlowPane(10, 10);
-        fp.prefWidthProperty().bind(this.widthProperty());
-        fp.prefHeightProperty().bind(this.heightProperty());
-        fp.setAlignment(Pos.CENTER);
-        fp.setOrientation(Orientation.VERTICAL);
+		fp.prefWidthProperty().bind(this.widthProperty());
+		fp.prefHeightProperty().bind(this.heightProperty());
+		fp.setAlignment(Pos.CENTER);
+		fp.setOrientation(Orientation.VERTICAL);
 
 		HBox lastLine = new HBox(2);
 		lastLine.setAlignment(Pos.CENTER);
@@ -126,8 +124,8 @@ public class NewPost extends Pane {
 
 		fp.getChildren().add(postForm);
 
-        Group group = new Group();
-        group.setEffect(shadow);
+		Group group = new Group();
+		group.setEffect(shadow);
 		group.getChildren().add(fp);
 
 		StackPane mainStack = new StackPane();

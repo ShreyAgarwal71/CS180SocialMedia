@@ -6,9 +6,9 @@ public class CreatePostDTO {
     private String messagePost;
     private String date;
     private String imageURL;
-    private UUID classId;
+    private String classId;
 
-    public CreatePostDTO(String messagePost, String date, String imageURL, UUID classId) {
+    public CreatePostDTO(String messagePost, String date, String imageURL, String classId) {
         this.messagePost = messagePost;
         this.date = date;
         this.imageURL = imageURL;
@@ -27,7 +27,7 @@ public class CreatePostDTO {
         return imageURL;
     }
 
-    public UUID getClassId() {
+    public String getClassId() {
         return classId;
     }
 

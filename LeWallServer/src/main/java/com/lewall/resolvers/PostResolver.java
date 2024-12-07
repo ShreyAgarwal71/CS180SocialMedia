@@ -36,7 +36,7 @@ public class PostResolver implements BaseResolver, IPostResolver {
         String date = request.getBody().getDate();
         int likes = 0;
         String imageURL = request.getBody().getImageURL();
-        UUID classId = request.getBody().getClassId();
+        String classId = request.getBody().getClassId();
 
         if (!PostService.createPost(userId, messagePost, date, likes, imageURL, classId)) {
             throw new InternalServerError("Failed to Create Post");
@@ -47,9 +47,9 @@ public class PostResolver implements BaseResolver, IPostResolver {
      * Delete a post
      * 
      * @param request
-     *            {@link Request} with {@link DeletePostDTO} body
+     *                {@link Request} with {@link DeletePostDTO} body
      * @throws InternalServerError
-     *             if unable to delete post
+     *                             if unable to delete post
      * @return void
      */
     @AuthGuard()
@@ -67,9 +67,9 @@ public class PostResolver implements BaseResolver, IPostResolver {
      * Like a post
      * 
      * @param request
-     *            {@link Request} with {@link LikePostDTO} body
+     *                {@link Request} with {@link LikePostDTO} body
      * @throws InternalServerError
-     *             if unable to like post
+     *                             if unable to like post
      * @return void
      */
     @AuthGuard()
@@ -87,9 +87,9 @@ public class PostResolver implements BaseResolver, IPostResolver {
      * Unlike a post
      * 
      * @param request
-     *            {@link Request} with {@link UnlikePostDTO} body
+     *                {@link Request} with {@link UnlikePostDTO} body
      * @throws InternalServerError
-     *             if unable to unlike post
+     *                             if unable to unlike post
      * @return void
      */
     @AuthGuard()
@@ -107,9 +107,9 @@ public class PostResolver implements BaseResolver, IPostResolver {
      * Hide a post
      * 
      * @param request
-     *            {@link Request} with {@link HidePostDTO} body
+     *                {@link Request} with {@link HidePostDTO} body
      * @throws InternalServerError
-     *             if unable to hide post
+     *                             if unable to hide post
      * @return void
      */
     @AuthGuard()
@@ -127,9 +127,9 @@ public class PostResolver implements BaseResolver, IPostResolver {
      * Get comments for a post
      * 
      * @param request
-     *            {@link Request} with {@link PostCommentsDTO} body
+     *                {@link Request} with {@link PostCommentsDTO} body
      * @throws InternalServerError
-     *             if unable to get comments
+     *                             if unable to get comments
      * @return {@link CommentsDTO}
      */
     @AuthGuard()
@@ -149,9 +149,9 @@ public class PostResolver implements BaseResolver, IPostResolver {
      * Make a post private or public
      * 
      * @param request
-     *            {@link Request} with {@link PublicPrivateDTO} body
+     *                {@link Request} with {@link PublicPrivateDTO} body
      * @throws InternalServerError
-     *             if unable to make post private or public
+     *                             if unable to make post private or public
      * @return void
      */
     @AuthGuard()

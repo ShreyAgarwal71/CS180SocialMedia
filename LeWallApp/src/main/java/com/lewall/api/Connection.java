@@ -241,7 +241,7 @@ public class Connection {
             }
 
             responseQueues.put(request.getRequestId(), new LinkedBlockingQueue<>());
-            String responseJSON = responseQueues.get(request.getRequestId()).poll(5, TimeUnit.SECONDS);
+            String responseJSON = responseQueues.get(request.getRequestId()).poll(10, TimeUnit.SECONDS);
             responseQueues.remove(request.getRequestId());
 
             if (responseJSON == null) {

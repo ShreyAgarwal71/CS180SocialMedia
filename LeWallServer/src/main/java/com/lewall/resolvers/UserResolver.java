@@ -24,9 +24,12 @@ import com.lewall.interfaces.IUserResolver;
 import com.lewall.dtos.UserFollowingPostsDTO;
 import com.lewall.dtos.FollowingPostsDTO;
 import com.lewall.dtos.ClassPostsDTO;
+import com.lewall.dtos.ClassesDTO;
 import com.lewall.dtos.ClassFeedDTO;
 import com.lewall.dtos.UserSearchDTO;
 import com.lewall.dtos.UsersFoundDTO;
+
+import java.util.List;
 
 /**
  * A class to resolve User-related requests
@@ -59,9 +62,9 @@ public class UserResolver implements BaseResolver, IUserResolver {
      * Delete a user
      * 
      * @param request
-     *            {@link Request} with {@link DeleteUserDTO} body
+     *                {@link Request} with {@link DeleteUserDTO} body
      * @throws InternalServerError
-     *             if unable to delete user
+     *                             if unable to delete user
      * @return void
      */
     @AuthGuard()
@@ -78,9 +81,9 @@ public class UserResolver implements BaseResolver, IUserResolver {
      * Follow a user
      * 
      * @param request
-     *            {@link Request} with {@link FollowUserDTO} body
+     *                {@link Request} with {@link FollowUserDTO} body
      * @throws InternalServerError
-     *             if unable to follow user
+     *                             if unable to follow user
      * @return void
      */
     @AuthGuard()
@@ -98,9 +101,9 @@ public class UserResolver implements BaseResolver, IUserResolver {
      * Unfollow a user
      * 
      * @param request
-     *            {@link Request} with {@link UnfollowUserDTO} body
+     *                {@link Request} with {@link UnfollowUserDTO} body
      * @throws InternalServerError
-     *             if unable to unfollow user
+     *                             if unable to unfollow user
      * @return void
      */
     @AuthGuard()
@@ -118,9 +121,9 @@ public class UserResolver implements BaseResolver, IUserResolver {
      * Block a user
      * 
      * @param request
-     *            {@link Request} with {@link BlockUserDTO} body
+     *                {@link Request} with {@link BlockUserDTO} body
      * @throws InternalServerError
-     *             if unable to block user
+     *                             if unable to block user
      * @return void
      */
     @AuthGuard()
@@ -138,9 +141,9 @@ public class UserResolver implements BaseResolver, IUserResolver {
      * Unblock a user
      * 
      * @param request
-     *            {@link Request} with {@link UnblockUserDTO} body
+     *                {@link Request} with {@link UnblockUserDTO} body
      * @throws InternalServerError
-     *             if unable to unblock user
+     *                             if unable to unblock user
      * @return void
      */
     @AuthGuard()
@@ -158,7 +161,7 @@ public class UserResolver implements BaseResolver, IUserResolver {
      * Get posts of a user
      * 
      * @param request
-     *            {@link Request} with {@link UserPostsDTO} body
+     *                {@link Request} with {@link UserPostsDTO} body
      * @return {@link PostsDTO}
      */
     @AuthGuard()
@@ -178,9 +181,9 @@ public class UserResolver implements BaseResolver, IUserResolver {
      * Update the profile name of a user
      * 
      * @param request
-     *            {@link Request} with {@link ProfileNameDTO} body
+     *                {@link Request} with {@link ProfileNameDTO} body
      * @throws InternalServerError
-     *             if unable to update profile name
+     *                             if unable to update profile name
      * @return void
      */
     @AuthGuard()
@@ -198,7 +201,7 @@ public class UserResolver implements BaseResolver, IUserResolver {
      * Get posts of users that the user is following
      * 
      * @param request
-     *            {@link Request} with {@link UserFollowingPostsDTO} body
+     *                {@link Request} with {@link UserFollowingPostsDTO} body
      * @return {@link FollowingPostsDTO}
      * 
      */
@@ -206,10 +209,9 @@ public class UserResolver implements BaseResolver, IUserResolver {
     @Endpoint(endpoint = "/getFollowerPosts", method = Request.EMethod.GET, requestBodyType = UserFollowingPostsDTO.class, responseBodyType = FollowingPostsDTO.class)
     public FollowingPostsDTO getFollowerPosts(Request<UserFollowingPostsDTO> request) {
         UUID userId = request.getUserId();
-        UUID classId = request.getBody().getClassId();
 
-        FollowingPostsDTO posts = new FollowingPostsDTO(UserService.getFollowingPosts(userId, classId));
-        if (UserService.getFollowingPosts(userId, classId) == null) {
+        FollowingPostsDTO posts = new FollowingPostsDTO(UserService.getFollowingPosts(userId));
+        if (UserService.getFollowingPosts(userId) == null) {
             throw new InternalServerError("Failed to get Following Posts");
         }
 
@@ -220,14 +222,14 @@ public class UserResolver implements BaseResolver, IUserResolver {
      * Get posts of a class
      * 
      * @param request
-     *            {@link Request} with {@link ClassPostsDTO} body
+     *                {@link Request} with {@link ClassPostsDTO} body
      * @return {@link ClassFeedDTO}
      */
     @AuthGuard()
     @Endpoint(endpoint = "/getMainFeed", method = Request.EMethod.GET, requestBodyType = ClassPostsDTO.class, responseBodyType = ClassFeedDTO.class)
     public ClassFeedDTO getMainFeed(Request<ClassPostsDTO> request) {
         UUID userId = request.getUserId();
-        UUID classId = request.getBody().getClassId();
+        String classId = request.getBody().getClassId();
 
         ClassFeedDTO posts = new ClassFeedDTO(UserService.getClassFeed(userId, classId));
         if (UserService.getClassFeed(userId, classId) == null) {
@@ -241,7 +243,7 @@ public class UserResolver implements BaseResolver, IUserResolver {
      * Search for users
      * 
      * @param request
-     *            {@link Request} with {@link UserSearchDTO} body
+     *                {@link Request} with {@link UserSearchDTO} body
      * @return {@link UsersFoundDTO}
      */
     @AuthGuard()
@@ -254,6 +256,16 @@ public class UserResolver implements BaseResolver, IUserResolver {
         if (UserService.getUsersSearched(userId, search) == null) {
             throw new InternalServerError("Failed to get Searches");
         }
+
+        /*
+         * ClassesDTO classes = new ClassesDTO();
+         * List<String> classesSearched = classes.getClasses();
+         * for (int i = 0; i < classesSearched.size(); i++) {
+         * if (classesSearched.get(i).toLowerCase().contains(search.toLowerCase())) {
+         * users.addUsers(new User(classesSearched.get(i), "", "Class", "", ""));
+         * }
+         * }
+         */
 
         return users;
     }
