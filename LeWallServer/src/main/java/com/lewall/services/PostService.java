@@ -23,7 +23,7 @@ public class PostService implements IService {
     private static final CommentCollection comments = db.getCommentCollection();
 
     public static boolean createPost(UUID userId, String messagePost, String date, int likes, String imageURL,
-            UUID classId) {
+            String classId) {
         Post post = new Post(userId, messagePost, date, likes, imageURL, classId);
         return posts.addElement(post);
     }

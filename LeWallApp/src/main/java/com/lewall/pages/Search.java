@@ -9,6 +9,9 @@ import com.lewall.api.LocalStorage;
 import com.lewall.components.Footer;
 import com.lewall.components.Navbar;
 import com.lewall.components.UserCard;
+import com.lewall.components.ClassCard;
+import com.lewall.dtos.ClassesDTO;
+import com.lewall.dtos.UserDTO;
 import com.lewall.dtos.UserSearchDTO;
 import com.lewall.dtos.UsersFoundDTO;
 import com.lewall.db.models.Post;
@@ -23,6 +26,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -30,6 +35,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Search page for the application with GUI search functionality
@@ -39,6 +45,8 @@ import java.util.List;
  */
 public class Search extends Pane {
     private static final Logger logger = LogManager.getLogger(Search.class);
+
+    private boolean isSearchingResults = false;
 
     /**
      * Constructor for the search page
@@ -69,8 +77,20 @@ public class Search extends Pane {
         searchBox.setAlignment(Pos.CENTER);
 
         TextField searchField = new TextField();
-        searchField.setPromptText("Enter search query...");
+        searchField.setPromptText("Search for classes and users...");
         searchField.setPrefWidth(200);
+
+        Image searchPic = new Image("imgs/search.png");
+        ImageView searchPicView = new ImageView(searchPic);
+
+        searchPicView.setFitWidth(16);
+        searchPicView.setFitHeight(16);
+        searchPicView.setPreserveRatio(true);
+        StackPane.setMargin(searchPicView, new Insets(0, 10, 0, 0));
+        StackPane.setAlignment(searchPicView, Pos.CENTER_RIGHT);
+
+        StackPane searchIcon = new StackPane();
+        searchIcon.getChildren().add(searchField);
 
         Button searchButton = new Button("Search");
         searchButton.getStyleClass().add("brand-button");
@@ -82,71 +102,74 @@ public class Search extends Pane {
                 return;
             } else {
                 searchError.setText("");
+                searchResults.getChildren().clear();
+                isSearchingResults = false;
             }
+
+            Text resultsTitle = new Text("Top Matches:");
+            resultsTitle.getStyleClass().add("brand-subtitle");
+            searchResults.getChildren().add(resultsTitle);
+
+            /*
+             * Connection.get("/post/getClasses", true).thenAccept(response -> {
+             * List<String> classes = LocalStorage.get("/post/getClasses",
+             * ClassesDTO.class).getClasses();
+             * Platform.runLater(() -> {
+             * for (int i = 0; i < classes.size(); i++) {
+             * if (classes.get(i).contains(query)) {
+             * ClassCard classCard = new ClassCard(classes.get(i));
+             * searchResults.getChildren().add(classCard);
+             * isSearchingResults = true;
+             * }
+             * }
+             * });
+             * });
+             */
 
             Connection.<UserSearchDTO, UsersFoundDTO>post("/user/userSearches", new UserSearchDTO(query))
                     .thenAccept(userResponse -> {
                         UsersFoundDTO usersFound = userResponse.getBody();
                         Platform.runLater(() -> {
-                            searchResults.getChildren().clear(); // Clear previous results
                             List<User> users = usersFound.getUsers();
                             if (users != null && !users.isEmpty()) {
-                                Text resultsTitle = new Text("Top Matches:");
-                                resultsTitle.getStyleClass().add("brand-subtitle");
-                                /*
-                                 * searchResults.getChildren().add(resultsTitle);
-                                 * 
-                                 * users.stream().limit(10).forEach(user -> {
-                                 * Text userText = new Text(
-                                 * user.getDisplayName() + " (" + user.getEmail() + ")");
-                                 * userText.getStyleClass().add("result-text");
-                                 * searchResults.getChildren().add(userText);
-                                 * 
-                                 * /* TODO: Implement user profile page
-                                 * userText.setOnMouseClicked(e -> {
-                                 * LocalStorage.put("/user", user);
-                                 * Navigator.navigateTo(EPage.PROFILE);
-                                 * });
-                                 * 
-                                 * });
-                                 */
-
-                                resultsTitle.getStyleClass().add("brand-subtitle");
-                                searchResults.getChildren().add(resultsTitle);
-
                                 users.stream().limit(10).forEach(user -> {
                                     UserCard userCard = new UserCard(user);
                                     searchResults.getChildren().add(userCard);
+                                    isSearchingResults = true;
                                     userCard.setOnMouseClicked(e -> {
-                                        // LocalStorage.put("/user", user);
-                                        /*
-                                         * if (user.getId() == LocalStorage.getLoggedInUser().getId()) {
-                                         * Navigator.navigateTo(EPage.PROFILE);
-                                         * } else {
-                                         * 
-                                         * //LocalStorage.put("/user", user);
-                                         * //Navigator.navigateTo(EPage.USER_PROFILE);
-                                         * }
-                                         */
+
+                                        UserDTO userDTO = LocalStorage.get("/user", UserDTO.class);
+                                        if (userDTO != null) {
+                                            String displayName = userDTO.getUser().getDisplayName();
+                                            if (displayName.equals(user.getDisplayName())) {
+                                                Navigator.navigateTo(EPage.PROFILE);
+                                            } else {
+                                                // LocalStorage.put("/user", user);
+                                                // Navigator.navigateTo(EPage.USER_PROFILE);
+                                            }
+                                        }
                                     });
                                 });
-
                             } else {
-                                Text noResults = new Text("No matches found.");
-                                noResults.getStyleClass().add("brand-subtitle");
-                                searchResults.getChildren().add(noResults);
+                                // isSearchingResults = false;
                             }
                         });
                     }).exceptionally(e -> {
                         logger.error(e.getMessage(), e);
-                        Platform.runLater(() -> searchError.setText("Failed to fetch search results."));
+                        Platform.runLater(
+                                () -> searchError.setText("Failed to fetch search results." + e.getMessage()));
                         return null;
                     });
+
+            if (!isSearchingResults) {
+                searchResults.getChildren().clear();
+                Text noResults = new Text("No matches found.");
+                noResults.getStyleClass().add("brand-subtitle");
+                searchResults.getChildren().add(noResults);
+            }
         });
 
-        // searchBox.getChildren().addAll(searchField, searchButton);
-        column.getChildren().addAll(searchField, searchButton, searchError, searchResults);
-
+        column.getChildren().addAll(searchIcon, searchButton, searchError, searchResults);
         flowPane.getChildren().add(column);
 
         // Stack pane to centralize content

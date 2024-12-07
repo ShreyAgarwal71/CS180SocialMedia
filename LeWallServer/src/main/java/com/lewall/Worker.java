@@ -68,10 +68,11 @@ public class Worker implements Runnable {
      */
     private void handleRequest(WorkerRequestRef ref) throws IOException {
         SocketChannel clientChannel = ref.getClientChannel();
-        ByteBuffer buffer = ref.getBuffer();
+        ByteBuffer reqBuffer = ref.getBuffer();
+        ByteBuffer resBuffer = ByteBuffer.allocate(MTU);
 
-        buffer.flip();
-        String json = new String(buffer.array()).trim();
+        reqBuffer.flip();
+        String json = new String(reqBuffer.array()).trim();
 
         try {
             @SuppressWarnings("unchecked")
@@ -91,9 +92,9 @@ public class Worker implements Runnable {
                             responseObj.getStatus().toString(),
                             request.getEndpoint()));
 
-            buffer.clear().put(response.getBytes());
-            buffer.flip();
-            clientChannel.write(buffer);
+            resBuffer.put(response.getBytes());
+            resBuffer.flip();
+            clientChannel.write(resBuffer);
         } catch (Exception e) {
             logger.error("Unknown Exception", e);
 
@@ -106,10 +107,10 @@ public class Worker implements Runnable {
                             response.getEndpoint()));
 
             String responseJSON = gson.toJson(response);
-            buffer.clear().put(responseJSON.getBytes());
-            buffer.flip();
+            resBuffer.put(responseJSON.getBytes());
+            resBuffer.flip();
 
-            clientChannel.write(buffer);
+            clientChannel.write(resBuffer);
         }
     }
 

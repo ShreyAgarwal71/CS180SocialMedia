@@ -55,8 +55,8 @@ public class PostCollection extends BaseCollection<Post> {
 	 * @param userId, classId
 	 * @return List<Post>
 	 */
-	public List<Post> findByClassAndUserId(UUID userId, UUID classId) {
-		return this.findAll(post -> (post.getClassId().equals(classId) && post.getUserId().equals(userId)));
+	public List<Post> findByClassAndUserId(UUID userId) {
+		return this.findAll(post -> (post.getUserId().equals(userId)));
 	}
 
 	/**
@@ -65,7 +65,7 @@ public class PostCollection extends BaseCollection<Post> {
 	 * @param classId
 	 * @return List<Post>
 	 */
-	public List<Post> findByClassId(UUID classId) {
+	public List<Post> findByClassId(String classId) {
 		return this.findAll(post -> post.getClassId().equals(classId));
 	}
 }

@@ -4,9 +4,9 @@ import java.util.UUID;
 
 public class ClassPostsDTO {
     private UUID userId;
-    private UUID classId;
+    private String classId;
 
-    public ClassPostsDTO(UUID userId, UUID classId) {
+    public ClassPostsDTO(UUID userId, String classId) {
         this.userId = userId;
         this.classId = classId;
     }
@@ -15,7 +15,7 @@ public class ClassPostsDTO {
         return userId;
     }
 
-    public UUID getClassId() {
+    public String getClassId() {
         return classId;
     }
 }

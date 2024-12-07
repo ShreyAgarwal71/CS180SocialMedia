@@ -13,4 +13,8 @@ public class UsersFoundDTO {
     public List<User> getUsers() {
         return users;
     }
+
+    public void addUsers(User user) {
+        this.users.add(user);
+    }
 }

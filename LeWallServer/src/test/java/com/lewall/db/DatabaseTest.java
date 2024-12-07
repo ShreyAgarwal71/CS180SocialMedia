@@ -182,9 +182,9 @@ public class DatabaseTest {
 		db.getUserCollection().addElement(testUser);
 
 		Post testPostOne = new Post(testUser.getId(), "testMessageOne", "testDateOne", 0, "testImageURLOne",
-				UUID.randomUUID());
+				"");
 		Post testPostTwo = new Post(testUser.getId(), "testMessageTwo", "testDateTwo", 0, "testImageURLTwo",
-				UUID.randomUUID());
+				"");
 
 		db.getPostCollection().addElement(testPostOne);
 		db.getPostCollection().addElement(testPostTwo);
@@ -204,7 +204,7 @@ public class DatabaseTest {
 
 		UUID userId = UUID.randomUUID();
 
-		Post testPostOne = new Post(userId, "testMessageOne", "testDateOne", 0, "testImageURLOne", UUID.randomUUID());
+		Post testPostOne = new Post(userId, "testMessageOne", "testDateOne", 0, "testImageURLOne", "");
 
 		db.getPostCollection().addElement(testPostOne);
 		assertFalse(db.getPostCollection().addElement(testPostOne), "Expected duplicate post to not be added");
@@ -224,7 +224,7 @@ public class DatabaseTest {
 
 		UUID userId = UUID.randomUUID();
 		Post testPostOne = new Post(userId, "testMessageOne", "testDateOne", 0, "testImageURLOne",
-				UUID.randomUUID());
+				"");
 
 		db.getPostCollection().addElement(testPostOne);
 
@@ -245,7 +245,7 @@ public class DatabaseTest {
 		Database db = new Database();
 
 		UUID userId = UUID.randomUUID();
-		Post testPostOne = new Post(userId, "testMessageOne", "testDateOne", 0, "testImageURLOne", UUID.randomUUID());
+		Post testPostOne = new Post(userId, "testMessageOne", "testDateOne", 0, "testImageURLOne", "");
 
 		db.getPostCollection().addElement(testPostOne);
 

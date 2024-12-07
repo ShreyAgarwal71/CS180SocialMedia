@@ -30,7 +30,7 @@ public class UserServiceTest {
 	}
 
 	/**
-	 * Cleans up the test database 
+	 * Cleans up the test database
 	 */
 	@AfterAll
 	public static void cleanupTestDB() {
@@ -77,7 +77,7 @@ public class UserServiceTest {
 
 		UserService.follow(u1.getId(), u2.getId());
 		assertTrue(UserService.unfollow(u1.getId(), u2.getId()));
-		
+
 		// Invalid Unfollow
 		Executable e = new Executable() {
 			@Override
@@ -104,7 +104,7 @@ public class UserServiceTest {
 
 		UserService.follow(u1.getId(), u2.getId());
 		assertTrue(UserService.block(u1.getId(), u2.getId()));
-		
+
 		// Invalid Block
 		Executable e = new Executable() {
 			@Override
@@ -133,7 +133,7 @@ public class UserServiceTest {
 		UserService.follow(u1.getId(), u2.getId());
 		UserService.block(u1.getId(), u2.getId());
 		assertTrue(UserService.unblock(u1.getId(), u2.getId()));
-		
+
 		// Invalid Block
 		Executable e = new Executable() {
 			@Override
@@ -158,9 +158,9 @@ public class UserServiceTest {
 		String name = "Leverkusen";
 		boolean result = UserService.updateProfileName(u1.getId(), name);
 
-		assertTrue(result); 
+		assertTrue(result);
 		assertTrue(u1.getDisplayName().equals(name));
-		
+
 		// Invalid Update
 		Executable e = new Executable() {
 			@Override
@@ -184,9 +184,9 @@ public class UserServiceTest {
 		String bio = "second";
 		boolean result = UserService.updateProfileBio(u1.getId(), bio);
 
-		assertTrue(result); 
+		assertTrue(result);
 		assertTrue(u1.getBio().equals(bio));
-		
+
 		// Invalid Update
 
 		Executable e = new Executable() {
@@ -221,14 +221,14 @@ public class UserServiceTest {
 		UserService.follow(u1.getId(), u2.getId());
 		UserService.follow(u1.getId(), u3.getId());
 
-		String[] expectedMsg = { "msg1", "msg3", "msg4" };
-		String[] expectedDate = { "11/22/2024", "11/20/2024", "11/19/2024" };
-		Post p1 = new Post(u2.getId(), "msg1", "11/22/2024", 0, null, target);
-		Post p2 = new Post(u2.getId(), "msg2", "11/21/2024", 0, null, extra);
-		Post p3 = new Post(u3.getId(), "msg3", "11/20/2024", 0, null, target);
-		Post p4 = new Post(u3.getId(), "msg4", "11/19/2024", 0, null, target);
-		Post p5 = new Post(u4.getId(), "msg5", "11/18/2024", 0, null, target);
-		Post p6 = new Post(u4.getId(), "msg6", "11/17/2024", 0, null, extra);
+		String[] expectedMsg = { "msg1", "msg2", "msg3", "msg4" };
+		String[] expectedDate = { "11/22/2024", "11/21/2024", "11/20/2024", "11/19/2024" };
+		Post p1 = new Post(u2.getId(), "msg1", "11/22/2024", 0, null, "RandomClass");
+		Post p2 = new Post(u2.getId(), "msg2", "11/21/2024", 0, null, "RandomClass1");
+		Post p3 = new Post(u3.getId(), "msg3", "11/20/2024", 0, null, "RandomClass");
+		Post p4 = new Post(u3.getId(), "msg4", "11/19/2024", 0, null, "RandomClass");
+		Post p5 = new Post(u4.getId(), "msg5", "11/18/2024", 0, null, "RandomClass");
+		Post p6 = new Post(u4.getId(), "msg6", "11/17/2024", 0, null, "RandomClass1");
 
 		UserService.db.getPostCollection().addElement(p1);
 		UserService.db.getPostCollection().addElement(p2);
@@ -237,7 +237,7 @@ public class UserServiceTest {
 		UserService.db.getPostCollection().addElement(p5);
 		UserService.db.getPostCollection().addElement(p6);
 
-		List<Post> results = UserService.getFollowingPosts(u1.getId(), target);
+		List<Post> results = UserService.getFollowingPosts(u1.getId());
 
 		assertEquals(expectedMsg.length, results.size());
 
@@ -261,15 +261,15 @@ public class UserServiceTest {
 
 		String[] expectedMsg = { "msg1", "msg3" };
 		String[] expectedDate = { "11/17/2024", "11/19/2024" };
-		Post p1 = new Post(u1.getId(), "msg1", "11/17/2024", 0, null, target);
-		Post p2 = new Post(u1.getId(), "msg2", "11/18/2024", 0, null, extra);
-		Post p3 = new Post(u1.getId(), "msg3", "11/19/2024", 0, null, target);
+		Post p1 = new Post(u1.getId(), "msg1", "11/17/2024", 0, null, "RandomClass3");
+		Post p2 = new Post(u1.getId(), "msg2", "11/18/2024", 0, null, "RandomClass1");
+		Post p3 = new Post(u1.getId(), "msg3", "11/19/2024", 0, null, "RandomClass3");
 
 		UserService.db.getPostCollection().addElement(p1);
 		UserService.db.getPostCollection().addElement(p2);
 		UserService.db.getPostCollection().addElement(p3);
 
-		List<Post> results = UserService.getClassFeed(u1.getId(), target);
+		List<Post> results = UserService.getClassFeed(u1.getId(), "RandomClass3");
 		assertEquals(expectedMsg.length, results.size());
 
 		for (int i = 0; i < results.size(); i++) {

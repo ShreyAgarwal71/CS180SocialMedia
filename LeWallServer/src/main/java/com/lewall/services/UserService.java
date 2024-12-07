@@ -178,7 +178,7 @@ public class UserService implements IService {
      * @param userId
      * @return
      */
-    public static List<Post> getFollowingPosts(UUID userId, UUID classId) {
+    public static List<Post> getFollowingPosts(UUID userId) {
         User user = users.findOne(u -> u.getId().equals(userId));
         if (user == null) {
             throw new BadRequest("User not found");
@@ -189,7 +189,7 @@ public class UserService implements IService {
             following.add(UUID.fromString(followerId));
         }
         for (UUID follower : following) {
-            posts1.add(posts.findByClassAndUserId(follower, classId));
+            posts1.add(posts.findByClassAndUserId(follower));
         }
 
         List<Post> posts2 = new ArrayList<>();
@@ -215,7 +215,7 @@ public class UserService implements IService {
      * @param classId
      * @return
      */
-    public static List<Post> getClassFeed(UUID userId, UUID classId) {
+    public static List<Post> getClassFeed(UUID userId, String classId) {
         User user = users.findOne(u -> u.getId().equals(userId));
         if (user == null) {
             throw new BadRequest("User not found");
@@ -240,9 +240,9 @@ public class UserService implements IService {
             throw new BadRequest("User not found");
         }
 
-        System.out.println(search);
+        // System.out.println(search);
         List<User> users1 = users.searchByUsername(search);
-        System.out.println(users1.size());
+        // System.out.println(users1.size());
 
         List<User> users2 = new ArrayList<>();
         for (int i = 0; i < users1.size(); i++) {

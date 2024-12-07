@@ -102,12 +102,30 @@ public class AppServer {
 
                 return; // Client disconnected, No further processing
             } else {
-                buffer.flip();
-                try {
-                    receiver.transfer(new Worker.WorkerRequestRef(clientChannel, buffer));
-                    return; // Transfer successful, No further processing
-                } catch (InterruptedException e) {
-                    logger.error(e);
+                buffer.flip(); // reset buffer position to 0
+
+                int packetLength = -1;
+                while (true) {
+                    if (buffer.remaining() < 4) {
+                        break;
+                    }
+
+                    packetLength = buffer.getInt();
+                    if (buffer.remaining() < packetLength) {
+                        break;
+                    }
+
+                    byte[] packet = new byte[packetLength];
+                    buffer.get(packet);
+
+                    try {
+                        // Transfer successful, No further processing
+                        receiver.transfer(new Worker.WorkerRequestRef(clientChannel, ByteBuffer.wrap(packet)));
+                    } catch (InterruptedException e) {
+                        logger.error(e);
+                    }
+
+                    packetLength = -1;
                 }
             }
         } catch (IOException e) {

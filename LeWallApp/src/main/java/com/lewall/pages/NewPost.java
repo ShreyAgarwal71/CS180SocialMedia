@@ -31,7 +31,6 @@ import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
 
 /**
@@ -41,7 +40,7 @@ import javafx.scene.effect.DropShadow;
  * @verion 5 December 2024
  */
 public class NewPost extends Pane {
-	private static final Logger logger = LogManager.getLogger(Register.class);
+	private static final Logger logger = LogManager.getLogger(NewPost.class);
 	List<String> classes;
 
 	/**
@@ -92,7 +91,7 @@ public class NewPost extends Pane {
 						body, date, selectedClass);
 				// TODO: IMG-URL
 				UUID validUUID = UUID.nameUUIDFromBytes(selectedClass.getBytes(StandardCharsets.US_ASCII));
-				CreatePostDTO post = new CreatePostDTO(body, date, null, validUUID);
+				CreatePostDTO post = new CreatePostDTO(body, date, null, "Class");
 				Connection.post("/post/create", post);
 				Navigator.navigateTo(Navigator.EPage.PROFILE);
 			} else {
@@ -138,7 +137,5 @@ public class NewPost extends Pane {
 		mainStack.getChildren().addAll(group, fp, navbar, footer);
 
 		this.getChildren().add(mainStack);
-
-		logger.info("Finished loading page: NEWPOST");
 	}
 }

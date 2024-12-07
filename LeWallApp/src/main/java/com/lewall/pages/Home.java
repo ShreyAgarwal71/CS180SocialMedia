@@ -39,23 +39,23 @@ public class Home extends Pane {
         FlowPane flowPane = new FlowPane(10, 10);
         flowPane.prefWidthProperty().bind(this.widthProperty());
         flowPane.prefHeightProperty().bind(this.heightProperty());
-        // flowPane.setAlignment(Pos.CENTER);
+
         flowPane.setOrientation(Orientation.VERTICAL);
         // Post(UUID userId, String messagePost, String date, int likes, String
         // imageURL, UUID classId)
         Post[] posts = new Post[] {
                 new Post(UUID.randomUUID(), "I learned the difference between Stacks and Queues", "11/17/2024", 1,
                         "https://www.purdue.edu/uns/images/2020/pt-bell-towerOG.jpg",
-                        UUID.randomUUID()),
+                        "ClassID"),
                 new Post(UUID.randomUUID(), "I learned the difference between Stacks and Queues", "11/17/2024", 2,
                         "https://www.teachhub.com/wp-content/uploads/2020/05/Classroom-Management-for-an-Effective-Learning-Environment-768x512.jpg",
-                        UUID.randomUUID()),
+                        "ClassID"),
                 new Post(UUID.randomUUID(), "I learned the difference between Stacks and Queues", "11/17/2024", 3,
                         "https://www.teachhub.com/wp-content/uploads/2020/05/Classroom-Management-for-an-Effective-Learning-Environment-768x512.jpg",
-                        UUID.randomUUID()),
+                        "ClassID"),
                 new Post(UUID.randomUUID(), "I learned the difference between Stacks and Queues", "11/17/2024", 4,
                         "https://www.teachhub.com/wp-content/uploads/2020/05/Classroom-Management-for-an-Effective-Learning-Environment-768x512.jpg",
-                        UUID.randomUUID()),
+                        "ClassID"),
         };
 
         // Connection.<MainFeed>get("/getFollowerPosts", false).thenAccept(response -> {
