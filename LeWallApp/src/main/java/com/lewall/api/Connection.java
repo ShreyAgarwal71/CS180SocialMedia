@@ -34,7 +34,7 @@ import com.google.gson.reflect.TypeToken;
 public class Connection {
     private static final Logger logger = LogManager.getLogger(Connection.class);
 
-    private static final String HOST = "localhost";
+    private static final String HOST = "lewall-api.mahitm.com";
     private static final int PORT = 8559;
 
     private static SocketChannel serverChannel;
