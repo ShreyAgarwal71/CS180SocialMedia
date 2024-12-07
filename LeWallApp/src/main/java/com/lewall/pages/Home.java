@@ -2,6 +2,7 @@ package com.lewall.pages;
 
 import java.util.UUID;
 
+import com.lewall.Navigator.NavigatorPageState;
 import com.lewall.api.Connection;
 import com.lewall.components.Footer;
 import com.lewall.components.Navbar;
@@ -34,7 +35,7 @@ public class Home extends Pane {
     /**
      * Constructor for the home page
      */
-    public Home() {
+    public Home(NavigatorPageState state) {
         this.getStyleClass().add("primary-bg");
 
         FlowPane flowPane = new FlowPane(10, 10);

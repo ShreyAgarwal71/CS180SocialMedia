@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.lewall.Navigator;
 import com.lewall.Navigator.EPage;
+import com.lewall.Navigator.NavigatorPageState;
 import com.lewall.api.Connection;
 import com.lewall.api.LocalStorage;
 import com.lewall.components.Footer;
@@ -51,17 +52,22 @@ public class Search extends Pane {
     /**
      * Constructor for the search page
      */
-    public Search() {
+    public Search(NavigatorPageState state) {
         this.getStyleClass().add("primary-bg");
 
         // Main layout container
         FlowPane flowPane = new FlowPane(10, 10);
         flowPane.prefWidthProperty().bind(this.widthProperty());
         flowPane.prefHeightProperty().bind(this.heightProperty());
-        flowPane.setAlignment(Pos.CENTER);
+        // flowPane.setAlignment(Pos.CENTER);
 
         VBox column = new VBox(10);
-        column.setAlignment(Pos.CENTER);
+        FlowPane.setMargin(column, new Insets(10, 0, 0, 90));
+        // column.setAlignment(Pos.CENTER);
+
+        Text searchTitle = new Text("Explore LeWall");
+        searchTitle.getStyleClass().add("brand-title");
+        column.getChildren().add(searchTitle);
 
         Text searchError = new Text();
         searchError.getStyleClass().add("error-text");
@@ -79,6 +85,8 @@ public class Search extends Pane {
         TextField searchField = new TextField();
         searchField.setPromptText("Search for classes and users...");
         searchField.setPrefWidth(200);
+        searchField.setFocusTraversable(false);
+        searchField.getStyleClass().add("brand-field");
 
         Image searchPic = new Image("imgs/search.png");
         ImageView searchPicView = new ImageView(searchPic);
@@ -144,8 +152,7 @@ public class Search extends Pane {
                                             if (displayName.equals(user.getDisplayName())) {
                                                 Navigator.navigateTo(EPage.PROFILE);
                                             } else {
-                                                // LocalStorage.put("/user", user);
-                                                // Navigator.navigateTo(EPage.USER_PROFILE);
+                                                Navigator.navigateTo(EPage.PROFILE, new NavigatorPageState(user));
                                             }
                                         }
                                     });

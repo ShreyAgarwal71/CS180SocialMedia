@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.lewall.Navigator.NavigatorPageState;
 import com.lewall.api.Connection;
 import com.lewall.api.LocalStorage;
 import com.lewall.common.Theme;
@@ -14,6 +15,7 @@ import com.lewall.db.models.Post;
 import com.lewall.db.models.User;
 import com.lewall.dtos.PostsDTO;
 import com.lewall.dtos.UserDTO;
+import com.lewall.dtos.UserIdDTO;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -39,7 +41,8 @@ import javafx.scene.text.Text;
  */
 public class Profile extends Pane {
 	private static final Logger logger = LogManager.getLogger(Login.class);
-	private User user;
+	private User profileUser;
+	private User authenicatedUser;
 	private List<Post> posts;
 
 	private StringProperty userUsername = new SimpleStringProperty("");
@@ -48,22 +51,34 @@ public class Profile extends Pane {
 	private StringProperty userFollowers = new SimpleStringProperty("");
 	private StringProperty userFollowing = new SimpleStringProperty("");
 
-	public Profile() {
+	public Profile(NavigatorPageState state) {
+		super();
+
+		authenicatedUser = LocalStorage.get("/user", UserDTO.class).getUser();
+
+		// If the state is a user, then we are viewing someone else's profile
+		if (state.getState() instanceof User) {
+			profileUser = (User) state.getState();
+		} else {
+			profileUser = authenicatedUser;
+		}
+
+		userUsername.set("@" + profileUser.getUsername().split("@")[0]);
+		userDisplayName.set(profileUser.getDisplayName());
+		userFollowers.set(profileUser.getFollowers().size() + "");
+		userFollowing.set(profileUser.getFollowing().size() + "");
+
+		Connection.<UserIdDTO, PostsDTO>post("/post/all", new UserIdDTO(profileUser.getId())).thenAccept(response -> {
+			posts = response.getBody().getPosts();
+			userQuotes.set(posts.size() + "");
+		});
+
 		this.getStyleClass().add("primary-bg");
 
 		Text profileTitle = new Text("Inscriber Profile");
 		profileTitle.getStyleClass().add("brand-title");
 		profileTitle.setFill(Color.WHITE);
 		VBox.setMargin(profileTitle, new Insets(10, 0, 0, 0));
-
-		Connection.get("/user", true).thenAccept(response -> {
-			user = LocalStorage.get("/user", UserDTO.class).getUser();
-
-			userUsername.set("@" + user.getUsername().split("@")[0]);
-			userDisplayName.set(user.getDisplayName());
-			userFollowers.set(user.getFollowers().size() + "");
-			userFollowing.set(user.getFollowing().size() + "");
-		});
 
 		Text profileSubtitle = new Text();
 		profileSubtitle.textProperty().bind(userUsername);
@@ -97,11 +112,6 @@ public class Profile extends Pane {
 		Text following = new Text("Following");
 		following.setFill(Color.web(Theme.TEXT_GREY));
 		nFollowingBox.getChildren().addAll(nFollowing, following);
-
-		Connection.get("/user/getPosts", true).thenAccept(response -> {
-			posts = LocalStorage.get("/user/getPosts", PostsDTO.class).getPosts();
-			userQuotes.set(posts.size() + "");
-		});
 
 		Text nPosts = new Text();
 		nPosts.textProperty().bind(userQuotes);
