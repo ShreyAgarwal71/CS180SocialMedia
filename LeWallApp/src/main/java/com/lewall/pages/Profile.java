@@ -5,11 +5,13 @@ import org.apache.logging.log4j.Logger;
 
 import com.lewall.api.Connection;
 import com.lewall.api.LocalStorage;
+import com.lewall.components.Footer;
 import com.lewall.components.Navbar;
 import com.lewall.db.models.User;
 import com.lewall.dtos.UserDTO;
 
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -66,8 +68,11 @@ public class Profile extends Pane {
         HBox topHalf = new HBox();
         topHalf.getChildren().addAll(navbar, idCardBox);
 
+        HBox footer = new Footer();
+        StackPane.setAlignment(footer, Pos.BOTTOM_CENTER);
+
         StackPane mainStack = new StackPane();
-        mainStack.getChildren().add(topHalf);
+        mainStack.getChildren().addAll(topHalf, footer);
         this.getChildren().add(mainStack);
     }
 }
