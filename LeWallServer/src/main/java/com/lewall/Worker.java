@@ -92,8 +92,12 @@ public class Worker implements Runnable {
                             responseObj.getStatus().toString(),
                             request.getEndpoint()));
 
-            resBuffer.put(response.getBytes());
+            byte[] responseBytes = response.getBytes();
+            int responseLength = responseBytes.length;
+            resBuffer.putInt(responseLength);
+            resBuffer.put(responseBytes);
             resBuffer.flip();
+
             clientChannel.write(resBuffer);
         } catch (Exception e) {
             logger.error("Unknown Exception", e);

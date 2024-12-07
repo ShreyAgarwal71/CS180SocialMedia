@@ -24,7 +24,8 @@ public class UserCard extends HBox {
     /**
      * Constructs a UserCard for the given user.
      * 
-     * @param user the user to display
+     * @param user
+     *            the user to display
      */
     public UserCard(User user) {
         this.user = user;
@@ -87,7 +88,7 @@ public class UserCard extends HBox {
         this.getChildren().addAll(userDetails);
 
         // this.getStyleClass().add("user-card");
-        this.setStyle("user-card");
+        this.getStyleClass().add("user-card");
 
         this.setOnMouseEntered(e -> {
             // this.getChildren().forEach(child ->
@@ -97,7 +98,7 @@ public class UserCard extends HBox {
             // child.setStyle("user-text-hover"));
         });
         this.setOnMouseExited(e -> {
-            this.setStyle("user-card");
+            this.getStyleClass().add("user-card");
 
             // this.getChildren().forEach(child -> child.getStyleClass().add("user-card"));
         });

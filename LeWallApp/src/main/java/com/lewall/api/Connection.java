@@ -34,6 +34,8 @@ import com.google.gson.reflect.TypeToken;
 public class Connection {
     private static final Logger logger = LogManager.getLogger(Connection.class);
 
+    private static final int MTU = 1024 * 16; // 16 KB
+
     private static final String REMOTE_HOST = "lewall.mahitm.com";
     private static final String LOCAL_HOST = "localhost";
     private static final int PORT = 8559;
@@ -135,13 +137,13 @@ public class Connection {
             return true;
         }
 
+        ByteBuffer buffer = ByteBuffer.allocate(MTU);
         for (SelectionKey key : selector.selectedKeys()) {
             if (!key.isReadable()) {
                 continue;
             }
 
             SocketChannel clientChannel = (SocketChannel) key.channel();
-            ByteBuffer buffer = ByteBuffer.allocate(1024);
 
             int bytesRead = clientChannel.read(buffer);
             if (bytesRead == -1) {
@@ -150,17 +152,35 @@ public class Connection {
             }
 
             buffer.flip();
-            String responseJSON = new String(buffer.array(), buffer.position(), buffer.limit());
-            buffer.clear();
 
-            Response<?> response = gson.fromJson(responseJSON, Response.class);
+            int packetLength = -1;
+            while (true) {
+                if (buffer.remaining() < 4) {
+                    break;
+                }
 
-            if (response.getRequestId() == null) {
-                logger.error("Invalid Response: " + response.getBody().toString());
-                continue;
+                packetLength = buffer.getInt();
+                if (buffer.remaining() < packetLength) {
+                    break;
+                }
+
+                byte[] packet = new byte[packetLength];
+                buffer.get(packet);
+
+                String responseJSON = new String(packet);
+                Response<?> response = gson.fromJson(responseJSON, Response.class);
+
+                if (response.getRequestId() == null) {
+                    logger.error("Invalid Response: " + response.getBody().toString());
+                    continue;
+                }
+
+                responseQueues.get(response.getRequestId()).put(responseJSON);
+
+                packetLength = -1;
             }
 
-            responseQueues.get(response.getRequestId()).put(responseJSON);
+            buffer.compact();
         }
         selector.selectedKeys().clear();
 
@@ -249,7 +269,7 @@ public class Connection {
             }
 
             responseQueues.put(request.getRequestId(), new LinkedBlockingQueue<>());
-            String responseJSON = responseQueues.get(request.getRequestId()).poll(10, TimeUnit.SECONDS);
+            String responseJSON = responseQueues.get(request.getRequestId()).poll(5, TimeUnit.SECONDS);
             responseQueues.remove(request.getRequestId());
 
             if (responseJSON == null) {

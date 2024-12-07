@@ -206,15 +206,12 @@
 .user-text {
     -fx-font-size: 12;
     -fx-text-fill: rgba(255, 255, 255, 1);
-    
 }
 
 .user-card {
     -fx-background-color: #0E0E0E;
-    
 }
 
-.user-card-hover {
+.user-card:hover {
     -fx-background-color: transparent;
-    
 }
