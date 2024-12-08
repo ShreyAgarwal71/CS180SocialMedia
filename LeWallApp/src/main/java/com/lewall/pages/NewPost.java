@@ -64,7 +64,15 @@ public class NewPost extends Pane {
 		quoteArea.setPrefWidth(400);
 		quoteGroup.getChildren().addAll(quoteAreaLabel, quoteArea);
 
+		VBox courseGroup = new VBox(3);
+
+		Text courseLabel = new Text("Select Class");
+		courseLabel.getStyleClass().add("brand-label");
+
 		ComboBox<String> courseDropdown = new ComboBox<String>();
+		courseDropdown.setPromptText("Select a class...");
+		courseDropdown.setPrefWidth(400);
+		courseDropdown.getStyleClass().add("brand-dropdown");
 		if (LocalStorage.get("/post/getClasses") == null)
 			Connection.get("/post/getClasses", true).thenAccept(response -> {
 				classes = LocalStorage.get("/post/getClasses", ClassesDTO.class).getClasses();
@@ -76,9 +84,10 @@ public class NewPost extends Pane {
 			classes = LocalStorage.get("/post/getClasses", ClassesDTO.class).getClasses();
 			courseDropdown.getItems().addAll(classes);
 		}
+		courseGroup.getChildren().addAll(courseLabel, courseDropdown);
 
 		Button submitButton = new Button("Inscribe Quote");
-		submitButton.getStyleClass().add("brand-button");
+		submitButton.getStyleClass().add("accent-button");
 		submitButton.setPrefWidth(400);
 		submitButton.setOnAction(e -> {
 			// Stringitle = titleField.getText();
@@ -130,7 +139,7 @@ public class NewPost extends Pane {
 		VBox postForm = new VBox(10);
 		FlowPane.setMargin(postForm, new Insets(10, 0, 0, 90));
 		postForm.setAlignment(Pos.TOP_LEFT);
-		postForm.getChildren().addAll(areaTitle, quoteGroup, courseDropdown, submitButton);
+		postForm.getChildren().addAll(areaTitle, courseGroup, quoteGroup, submitButton);
 
 		fp.getChildren().add(postForm);
 

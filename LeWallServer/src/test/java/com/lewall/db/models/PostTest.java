@@ -25,7 +25,7 @@ public class PostTest {
 	 */
 	@Test
 	public void testPostConstructor() {
-		Post testPost = new Post(UUID.randomUUID(), "testUser", "12-12-24", 1234,
+		Post testPost = new Post(UUID.randomUUID(), "testUser", "12-12-24", 1234, 0,
 				"https://www.mahitm.com/cdn/v1/post/1234", "");
 
 		assertNotNull(testPost, "Ensure the constructor is actually instantiating variables");
@@ -37,8 +37,7 @@ public class PostTest {
 	@Test
 	public void testGetters() {
 		UUID userId = UUID.randomUUID();
-		UUID classId = UUID.randomUUID();
-		Post testPost = new Post(userId, "testMessage", "12-12-24", 1234,
+		Post testPost = new Post(userId, "testMessage", "12-12-24", 1234, 0,
 				"https://www.mahitm.com/cdn/v1/post/1234", "classId");
 
 		testPost.setUsersLiked(new HashSet<>());
@@ -50,7 +49,6 @@ public class PostTest {
 		assertEquals(testPost.getMessagePost(), "testMessage", "Ensure the getter is working for messagePost");
 		assertNotNull(testPost.getUsersLiked(), "Ensure the getter is working for usersLiked");
 		assertEquals(testPost.getClassId(), "classId", "Ensure the getter is working for classId");
-
 	}
 
 	/**
@@ -59,8 +57,7 @@ public class PostTest {
 	@Test
 	public void testSetters() {
 		UUID userId = UUID.randomUUID();
-		UUID classId = UUID.randomUUID();
-		Post testPost = new Post(userId, "testMessage", "12-12-24", 1234,
+		Post testPost = new Post(userId, "testMessage", "12-12-24", 1234, 0,
 				"https://www.mahitm.com/cdn/v1/post/1234", "classId");
 
 		testPost.setDate("12-12-25");
@@ -85,7 +82,7 @@ public class PostTest {
 	@Test
 	public void testAddRemoveLike() {
 		UUID userId = UUID.randomUUID();
-		Post testPost = new Post(userId, "testMessage", "12-12-24", 1234,
+		Post testPost = new Post(userId, "testMessage", "12-12-24", 1234, 0,
 				"https://www.mahitm.com/cdn/v1/post/1234", "classId");
 
 		testPost.addLike(userId.toString());
@@ -101,11 +98,10 @@ public class PostTest {
 	@Test
 	public void testEqualsToString() {
 		UUID userId = UUID.randomUUID();
-		UUID classId = UUID.randomUUID();
-		Post testPost = new Post(userId, "testMessage", "12-12-24", 1234,
+		Post testPost = new Post(userId, "testMessage", "12-12-24", 1234, 0,
 				"https://www.mahitm.com/cdn/v1/post/1234", "classId");
 
-		Post testPost2 = new Post(userId, "testMessage", "12-12-24", 1234,
+		Post testPost2 = new Post(userId, "testMessage", "12-12-24", 1234, 0,
 				"https://www.mahitm.com/cdn/v1/post/1234", "classId");
 
 		assertEquals(testPost, testPost2, "Ensure the equals method is working");

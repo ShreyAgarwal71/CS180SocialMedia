@@ -3,6 +3,7 @@ package com.lewall.interfaces;
 import com.lewall.api.Request;
 
 import com.lewall.dtos.DeleteUserDTO;
+import com.lewall.dtos.AggregatedPostsDTO;
 import com.lewall.dtos.BlockUserDTO;
 import com.lewall.dtos.UnblockUserDTO;
 import com.lewall.dtos.FollowUserDTO;
@@ -63,7 +64,7 @@ public interface IUserResolver {
 	 *
 	 * @param request
 	 */
-	public PostsDTO getPosts(Request<Void> request);
+	public AggregatedPostsDTO getPosts(Request<Void> request);
 
 	/**
 	 * Resolves a update profile name request;

@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import com.lewall.api.InternalServerError;
 import com.lewall.api.Request;
+import com.lewall.db.models.Post;
 import com.lewall.resolvers.ResolverTools.AuthGuard;
 import com.lewall.resolvers.ResolverTools.BaseResolver;
 import com.lewall.resolvers.ResolverTools.Endpoint;
@@ -13,7 +14,6 @@ import com.lewall.services.UserService;
 import com.lewall.dtos.CreatePostDTO;
 import com.lewall.dtos.DeletePostDTO;
 import com.lewall.dtos.UnlikePostDTO;
-import com.lewall.dtos.UserDTO;
 import com.lewall.dtos.UserIdDTO;
 import com.lewall.interfaces.IPostResolver;
 import com.lewall.dtos.LikePostDTO;
@@ -21,14 +21,15 @@ import com.lewall.dtos.CommentsDTO;
 import com.lewall.dtos.PostCommentsDTO;
 import com.lewall.dtos.PostsDTO;
 import com.lewall.dtos.HidePostDTO;
+import com.lewall.dtos.PostDTO;
 import com.lewall.dtos.PublicPrivateDTO;
 import com.lewall.dtos.ClassesDTO;
 
 /**
  * A class to resolve Post-related requests
  *
- * @author Shrey Agarwal
- * @version 14 November 2024
+ * @author Shrey Agarwal, Ates Isfendiyaroglu
+ * @version 8 December 2024
  */
 @Resolver(basePath = "/post")
 public class PostResolver implements BaseResolver, IPostResolver {
@@ -52,10 +53,11 @@ public class PostResolver implements BaseResolver, IPostResolver {
         String messagePost = request.getBody().getMessagePost();
         String date = request.getBody().getDate();
         int likes = 0;
+        int dislikes = 0;
         String imageURL = request.getBody().getImageURL();
         String classId = request.getBody().getClassId();
 
-        if (!PostService.createPost(userId, messagePost, date, likes, imageURL, classId)) {
+        if (!PostService.createPost(userId, messagePost, date, likes, dislikes, imageURL, classId)) {
             throw new InternalServerError("Failed to Create Post");
         }
     }
@@ -90,14 +92,40 @@ public class PostResolver implements BaseResolver, IPostResolver {
      * @return void
      */
     @AuthGuard()
-    @Endpoint(endpoint = "/like", method = Request.EMethod.POST, requestBodyType = LikePostDTO.class)
-    public void likePost(Request<LikePostDTO> request) {
+    @Endpoint(endpoint = "/like", method = Request.EMethod.POST, requestBodyType = LikePostDTO.class, responseBodyType = PostDTO.class)
+    public PostDTO likePost(Request<LikePostDTO> request) {
         UUID postId = request.getBody().getPostId();
         UUID userId = request.getUserId();
 
-        if (!PostService.likePost(userId, postId)) {
+        Post updatedPost = PostService.likePost(userId, postId);
+        if (updatedPost == null) {
             throw new InternalServerError("Failed to Like Post");
         }
+
+        return new PostDTO(updatedPost);
+    }
+
+    /**
+     * Dislike a post
+     * 
+     * @param request
+     *            {@link Request} with {@link LikePostDTO} body
+     * @throws InternalServerError
+     *             if unable to like post
+     * @return void
+     */
+    @AuthGuard()
+    @Endpoint(endpoint = "/dislike", method = Request.EMethod.POST, requestBodyType = LikePostDTO.class, responseBodyType = PostDTO.class)
+    public PostDTO dislikePost(Request<LikePostDTO> request) {
+        UUID postId = request.getBody().getPostId();
+        UUID userId = request.getUserId();
+
+        Post updatedPost = PostService.dislikePost(userId, postId);
+        if (updatedPost == null) {
+            throw new InternalServerError("Failed to Dislike Post");
+        }
+
+        return new PostDTO(updatedPost);
     }
 
     /**
@@ -110,14 +138,40 @@ public class PostResolver implements BaseResolver, IPostResolver {
      * @return void
      */
     @AuthGuard()
-    @Endpoint(endpoint = "/unlike", method = Request.EMethod.POST, requestBodyType = UnlikePostDTO.class)
-    public void unlikePost(Request<UnlikePostDTO> request) {
+    @Endpoint(endpoint = "/unlike", method = Request.EMethod.POST, requestBodyType = UnlikePostDTO.class, responseBodyType = PostDTO.class)
+    public PostDTO unlikePost(Request<UnlikePostDTO> request) {
         UUID postId = request.getBody().getPostId();
         UUID userId = request.getUserId();
 
-        if (!PostService.unlikePost(userId, postId)) {
+        Post updatedPost = PostService.unlikePost(userId, postId);
+        if (updatedPost == null) {
             throw new InternalServerError("Failed to Unlike Post");
         }
+
+        return new PostDTO(updatedPost);
+    }
+
+    /**
+     * Un-dislike a post
+     * 
+     * @param request
+     *            {@link Request} with {@link UnlikePostDTO} body
+     * @throws InternalServerError
+     *             if unable to unlike post
+     * @return void
+     */
+    @AuthGuard()
+    @Endpoint(endpoint = "/unDislike", method = Request.EMethod.POST, requestBodyType = UnlikePostDTO.class, responseBodyType = PostDTO.class)
+    public PostDTO unDislikePost(Request<UnlikePostDTO> request) {
+        UUID postId = request.getBody().getPostId();
+        UUID userId = request.getUserId();
+
+        Post updatedPost = PostService.unDislikePost(userId, postId);
+        if (updatedPost == null) {
+            throw new InternalServerError("Failed to Unlike Post");
+        }
+
+        return new PostDTO(updatedPost);
     }
 
     /**
@@ -150,7 +204,7 @@ public class PostResolver implements BaseResolver, IPostResolver {
      * @return {@link CommentsDTO}
      */
     @AuthGuard()
-    @Endpoint(endpoint = "/getComments", method = Request.EMethod.GET, requestBodyType = PostCommentsDTO.class, responseBodyType = CommentsDTO.class)
+    @Endpoint(endpoint = "/getComments", method = Request.EMethod.POST, requestBodyType = PostCommentsDTO.class, responseBodyType = CommentsDTO.class)
     public CommentsDTO getComments(Request<PostCommentsDTO> request) {
         UUID postId = request.getBody().getPostId();
 

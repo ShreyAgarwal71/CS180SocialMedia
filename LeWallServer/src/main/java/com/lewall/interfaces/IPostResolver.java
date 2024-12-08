@@ -10,6 +10,7 @@ import com.lewall.dtos.CommentsDTO;
 import com.lewall.dtos.PostCommentsDTO;
 import com.lewall.dtos.PostsDTO;
 import com.lewall.dtos.HidePostDTO;
+import com.lewall.dtos.PostDTO;
 
 /**
  * Interface implemented only by the PostResolver class
@@ -31,12 +32,12 @@ public interface IPostResolver {
 	/**
 	 * Resolves a like post request
 	 */
-	public void likePost(Request<LikePostDTO> request);
+	public PostDTO likePost(Request<LikePostDTO> request);
 
 	/**
 	 * Resolves an unlike post request
 	 */
-	public void unlikePost(Request<UnlikePostDTO> request);
+	public PostDTO unlikePost(Request<UnlikePostDTO> request);
 
 	/**
 	 * Resolves an hide post request

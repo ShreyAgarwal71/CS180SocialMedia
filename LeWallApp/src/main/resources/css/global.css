@@ -48,6 +48,11 @@
     -fx-fill: #858585;
 }
 
+.rounded {
+    -fx-background-radius: 3;
+    -fx-border-radius: 3;
+}
+
 .brand-subtitle {
     -fx-font-size: 12;
     -fx-fill: rgba(255, 255, 255, 0.5);
@@ -139,7 +144,8 @@
     -fx-border-color: transparent;    
     -fx-text-fill: rgba(255, 255, 255, 0.5);             
     -fx-font-size: 12px;             
-    -fx-padding: 0;                 
+    -fx-padding: 0;       
+    -fx-cursor: hand;          
     -fx-effect: null;                   
 
     transition: all 175ms ease;
@@ -148,6 +154,38 @@
 .brand-text-button:hover {
     -fx-text-fill: rgba(255, 255, 255, 0.3);      
     -fx-cursor: hand;
+    -fx-underline: true;
+}
+
+.brand-dropdown {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-background-radius: 5;
+    -fx-background-insets: 0;
+    -fx-text-fill: white;
+    -fx-font-size: 12;
+    -fx-padding: 5 10;
+    -fx-border-radius: 5;
+    -fx-border-width: 1;
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* .combo-box .combo-box-base {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-border-color: transparent;
+} */
+
+.combo-box .list-cell {
+    -fx-background-color: #0E0E0E;
+    -fx-background-radius: 5;
+    -fx-background-insets: 2;
+    -fx-border-insets: 2;
+    -fx-text-fill: white;
+    -fx-font-size: 12;
+    -fx-padding: 5 10;
+    -fx-border-radius: 5;
+    -fx-border-width: 1;
+    -fx-border-color: rgba(255, 255, 255, 0.1);
 }
 
 .bottom-label {

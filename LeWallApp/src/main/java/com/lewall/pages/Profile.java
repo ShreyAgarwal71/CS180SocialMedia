@@ -8,12 +8,16 @@ import org.apache.logging.log4j.Logger;
 import com.lewall.Navigator.NavigatorPageState;
 import com.lewall.api.Connection;
 import com.lewall.api.LocalStorage;
+import com.lewall.common.AggregatedPost;
 import com.lewall.common.Theme;
 import com.lewall.components.Footer;
 import com.lewall.components.Navbar;
+import com.lewall.components.PostListView;
 import com.lewall.db.models.Post;
 import com.lewall.db.models.User;
+import com.lewall.dtos.AggregatedPostsDTO;
 import com.lewall.dtos.FollowUserDTO;
+import com.lewall.dtos.FollowingPostsDTO;
 import com.lewall.dtos.PostsDTO;
 import com.lewall.dtos.UnfollowUserDTO;
 import com.lewall.dtos.UserDTO;
@@ -24,10 +28,13 @@ import com.lewall.dtos.UnblockUserDTO;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
@@ -250,6 +257,7 @@ public class Profile extends Pane {
 		VBox.setMargin(idCardItems, new Insets(20, 0, 0, 0));
 
 		VBox idCardBox = new VBox();
+		idCardBox.setMaxWidth(300);
 		idCardBox.getChildren().addAll(profileTitle, profileSubtitle, idCardItems);
 
 		HBox footer = new Footer();
@@ -260,8 +268,33 @@ public class Profile extends Pane {
 		fp.prefHeightProperty().bind(this.heightProperty());
 		fp.setOrientation(Orientation.VERTICAL);
 
-		FlowPane.setMargin(idCardBox, new Insets(0, 0, 0, 90));
-		fp.getChildren().add(idCardBox);
+		ObservableList<AggregatedPost> items = FXCollections.observableArrayList();
+
+		Connection.<AggregatedPostsDTO>get("/user/getPosts", false).thenAccept(response -> {
+			AggregatedPostsDTO postsDTO = response.getBody();
+			items.addAll(postsDTO.getAggregatedPosts());
+		});
+
+		ListView<AggregatedPost> postListView = new PostListView(items);
+		postListView.setMaxHeight(220);
+
+		VBox column = new VBox(10);
+		column.setAlignment(Pos.TOP_LEFT);
+		fp.setAlignment(Pos.TOP_LEFT);
+		FlowPane.setMargin(column, new Insets(0, 0, 0, 90));
+
+		Text yourQuotes = new Text("Your Quotes");
+		yourQuotes.getStyleClass().add("brand-title");
+		VBox.setMargin(yourQuotes, new Insets(10, 0, 0, 10));
+
+		Text yourQuotesHint = new Text("Navigate to \"inscribe\" to add quotes...");
+		yourQuotesHint.setFill(Color.web(Theme.TEXT_GREY));
+		VBox.setMargin(yourQuotesHint, new Insets(0, 0, 0, 10));
+		VBox yourQuoteHeader = new VBox(3);
+		yourQuoteHeader.getChildren().addAll(yourQuotes, yourQuotesHint);
+
+		column.getChildren().addAll(idCardBox, yourQuoteHeader, postListView);
+		fp.getChildren().add(column);
 
 		StackPane mainStack = new StackPane();
 		mainStack.getChildren().addAll(fp);

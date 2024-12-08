@@ -19,8 +19,8 @@ import com.lewall.dtos.LikeCommentDTO;
 /**
  * A class to resolve Comment-related requests
  *
- * @author Shrey Agarwal
- * @version 14 November 2024
+ * @author Shrey Agarwal, Ates Isfendiyaroglu
+ * @version 8 December 2024
  */
 @Resolver(basePath = "/comment")
 public class CommentResolver implements BaseResolver, ICommentResolver {
@@ -89,6 +89,26 @@ public class CommentResolver implements BaseResolver, ICommentResolver {
     }
 
     /**
+     * Dislike a comment
+     * 
+     * @param request
+     *            {@link Request} with {@link LikeCommentDTO} body
+     * @throws InternalServerError
+     *             if unable to like comment
+     * @return void
+     */
+    @AuthGuard()
+    @Endpoint(endpoint = "/dislike", method = Request.EMethod.POST, requestBodyType = LikeCommentDTO.class)
+    public void dislikeComment(Request<LikeCommentDTO> request) {
+        UUID commentId = request.getBody().getCommentId();
+        UUID userId = request.getUserId();
+
+        if (!CommentService.dislikeComment(userId, commentId)) {
+            throw new InternalServerError("Failed to dislike Comment");
+        }
+    }
+
+    /**
      * Unlike a comment
      * 
      * @param request
@@ -104,6 +124,26 @@ public class CommentResolver implements BaseResolver, ICommentResolver {
         UUID userId = request.getUserId();
 
         if (!CommentService.unlikeComment(userId, commentId)) {
+            throw new InternalServerError("Failed to Unlike Comment");
+        }
+    }
+
+    /**
+     * Un-dislike a comment
+     * 
+     * @param request
+     *            {@link Request} with {@link UnlikeCommentDTO} body
+     * @throws InternalServerError
+     *             if unable to unlike comment
+     * @return void
+     */
+    @AuthGuard()
+    @Endpoint(endpoint = "/unDislike", method = Request.EMethod.POST, requestBodyType = UnlikeCommentDTO.class)
+    public void unDislikeComment(Request<UnlikeCommentDTO> request) {
+        UUID commentId = request.getBody().getCommentId();
+        UUID userId = request.getUserId();
+
+        if (!CommentService.unDislikeComment(userId, commentId)) {
             throw new InternalServerError("Failed to Unlike Comment");
         }
     }

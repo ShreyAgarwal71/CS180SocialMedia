@@ -4,9 +4,11 @@ import java.util.UUID;
 
 import com.lewall.Navigator.NavigatorPageState;
 import com.lewall.api.Connection;
+import com.lewall.common.AggregatedPost;
 import com.lewall.components.Footer;
 import com.lewall.components.Navbar;
 import com.lewall.components.PostItem;
+import com.lewall.components.PostListView;
 import com.lewall.db.models.Post;
 import com.lewall.dtos.FollowingPostsDTO;
 import com.lewall.dtos.UserFollowingPostsDTO;
@@ -18,6 +20,7 @@ import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.skin.VirtualFlow;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -50,39 +53,17 @@ public class Home extends Pane {
         // System.out.println(response.getBody().);
         // });
 
-        ObservableList<Post> items = FXCollections.observableArrayList();
+        ObservableList<AggregatedPost> items = FXCollections.observableArrayList();
 
         Connection.<FollowingPostsDTO>get("/user/getFollowerPosts", false).thenAccept(response -> {
             FollowingPostsDTO followingPostsDTO = response.getBody();
-            items.addAll(followingPostsDTO.getPosts());
+            items.addAll(followingPostsDTO.getAggregatedPosts());
         });
 
-        ListView<Post> postListView = new ListView<>(items);
-        postListView.setPrefWidth(480);
-
-        postListView.setCellFactory(param -> new ListCell<Post>() {
-            @Override
-            protected void updateItem(Post item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                    setGraphic(null);
-                } else {
-                    boolean isLast = getIndex() == items.size() - 1;
-                    VBox post = new PostItem(item);
-                    post.setPadding(new Insets(0, 0, isLast ? 40 : 10, 0));
-                    setGraphic(post);
-                }
-            }
-        });
+        ListView<AggregatedPost> postListView = new PostListView(items);
 
         VBox column = new VBox(10);
         FlowPane.setMargin(column, new Insets(10, 0, 0, 85));
-        // column.setAlignment(Pos.CENTER);
-
-        // UserDTO userDTO = LocalStorage.get("/user", UserDTO.class);
-        // if (userDTO != null) {
-        // String displayName = userDTO.getUser().getDisplayName();
 
         Text fyp = new Text("Your LeWall");
         VBox.setMargin(fyp, new Insets(0, 0, 0, 10));
