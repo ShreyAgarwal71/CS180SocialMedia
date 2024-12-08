@@ -10,8 +10,8 @@ import java.util.Set;
  * This class represents a post object that can be added to a feed.
  * 
  * 
- * @author Shrey Agarwal and Mahit Mehta
- * @version 2024-11-03
+ * @author Shrey Agarwal, Mahit Mehta, Ates Isfendiyaroglu
+ * @version 8 December 2024
  * 
  */
 public class Post extends Model {
@@ -20,6 +20,8 @@ public class Post extends Model {
     private String date;
     private int likes;
     private Set<String> usersLiked;
+    private int dislikes;
+    private Set<String> usersDisliked;
     private String imageURL;
     private String classId;
     private boolean isPrivate;
@@ -33,13 +35,15 @@ public class Post extends Model {
      * @param postId
      * @param likes
      */
-    public Post(UUID userId, String messagePost, String date, int likes, String imageURL, String classId) {
+    public Post(UUID userId, String messagePost, String date, int likes, int dislikes, String imageURL, String classId) {
         this.userId = userId;
         this.messagePost = messagePost;
         this.date = date; // MM/DD/YYYY
         this.likes = likes;
+		this.dislikes = dislikes;
         this.imageURL = imageURL;
         this.usersLiked = new HashSet<>();
+        this.usersDisliked = new HashSet<>();
         this.classId = classId;
         this.isPrivate = false;
     }
@@ -81,6 +85,15 @@ public class Post extends Model {
     }
 
     /**
+     * Getter for dislikes
+     * 
+     * @return dislikes
+     */
+	public int getDislikes() {
+		return dislikes;
+	}
+
+    /**
      * getter for imageURL
      * 
      * @return imageURL
@@ -97,6 +110,15 @@ public class Post extends Model {
     public Set<String> getUsersLiked() {
         return usersLiked;
     }
+
+	/**
+	 * Getter for usersDisliked
+	 *
+	 * @return usersDisliked
+	 */
+	public Set<String> getUsersDisliked() {
+		return usersDisliked;
+	}
 
     /**
      * Getter for classId
@@ -186,8 +208,28 @@ public class Post extends Model {
      * @return boolean
      */
     public boolean addLike(String userId) {
+		if (usersLiked.contains(userId) || usersDisliked.contains(userId)) {
+			return false;
+		}
         if (usersLiked.add(userId)) {
             this.likes++;
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Add a dislike to the post
+     * 
+     * @param userId
+     * @return boolean
+     */
+    public boolean addDislike(String userId) {
+		if (usersLiked.contains(userId) || usersDisliked.contains(userId)) {
+			return false;
+		}
+        if (usersDisliked.add(userId)) {
+            this.dislikes++;
             return true;
         }
         return false;
@@ -202,6 +244,20 @@ public class Post extends Model {
     public boolean removeLike(String userId) {
         if (usersLiked.remove(userId)) {
             this.likes--;
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Remove a dislike from the post
+     * 
+     * @param userId
+     * @return boolean
+     */
+    public boolean removeDislike(String userId) {
+        if (usersDisliked.remove(userId)) {
+            this.dislikes--;
             return true;
         }
         return false;

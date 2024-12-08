@@ -30,7 +30,7 @@ public class CommentTest {
 		UUID userId = UUID.randomUUID();
 		UUID postId = UUID.randomUUID();
 
-		Comment testComment = new Comment(userId, postId, "This is a comment", "11-3-24", 5678);
+		Comment testComment = new Comment(userId, postId, "This is a comment", "11-3-24", 5678, 10);
 
 		assertNotNull(testComment, "Ensure the constructor is actually instantiating variables");
 	}
@@ -44,7 +44,7 @@ public class CommentTest {
 		UUID postId = UUID.randomUUID();
 
 		Comment[] comments = new Comment[2];
-		Comment testComment = new Comment(userId, postId, "This is a comment", "11-3-24", 300);
+		Comment testComment = new Comment(userId, postId, "This is a comment", "11-3-24", 300, 20);
 		testComment.setComments(comments);
 
 		assertEquals(testComment.getMessageComment(), "This is a comment",
@@ -65,7 +65,7 @@ public class CommentTest {
 		UUID userId = UUID.randomUUID();
 		UUID postId = UUID.randomUUID();
 
-		Comment testComment = new Comment(userId, postId, "This is a comment", "11-3-24", 0);
+		Comment testComment = new Comment(userId, postId, "This is a comment", "11-3-24", 0, 0);
 
 		testComment.setMessageComment("This is a new comment");
 		testComment.setDate("11-4-24");
@@ -96,7 +96,7 @@ public class CommentTest {
 		UUID userId = UUID.randomUUID();
 		UUID postId = UUID.randomUUID();
 
-		Comment testComment = new Comment(userId, postId, "This is a comment", "11-3-24", 0);
+		Comment testComment = new Comment(userId, postId, "This is a comment", "11-3-24", 0, 0);
 
 		testComment.addLike("user1");
 		testComment.addLike("user2");
@@ -117,8 +117,8 @@ public class CommentTest {
 		UUID userId = UUID.randomUUID();
 		UUID postId = UUID.randomUUID();
 
-		Comment testComment = new Comment(userId, postId, "This is a comment", "11-3-24", 0);
-		Comment testComment2 = new Comment(userId, postId, "This is a comment", "11-3-24", 0);
+		Comment testComment = new Comment(userId, postId, "This is a comment", "11-3-24", 0, 0);
+		Comment testComment2 = new Comment(userId, postId, "This is a comment", "11-3-24", 0, 0);
 
 		assertEquals(testComment, testComment2, "Ensure the equals method is working");
 

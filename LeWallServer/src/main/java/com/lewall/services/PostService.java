@@ -14,17 +14,17 @@ import com.lewall.api.BadRequest;
 /**
  * A class that implements Post-managing services
  * 
- * @author Shrey Agarwal
- * @version 14 November 2024
+ * @author Shrey Agarwal, Ates Isfendiyaroglu
+ * @version 8 December 2024
  */
 public class PostService implements IService {
     private static final UserCollection users = db.getUserCollection();
     private static final PostCollection posts = db.getPostCollection();
     private static final CommentCollection comments = db.getCommentCollection();
 
-    public static boolean createPost(UUID userId, String messagePost, String date, int likes, String imageURL,
-            String classId) {
-        Post post = new Post(userId, messagePost, date, likes, imageURL, classId);
+    public static boolean createPost(UUID userId, String messagePost, String date, int likes, int dislikes, 
+			String imageURL, String classId) {
+        Post post = new Post(userId, messagePost, date, likes, dislikes, imageURL, classId);
         return posts.addElement(post);
     }
 
@@ -75,6 +75,30 @@ public class PostService implements IService {
     }
 
     /**
+     * Dislike a post
+     * 
+     * @param userId
+     * @param postId
+     * @return updated Post
+     */
+    public static Post dislikePost(UUID userId, UUID postId) {
+        Post post = posts.findOne(p -> p.getId().equals(postId));
+        if (post == null) {
+            throw new BadRequest("Post not found");
+        }
+
+        if (!post.addDislike(userId.toString())) {
+            throw new BadRequest("Already disliked post");
+        }
+
+        if (!posts.updateElement(post.getId(), post)) {
+            return null;
+        }
+
+        return posts.findById(postId);
+    }
+
+    /**
      * Unlike a post
      * 
      * @param userId
@@ -89,6 +113,30 @@ public class PostService implements IService {
 
         if (!post.removeLike(userId.toString())) {
             throw new BadRequest("Not liked post");
+        }
+
+        if (!posts.updateElement(post.getId(), post)) {
+            return null;
+        }
+
+        return posts.findById(postId);
+    }
+
+    /**
+     * Unlike a post
+     * 
+     * @param userId
+     * @param postId
+     * @return
+     */
+    public static Post unDislikePost(UUID userId, UUID postId) {
+        Post post = posts.findOne(p -> p.getId().equals(postId));
+        if (post == null) {
+            throw new BadRequest("Post not found");
+        }
+
+        if (!post.removeDislike(userId.toString())) {
+            throw new BadRequest("Not disliked post");
         }
 
         if (!posts.updateElement(post.getId(), post)) {
