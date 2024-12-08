@@ -1,5 +1,6 @@
 package com.lewall.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -10,6 +11,7 @@ import com.lewall.db.models.Post;
 import com.lewall.db.models.User;
 import com.lewall.db.collections.CommentCollection;
 import com.lewall.api.BadRequest;
+import com.lewall.common.AggregatedComment;
 
 /**
  * A class that implements Post-managing services
@@ -22,8 +24,8 @@ public class PostService implements IService {
     private static final PostCollection posts = db.getPostCollection();
     private static final CommentCollection comments = db.getCommentCollection();
 
-    public static boolean createPost(UUID userId, String messagePost, String date, int likes, int dislikes, 
-			String imageURL, String classId) {
+    public static boolean createPost(UUID userId, String messagePost, String date, int likes, int dislikes,
+            String imageURL, String classId) {
         Post post = new Post(userId, messagePost, date, likes, dislikes, imageURL, classId);
         return posts.addElement(post);
     }
@@ -200,6 +202,21 @@ public class PostService implements IService {
         List<Comment> comments1 = comments.commentsByPostId(postId);
 
         return comments1;
+    }
+
+    public static AggregatedComment aggregatedComment(Comment comment) {
+        User user = users.findById(comment.getUserId());
+        return new AggregatedComment(comment, user);
+    }
+
+    public static List<AggregatedComment> aggregatedComments(List<Comment> comments) {
+        List<AggregatedComment> aggregatedComments = new ArrayList<>();
+
+        for (Comment comment : comments) {
+            aggregatedComments.add(aggregatedComment(comment));
+        }
+
+        return aggregatedComments;
     }
 
     /**

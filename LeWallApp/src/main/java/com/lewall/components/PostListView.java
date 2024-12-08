@@ -1,7 +1,6 @@
 package com.lewall.components;
 
 import com.lewall.common.AggregatedPost;
-import com.lewall.db.models.Post;
 
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -48,6 +47,9 @@ public class PostListView extends ListView<AggregatedPost> {
                             }, updatedPost -> {
                                 item.getPost().setLikes(updatedPost.getPost().getLikes());
                                 item.getPost().setUsersLiked(updatedPost.getPost().getUsersLiked());
+
+                                item.getPost().setDislikes(updatedPost.getPost().getDislikes());
+                                item.getPost().setUsersDisliked(updatedPost.getPost().getUsersDisliked());
                                 that.refresh();
                             },
                             comments -> {

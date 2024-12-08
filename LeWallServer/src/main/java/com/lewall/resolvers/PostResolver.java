@@ -1,9 +1,12 @@
 package com.lewall.resolvers;
 
+import java.util.List;
 import java.util.UUID;
 
 import com.lewall.api.InternalServerError;
 import com.lewall.api.Request;
+import com.lewall.common.AggregatedComment;
+import com.lewall.db.models.Comment;
 import com.lewall.db.models.Post;
 import com.lewall.resolvers.ResolverTools.AuthGuard;
 import com.lewall.resolvers.ResolverTools.BaseResolver;
@@ -23,6 +26,7 @@ import com.lewall.dtos.PostsDTO;
 import com.lewall.dtos.HidePostDTO;
 import com.lewall.dtos.PostDTO;
 import com.lewall.dtos.PublicPrivateDTO;
+import com.lewall.dtos.AggregatedCommentsDTO;
 import com.lewall.dtos.ClassesDTO;
 
 /**
@@ -204,16 +208,17 @@ public class PostResolver implements BaseResolver, IPostResolver {
      * @return {@link CommentsDTO}
      */
     @AuthGuard()
-    @Endpoint(endpoint = "/getComments", method = Request.EMethod.POST, requestBodyType = PostCommentsDTO.class, responseBodyType = CommentsDTO.class)
-    public CommentsDTO getComments(Request<PostCommentsDTO> request) {
+    @Endpoint(endpoint = "/getComments", method = Request.EMethod.POST, requestBodyType = PostCommentsDTO.class, responseBodyType = AggregatedCommentsDTO.class)
+    public AggregatedCommentsDTO getComments(Request<PostCommentsDTO> request) {
         UUID postId = request.getBody().getPostId();
 
-        CommentsDTO comments = new CommentsDTO(PostService.getComments(postId));
-        if (PostService.getComments(postId) == null) {
+        List<Comment> comments = PostService.getComments(postId);
+        if (comments == null) {
             throw new InternalServerError("Failed to get Comments");
         }
 
-        return comments;
+        List<AggregatedComment> aggregatedComments = PostService.aggregatedComments(comments);
+        return new AggregatedCommentsDTO(aggregatedComments);
     }
 
     /**

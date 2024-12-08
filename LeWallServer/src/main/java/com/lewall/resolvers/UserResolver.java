@@ -187,9 +187,9 @@ public class UserResolver implements BaseResolver, IUserResolver {
      * @return {@link PostsDTO}
      */
     @AuthGuard()
-    @Endpoint(endpoint = "/getPosts", method = Request.EMethod.GET, responseBodyType = AggregatedPostsDTO.class)
-    public AggregatedPostsDTO getPosts(Request<Void> request) {
-        UUID userId = request.getUserId();
+    @Endpoint(endpoint = "/getPosts", method = Request.EMethod.POST, requestBodyType = UserIdDTO.class, responseBodyType = AggregatedPostsDTO.class)
+    public AggregatedPostsDTO getPosts(Request<UserIdDTO> request) {
+        UUID userId = request.getBody().getUserId();
 
         try {
             List<AggregatedPost> posts = UserService.getAggregatedPosts(UserService.getPosts(userId));
