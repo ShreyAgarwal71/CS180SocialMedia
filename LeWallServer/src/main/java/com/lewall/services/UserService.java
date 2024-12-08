@@ -202,6 +202,7 @@ public class UserService implements IService {
             throw new BadRequest("User not found");
         }
         List<Post> posts1 = posts.findByUserId(userId);
+        PostSort.quickSort(posts1, 0, posts1.size() - 1);
 
         return posts1;
     }

@@ -9,6 +9,7 @@ import com.lewall.db.collections.PostCollection;
 import com.lewall.db.models.Comment;
 import com.lewall.db.models.Post;
 import com.lewall.db.models.User;
+import com.lewall.helpers.CommentSort;
 import com.lewall.db.collections.CommentCollection;
 import com.lewall.api.BadRequest;
 import com.lewall.common.AggregatedComment;
@@ -200,6 +201,7 @@ public class PostService implements IService {
             throw new BadRequest("Post not found");
         }
         List<Comment> comments1 = comments.commentsByPostId(postId);
+        CommentSort.quickSort(comments1, 0, comments1.size() - 1);
 
         return comments1;
     }
