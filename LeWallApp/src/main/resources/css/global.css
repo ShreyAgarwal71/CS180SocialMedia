@@ -139,7 +139,8 @@
     -fx-border-color: transparent;    
     -fx-text-fill: rgba(255, 255, 255, 0.5);             
     -fx-font-size: 12px;             
-    -fx-padding: 0;                 
+    -fx-padding: 0;       
+    -fx-cursor: hand;          
     -fx-effect: null;                   
 
     transition: all 175ms ease;
@@ -148,6 +149,7 @@
 .brand-text-button:hover {
     -fx-text-fill: rgba(255, 255, 255, 0.3);      
     -fx-cursor: hand;
+    -fx-underline: true;
 }
 
 .brand-dropdown {

@@ -5,8 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.lewall.api.BadRequest;
+import com.lewall.common.AggregatedPost;
+import com.lewall.db.collections.CommentCollection;
 import com.lewall.db.collections.PostCollection;
 import com.lewall.db.collections.UserCollection;
+import com.lewall.db.models.Comment;
 import com.lewall.db.models.Post;
 import com.lewall.db.models.User;
 import com.lewall.helpers.PostSort;
@@ -20,6 +23,22 @@ import com.lewall.helpers.PostSort;
 public class UserService implements IService {
     private static final UserCollection users = db.getUserCollection();
     private static final PostCollection posts = db.getPostCollection();
+    private static final CommentCollection comments = db.getCommentCollection();
+
+    public static List<AggregatedPost> getAggregatedPosts(List<Post> posts) {
+        List<AggregatedPost> aggregatedPosts = new ArrayList<>();
+        for (Post post : posts) {
+            aggregatedPosts.add(getAggregatedPost(post));
+        }
+        return aggregatedPosts;
+    }
+
+    public static AggregatedPost getAggregatedPost(Post post) {
+        User user = users.findById(post.getUserId());
+        List<Comment> postComments = comments.findAll(c -> c.getPostId().equals(post.getId()));
+        AggregatedPost aggregatedPost = new AggregatedPost(post, postComments, user);
+        return aggregatedPost;
+    }
 
     /**
      * Get a user

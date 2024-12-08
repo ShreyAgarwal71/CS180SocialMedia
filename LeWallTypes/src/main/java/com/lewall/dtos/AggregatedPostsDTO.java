@@ -1,18 +1,17 @@
 package com.lewall.dtos;
 
-import com.lewall.common.AggregatedPost;
-
 import java.util.List;
 
-public class FollowingPostsDTO {
+import com.lewall.common.AggregatedPost;
+
+public class AggregatedPostsDTO {
     private List<AggregatedPost> posts;
 
-    public FollowingPostsDTO(List<AggregatedPost> posts) {
+    public AggregatedPostsDTO(List<AggregatedPost> posts) {
         this.posts = posts;
     }
 
     public List<AggregatedPost> getAggregatedPosts() {
         return posts;
     }
-
 }

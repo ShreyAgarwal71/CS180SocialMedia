@@ -1,5 +1,6 @@
 package com.lewall.components;
 
+import com.lewall.common.AggregatedPost;
 import com.lewall.db.models.Post;
 
 import javafx.collections.ObservableList;
@@ -8,10 +9,10 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.VBox;
 
-public class PostListView extends ListView<Post> {
-    ListView<Post> that;
+public class PostListView extends ListView<AggregatedPost> {
+    ListView<AggregatedPost> that;
 
-    public PostListView(ObservableList<Post> items) {
+    public PostListView(ObservableList<AggregatedPost> items) {
         super(items);
         that = this;
 
@@ -31,9 +32,9 @@ public class PostListView extends ListView<Post> {
         // }
         // });
 
-        this.setCellFactory(param -> new ListCell<Post>() {
+        this.setCellFactory(param -> new ListCell<AggregatedPost>() {
             @Override
-            protected void updateItem(Post item, boolean empty) {
+            protected void updateItem(AggregatedPost item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || item == null) {
                     setText(null);
@@ -43,10 +44,10 @@ public class PostListView extends ListView<Post> {
                     VBox post = new PostItem(
                             item,
                             pid -> {
-                                items.removeIf(ele -> ele.getId().equals(pid));
+                                items.removeIf(ele -> ele.getPost().getId().equals(pid));
                             }, updatedPost -> {
-                                item.setLikes(updatedPost.getLikes());
-                                item.setUsersLiked(updatedPost.getUsersLiked());
+                                item.getPost().setLikes(updatedPost.getPost().getLikes());
+                                item.getPost().setUsersLiked(updatedPost.getPost().getUsersLiked());
                                 that.refresh();
                             });
                     post.setPadding(new Insets(0, 0, isLast ? 40 : 10, 0));

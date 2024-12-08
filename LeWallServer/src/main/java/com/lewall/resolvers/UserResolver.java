@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import com.lewall.api.InternalServerError;
 import com.lewall.api.Request;
+import com.lewall.common.AggregatedPost;
 import com.lewall.db.models.Post;
 import com.lewall.db.models.User;
 import com.lewall.resolvers.ResolverTools.AuthGuard;
@@ -13,6 +14,7 @@ import com.lewall.resolvers.ResolverTools.Resolver;
 import com.lewall.services.UserService;
 
 import com.lewall.dtos.DeleteUserDTO;
+import com.lewall.dtos.AggregatedPostsDTO;
 import com.lewall.dtos.BlockUserDTO;
 import com.lewall.dtos.UnblockUserDTO;
 import com.lewall.dtos.FollowUserDTO;
@@ -185,16 +187,20 @@ public class UserResolver implements BaseResolver, IUserResolver {
      * @return {@link PostsDTO}
      */
     @AuthGuard()
-    @Endpoint(endpoint = "/getPosts", method = Request.EMethod.GET, responseBodyType = PostsDTO.class)
-    public PostsDTO getPosts(Request<Void> request) {
+    @Endpoint(endpoint = "/getPosts", method = Request.EMethod.GET, responseBodyType = AggregatedPostsDTO.class)
+    public AggregatedPostsDTO getPosts(Request<Void> request) {
         UUID userId = request.getUserId();
 
-        PostsDTO posts = new PostsDTO(UserService.getPosts(userId));
-        if (UserService.getPosts(userId) == null) {
+        try {
+            List<AggregatedPost> posts = UserService.getAggregatedPosts(UserService.getPosts(userId));
+            if (posts == null) {
+                throw new InternalServerError("Failed to get Posts");
+            }
+            return new AggregatedPostsDTO(posts);
+        } catch (Exception e) {
+            System.out.println(e);
             throw new InternalServerError("Failed to get Posts");
         }
-
-        return posts;
     }
 
     /**
@@ -236,7 +242,8 @@ public class UserResolver implements BaseResolver, IUserResolver {
             throw new InternalServerError("Failed to get Following Posts");
         }
 
-        return new FollowingPostsDTO(posts);
+        List<AggregatedPost> postRecords = UserService.getAggregatedPosts(posts);
+        return new FollowingPostsDTO(postRecords);
     }
 
     /**

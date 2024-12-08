@@ -8,12 +8,14 @@ import org.apache.logging.log4j.Logger;
 import com.lewall.Navigator.NavigatorPageState;
 import com.lewall.api.Connection;
 import com.lewall.api.LocalStorage;
+import com.lewall.common.AggregatedPost;
 import com.lewall.common.Theme;
 import com.lewall.components.Footer;
 import com.lewall.components.Navbar;
 import com.lewall.components.PostListView;
 import com.lewall.db.models.Post;
 import com.lewall.db.models.User;
+import com.lewall.dtos.AggregatedPostsDTO;
 import com.lewall.dtos.FollowUserDTO;
 import com.lewall.dtos.FollowingPostsDTO;
 import com.lewall.dtos.PostsDTO;
@@ -226,14 +228,14 @@ public class Profile extends Pane {
 		fp.prefHeightProperty().bind(this.heightProperty());
 		fp.setOrientation(Orientation.VERTICAL);
 
-		ObservableList<Post> items = FXCollections.observableArrayList();
+		ObservableList<AggregatedPost> items = FXCollections.observableArrayList();
 
-		Connection.<PostsDTO>get("/user/getPosts", false).thenAccept(response -> {
-			PostsDTO postsDTO = response.getBody();
-			items.addAll(postsDTO.getPosts());
+		Connection.<AggregatedPostsDTO>get("/user/getPosts", false).thenAccept(response -> {
+			AggregatedPostsDTO postsDTO = response.getBody();
+			items.addAll(postsDTO.getAggregatedPosts());
 		});
 
-		ListView<Post> postListView = new PostListView(items);
+		ListView<AggregatedPost> postListView = new PostListView(items);
 		postListView.setMaxHeight(220);
 
 		VBox column = new VBox(10);

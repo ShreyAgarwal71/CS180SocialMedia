@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import com.lewall.Navigator.NavigatorPageState;
 import com.lewall.api.Connection;
+import com.lewall.common.AggregatedPost;
 import com.lewall.components.Footer;
 import com.lewall.components.Navbar;
 import com.lewall.components.PostItem;
@@ -52,14 +53,14 @@ public class Home extends Pane {
         // System.out.println(response.getBody().);
         // });
 
-        ObservableList<Post> items = FXCollections.observableArrayList();
+        ObservableList<AggregatedPost> items = FXCollections.observableArrayList();
 
         Connection.<FollowingPostsDTO>get("/user/getFollowerPosts", false).thenAccept(response -> {
             FollowingPostsDTO followingPostsDTO = response.getBody();
-            items.addAll(followingPostsDTO.getPosts());
+            items.addAll(followingPostsDTO.getAggregatedPosts());
         });
 
-        ListView<Post> postListView = new PostListView(items);
+        ListView<AggregatedPost> postListView = new PostListView(items);
 
         VBox column = new VBox(10);
         FlowPane.setMargin(column, new Insets(10, 0, 0, 85));
