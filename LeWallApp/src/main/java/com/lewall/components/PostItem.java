@@ -7,9 +7,12 @@ import com.lewall.api.LocalStorage;
 import com.lewall.common.Theme;
 import com.lewall.db.models.Post;
 import com.lewall.dtos.UserDTO;
+import com.lewall.dtos.UserIdDTO;
 import com.lewall.dtos.DeletePostDTO;
 
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -27,16 +30,20 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 
 public class PostItem extends VBox {
+    private StringProperty author = new SimpleStringProperty("");
+
     public PostItem(Post item) {
         super(5);
+
+        Connection.<UserIdDTO, UserDTO>post("/user/get", new UserIdDTO(item.getUserId())).thenAccept(response -> {
+            UserDTO userDTO = response.getBody();
+            author.set(userDTO.getUser().getDisplayName());
+        });
 
         StackPane mainStack = new StackPane();
         String imageURL = item.getImageURL();
@@ -51,7 +58,9 @@ public class PostItem extends VBox {
         container.setArcHeight(0);
 
         VBox postContents = new VBox(5);
-        VBox postQuote = getPostQuoteComponent(item.getMessagePost(), imageURL == null ? width - 20 : height - 10);
+        VBox postQuote = getPostQuoteComponent(
+                item.getMessagePost(),
+                imageURL == null ? width - 20 : height - 10);
 
         if (imageURL != null) {
             StackPane.setAlignment(postContents, Pos.CENTER_RIGHT);
@@ -109,11 +118,9 @@ public class PostItem extends VBox {
         UserDTO userDTO = LocalStorage.get("/user", UserDTO.class);
         if (userDTO != null) {
             if (userDTO.getUser().getId().equals(item.getUserId())) {
-                Button deleteButton = new Button("Delete");
-                deleteButton.getStyleClass().add("brand-button");
-                deleteButton.setPadding(new Insets(0, 0, 10, 10));
-                // deleteButton.setPrefWidth(100);
-                // deleteButton.setPrefHeight(5);
+                Button deleteButton = new Button("Delete Quote");
+                deleteButton.getStyleClass().add("brand-text-button");
+                HBox.setMargin(deleteButton, new Insets(0, 10, 0, 0));
                 deleteButton.setOnAction(event -> {
                     Connection.post("/post/delete", new DeletePostDTO(item.getId())).thenAccept(response -> {
                         Platform.runLater(() -> {
@@ -123,7 +130,10 @@ public class PostItem extends VBox {
                 });
 
                 HBox classAndDelete = new HBox(5);
-                classAndDelete.getChildren().addAll(postClass, deleteButton);
+                HBox spacer = new HBox();
+                HBox.setHgrow(spacer, Priority.ALWAYS);
+
+                classAndDelete.getChildren().addAll(postClass, spacer, deleteButton);
 
                 this.getChildren().addAll(classAndDelete, mainStack);
             } else {
@@ -221,7 +231,8 @@ public class PostItem extends VBox {
         postText.setFill(Color.web(Theme.TEXT_GREY));
         postText.setFont(Theme.INRIA_SERIF);
 
-        Text postAuthor = new Text("~ Mahit Mehta");
+        Text postAuthor = new Text();
+        postAuthor.textProperty().bind(author);
         Text postImprintedDate = new Text("Imprinted Dec. 1st 2024");
 
         postAuthor.setFont(Theme.INRIA_SERIF);

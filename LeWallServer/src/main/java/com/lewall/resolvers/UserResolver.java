@@ -26,7 +26,6 @@ import com.lewall.dtos.UserFollowingPostsDTO;
 import com.lewall.dtos.UserIdDTO;
 import com.lewall.dtos.FollowingPostsDTO;
 import com.lewall.dtos.ClassPostsDTO;
-import com.lewall.dtos.ClassesDTO;
 import com.lewall.dtos.ClassFeedDTO;
 import com.lewall.dtos.UserSearchDTO;
 import com.lewall.dtos.UsersFoundDTO;
@@ -42,7 +41,7 @@ import java.util.List;
 @Resolver(basePath = "/user")
 public class UserResolver implements BaseResolver, IUserResolver {
     /**
-     * Get a user
+     * Get the current authenticated user
      * 
      * @param request
      * @return {@link UserDTO}
@@ -51,6 +50,19 @@ public class UserResolver implements BaseResolver, IUserResolver {
     @Endpoint(endpoint = "/", method = Request.EMethod.GET, responseBodyType = UserDTO.class)
     public UserDTO getUser(Request<Void> request) {
         UUID userId = request.getUserId();
+
+        User user = UserService.getUser(userId);
+        if (user == null) {
+            throw new InternalServerError("Failed to get User");
+        }
+
+        return new UserDTO(user);
+    }
+
+    @AuthGuard
+    @Endpoint(endpoint = "/get", method = Request.EMethod.POST, requestBodyType = UserIdDTO.class, responseBodyType = UserDTO.class)
+    public UserDTO getUserById(Request<UserIdDTO> request) {
+        UUID userId = request.getBody().getUserId();
 
         User user = UserService.getUser(userId);
         if (user == null) {
