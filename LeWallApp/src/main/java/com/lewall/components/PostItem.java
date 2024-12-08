@@ -133,7 +133,6 @@ public class PostItem extends VBox {
         postClass.setPadding(new Insets(5, 0, 0, 10));
 
         Text postClassText = new Text("@" + item.getPost().getClassId());
-		System.out.println(item.getPost().getClassId());
         postClassText.setFill(Color.web(Theme.TEXT_GREY));
         postClass.getChildren().add(postClassText);
 

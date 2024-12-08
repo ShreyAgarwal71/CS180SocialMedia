@@ -1,7 +1,6 @@
 package com.lewall.components;
 
 import com.lewall.common.AggregatedPost;
-import com.lewall.db.models.Post;
 
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;

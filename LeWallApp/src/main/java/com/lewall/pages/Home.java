@@ -1,26 +1,19 @@
 package com.lewall.pages;
 
-import java.util.UUID;
-
 import com.lewall.Navigator.NavigatorPageState;
 import com.lewall.api.Connection;
 import com.lewall.common.AggregatedPost;
 import com.lewall.components.Footer;
 import com.lewall.components.Navbar;
-import com.lewall.components.PostItem;
 import com.lewall.components.PostListView;
-import com.lewall.db.models.Post;
 import com.lewall.dtos.FollowingPostsDTO;
-import com.lewall.dtos.UserFollowingPostsDTO;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.control.skin.VirtualFlow;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;

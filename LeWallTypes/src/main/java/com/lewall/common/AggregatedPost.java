@@ -2,7 +2,6 @@ package com.lewall.common;
 
 import java.util.List;
 
-import com.lewall.db.models.Comment;
 import com.lewall.db.models.Post;
 import com.lewall.db.models.User;
 
