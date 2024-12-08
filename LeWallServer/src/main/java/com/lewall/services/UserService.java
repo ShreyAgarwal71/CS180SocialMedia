@@ -276,7 +276,7 @@ public class UserService implements IService {
 
         // System.out.println(search);
         List<User> users1 = users.searchByUsername(search);
-        // System.out.println(users1.size());
+        System.out.println(users1.size());
 
         List<User> users2 = new ArrayList<>();
         for (int i = 0; i < users1.size(); i++) {
