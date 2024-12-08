@@ -22,6 +22,8 @@ import com.lewall.dtos.PostsDTO;
 import com.lewall.dtos.UnfollowUserDTO;
 import com.lewall.dtos.UserDTO;
 import com.lewall.dtos.UserIdDTO;
+import com.lewall.dtos.BlockUserDTO;
+import com.lewall.dtos.UnblockUserDTO;
 
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -97,7 +99,7 @@ public class Profile extends Pane {
 		profileSubtitle.setFill(Color.web(Theme.ACCENT));
 		VBox.setMargin(profileSubtitle, new Insets(3, 0, 0, 0));
 
-		Rectangle idCard = new Rectangle(315, otherUser ? 150 : 115);
+		Rectangle idCard = new Rectangle(315, otherUser ? 170 : 115);
 		idCard.setFill(Color.rgb(25, 18, 35));
 		idCard.setStroke(Color.rgb(255, 255, 255, 0.05));
 		idCard.setStrokeWidth(1);
@@ -209,7 +211,50 @@ public class Profile extends Pane {
 							});
 				}
 			});
-			content.getChildren().add(followButton);
+
+			boolean hasBlockedProfileUser = getAuthenicatedUser().getBlockedUsers()
+					.contains(profileUser.getId().toString());
+
+			Button blockButton = new Button(hasBlockedProfileUser ? "Unblock" : "Block");
+			blockButton.getStyleClass().add("accent-button");
+			blockButton.setPrefWidth(300);
+			blockButton.setOnAction(e -> {
+				System.out.println(getAuthenicatedUser().getBlockedUsers().toString());
+				System.out.println(profileUser.getId().toString());
+				System.out.println(getAuthenicatedUser().getBlockedUsers().contains(profileUser.getId().toString()));
+				if (getAuthenicatedUser().getBlockedUsers().contains(profileUser.getId().toString())) {
+					Connection
+							.<UnblockUserDTO, UserDTO>post("/user/unblock", new UnblockUserDTO(profileUser.getId()))
+							.thenAccept(response -> {
+								Platform.runLater(() -> {
+									blockButton.setText("Block");
+								});
+
+								profileUser = response.getBody().getUser();
+								userFollowers.set(profileUser.getFollowers().size() + "");
+								userFollowing.set(profileUser.getFollowing().size() + "");
+
+								// Update the user in local storage
+								Connection.<UserDTO>get("/user", true);
+							});
+				} else {
+					Connection.<BlockUserDTO, UserDTO>post("/user/block", new BlockUserDTO(profileUser.getId()))
+							.thenAccept(response -> {
+								Platform.runLater(() -> {
+									blockButton.setText("Unblock");
+								});
+
+								profileUser = response.getBody().getUser();
+								userFollowers.set(profileUser.getFollowers().size() + "");
+								userFollowing.set(profileUser.getFollowing().size() + "");
+
+								// Update the user in local storage
+								Connection.<UserDTO>get("/user", true);
+							});
+				}
+			});
+
+			content.getChildren().addAll(blockButton, followButton);
 		}
 
 		StackPane idCardItems = new StackPane();

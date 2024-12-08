@@ -19,6 +19,7 @@ import com.lewall.dtos.DeletePostDTO;
 import com.lewall.dtos.PostDTO;
 import com.lewall.dtos.LikePostDTO;
 import com.lewall.dtos.PostCommentsDTO;
+import com.lewall.dtos.HidePostDTO;
 
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -47,6 +48,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import com.lewall.Navigator;
+import com.lewall.Navigator.NavigatorPageState;
+import com.lewall.Navigator.EPage;
 
 public class PostItem extends VBox {
     private StringProperty author = new SimpleStringProperty("");
@@ -158,7 +162,25 @@ public class PostItem extends VBox {
 
                 this.getChildren().addAll(classAndDelete, mainStack);
             } else {
-                this.getChildren().addAll(postClass, mainStack);
+                Button hideButton = new Button("Hide Post");
+                hideButton.getStyleClass().add("brand-text-button");
+                HBox.setMargin(hideButton, new Insets(0, 10, 0, 0));
+                hideButton.setOnAction(event -> {
+                    Connection.post("/post/hide", new HidePostDTO(item.getPost().getId())).thenAccept(response -> {
+                        Platform.runLater(() -> {
+                            Navigator.navigateTo(EPage.HOME);
+                            // refreshPost.accept(item.getPost().getId());
+                        });
+                    });
+                });
+
+                HBox classAndHide = new HBox(5);
+                HBox spacer = new HBox();
+                HBox.setHgrow(spacer, Priority.ALWAYS);
+
+                classAndHide.getChildren().addAll(postClass, spacer, hideButton);
+
+                this.getChildren().addAll(classAndHide, mainStack);
             }
         }
 

@@ -118,21 +118,19 @@ public class Search extends Pane {
             resultsTitle.getStyleClass().add("brand-subtitle");
             searchResults.getChildren().add(resultsTitle);
 
-            /*
-             * Connection.get("/post/getClasses", true).thenAccept(response -> {
-             * List<String> classes = LocalStorage.get("/post/getClasses",
-             * ClassesDTO.class).getClasses();
-             * Platform.runLater(() -> {
-             * for (int i = 0; i < classes.size(); i++) {
-             * if (classes.get(i).contains(query)) {
-             * ClassCard classCard = new ClassCard(classes.get(i));
-             * searchResults.getChildren().add(classCard);
-             * isSearchingResults = true;
-             * }
-             * }
-             * });
-             * });
-             */
+            // Connection.get("/post/getClasses", true).thenAccept(response -> {
+            // List<String> classes = LocalStorage.get("/post/getClasses",
+            // ClassesDTO.class).getClasses();
+            // Platform.runLater(() -> {
+            // for (int i = 0; i < classes.size(); i++) {
+            // if (classes.get(i).contains(query)) {
+            // ClassCard classCard = new ClassCard(classes.get(i));
+            // searchResults.getChildren().add(classCard);
+            // isSearchingResults = true;
+            // }
+            // }
+            // });
+            // });
 
             Connection.<UserSearchDTO, UsersFoundDTO>post("/user/userSearches", new UserSearchDTO(query))
                     .thenAccept(userResponse -> {
