@@ -11,8 +11,8 @@ import com.lewall.db.models.Post;
 /**
  * A class that implements Comment-managing services
  * 
- * @author Shrey Agarwal
- * @version 14 November 2024
+ * @author Shrey Agarwal, Ates Isfendiyaroglu
+ * @version 8 December 2024
  */
 public class CommentService implements IService {
     private static final CommentCollection comments = db.getCommentCollection();
@@ -28,7 +28,7 @@ public class CommentService implements IService {
      * @return
      */
     public static boolean addComment(UUID userId, UUID postId, String messageComment, String date) {
-        Comment comment = new Comment(userId, postId, messageComment, date, 0);
+        Comment comment = new Comment(userId, postId, messageComment, date, 0, 0);
 
         return comments.addElement(comment);
     }
@@ -54,7 +54,7 @@ public class CommentService implements IService {
     }
 
     /**
-     * Delete a comment
+     * Like a comment
      * 
      * @param userId
      * @param commentId
@@ -93,4 +93,43 @@ public class CommentService implements IService {
         return comments.updateElement(comment.getId(), comment);
     }
 
+    /**
+     * Dislike a comment
+     * 
+     * @param userId
+     * @param commentId
+     * @return
+     */
+    public static boolean dislikeComment(UUID userId, UUID commentId) {
+        Comment comment = comments.findOne(c -> c.getId().equals(commentId));
+        if (comment == null) {
+            throw new BadRequest("Comment not found");
+        }
+
+        if (!comment.addDislike(userId.toString())) {
+            throw new BadRequest("User has already disliked this comment");
+        }
+
+        return comments.updateElement(comment.getId(), comment);
+    }
+
+    /**
+     * Un-dislike a comment
+     * 
+     * @param userId
+     * @param commentId
+     * @return exitCode
+     */
+    public static boolean unDislikeComment(UUID userId, UUID commentId) {
+        Comment comment = comments.findOne(c -> c.getId().equals(commentId));
+        if (comment == null) {
+            throw new BadRequest("Comment not found");
+        }
+
+        if (!comment.removeDislike(userId.toString())) {
+            throw new BadRequest("User has not disliked this comment");
+        }
+
+        return comments.updateElement(comment.getId(), comment);
+    }
 }
