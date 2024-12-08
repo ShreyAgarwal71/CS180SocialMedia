@@ -99,7 +99,7 @@ public class Profile extends Pane {
 		profileSubtitle.setFill(Color.web(Theme.ACCENT));
 		VBox.setMargin(profileSubtitle, new Insets(3, 0, 0, 0));
 
-		Rectangle idCard = new Rectangle(315, otherUser ? 170 : 115);
+		Rectangle idCard = new Rectangle(315, otherUser ? 180 : 115);
 		idCard.setFill(Color.rgb(25, 18, 35));
 		idCard.setStroke(Color.rgb(255, 255, 255, 0.05));
 		idCard.setStrokeWidth(1);
@@ -186,28 +186,32 @@ public class Profile extends Pane {
 					Connection
 							.<UnfollowUserDTO, UserDTO>post("/user/unfollow", new UnfollowUserDTO(profileUser.getId()))
 							.thenAccept(response -> {
+								profileUser = response.getBody().getUser();
+								userFollowers.set(profileUser.getFollowers().size() + "");
+								userFollowing.set(profileUser.getFollowing().size() + "");
+
+								// Update the user in local storage
+								Connection.<UserDTO>get("/user", true).thenAccept((res) -> {
+								});
+
 								Platform.runLater(() -> {
 									followButton.setText("Follow");
 								});
-
-								profileUser = response.getBody().getUser();
-								userFollowers.set(profileUser.getFollowers().size() + "");
-
-								// Update the user in local storage
-								Connection.<UserDTO>get("/user", true);
 							});
 				} else {
 					Connection.<FollowUserDTO, UserDTO>post("/user/follow", new FollowUserDTO(profileUser.getId()))
 							.thenAccept(response -> {
+								profileUser = response.getBody().getUser();
+								userFollowers.set(profileUser.getFollowers().size() + "");
+								userFollowing.set(profileUser.getFollowing().size() + "");
+
+								// Update the user in local storage
+								Connection.<UserDTO>get("/user", true).thenAccept((res) -> {
+								});
+
 								Platform.runLater(() -> {
 									followButton.setText("Unfollow");
 								});
-
-								profileUser = response.getBody().getUser();
-								userFollowers.set(profileUser.getFollowers().size() + "");
-
-								// Update the user in local storage
-								Connection.<UserDTO>get("/user", true);
 							});
 				}
 			});
@@ -216,7 +220,7 @@ public class Profile extends Pane {
 					.contains(profileUser.getId().toString());
 
 			Button blockButton = new Button(hasBlockedProfileUser ? "Unblock" : "Block");
-			blockButton.getStyleClass().add("accent-button");
+			blockButton.getStyleClass().add("brand-text-button");
 			blockButton.setPrefWidth(300);
 			blockButton.setOnAction(e -> {
 				System.out.println(getAuthenicatedUser().getBlockedUsers().toString());
@@ -226,35 +230,38 @@ public class Profile extends Pane {
 					Connection
 							.<UnblockUserDTO, UserDTO>post("/user/unblock", new UnblockUserDTO(profileUser.getId()))
 							.thenAccept(response -> {
-								Platform.runLater(() -> {
-									blockButton.setText("Block");
-								});
-
 								profileUser = response.getBody().getUser();
 								userFollowers.set(profileUser.getFollowers().size() + "");
 								userFollowing.set(profileUser.getFollowing().size() + "");
 
-								// Update the user in local storage
-								Connection.<UserDTO>get("/user", true);
+								Connection.<UserDTO>get("/user", true).thenAccept((res) -> {
+								});
+
+								Platform.runLater(() -> {
+									blockButton.setText("Block");
+								});
+							}).exceptionally(ee -> {
+								logger.error(ee);
+								return null;
 							});
 				} else {
 					Connection.<BlockUserDTO, UserDTO>post("/user/block", new BlockUserDTO(profileUser.getId()))
 							.thenAccept(response -> {
-								Platform.runLater(() -> {
-									blockButton.setText("Unblock");
-								});
-
 								profileUser = response.getBody().getUser();
 								userFollowers.set(profileUser.getFollowers().size() + "");
 								userFollowing.set(profileUser.getFollowing().size() + "");
 
-								// Update the user in local storage
-								Connection.<UserDTO>get("/user", true);
+								Connection.<UserDTO>get("/user", true).thenAccept((res) -> {
+								});
+
+								Platform.runLater(() -> {
+									blockButton.setText("Unblock");
+								});
 							});
 				}
 			});
 
-			content.getChildren().addAll(blockButton, followButton);
+			content.getChildren().addAll(followButton, blockButton);
 		}
 
 		StackPane idCardItems = new StackPane();
@@ -289,7 +296,7 @@ public class Profile extends Pane {
 		fp.setAlignment(Pos.TOP_LEFT);
 		FlowPane.setMargin(column, new Insets(0, 0, 0, 90));
 
-		Text yourQuotes = new Text("Your Quotes");
+		Text yourQuotes = new Text(otherUser ? "Their Quotes" : "Your Quotes");
 		yourQuotes.getStyleClass().add("brand-title");
 		VBox.setMargin(yourQuotes, new Insets(10, 0, 0, 10));
 

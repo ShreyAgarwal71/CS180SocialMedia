@@ -59,7 +59,7 @@ public class PostListView extends ListView<AggregatedPost> {
                             pid -> {
 
                             });
-                    post.setPadding(new Insets(0, 0, isLast ? 40 : 10, 0));
+                    post.setPadding(new Insets(0, 0, isLast ? 75 : 10, 0));
                     setGraphic(post);
                 }
             }

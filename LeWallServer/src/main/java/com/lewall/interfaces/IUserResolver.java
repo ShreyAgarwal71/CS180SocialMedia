@@ -51,14 +51,14 @@ public interface IUserResolver {
 	 *
 	 * @param request
 	 */
-	public void blockUser(Request<BlockUserDTO> request);
+	public UserDTO blockUser(Request<BlockUserDTO> request);
 
 	/**
 	 * Resolves an unblock user request;
 	 *
 	 * @param request
 	 */
-	public void unblockUser(Request<UnblockUserDTO> request);
+	public UserDTO unblockUser(Request<UnblockUserDTO> request);
 
 	/**
 	 * Resolves a getPosts request;
