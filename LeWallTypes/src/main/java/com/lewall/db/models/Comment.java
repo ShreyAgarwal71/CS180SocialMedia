@@ -277,6 +277,35 @@ public class Comment extends Model {
     }
 
     /**
+     * compereTo method for Comment
+     * 
+     * @param comment
+     */
+    public int compareTo(Comment comment) {
+        String[] date1 = this.date.split("/");
+        String[] date2 = comment.getDate().split("/");
+        if (Integer.parseInt(date1[2]) > Integer.parseInt(date2[2])) {
+            return 1;
+        } else if (Integer.parseInt(date1[2]) < Integer.parseInt(date2[2])) {
+            return -1;
+        } else {
+            if (Integer.parseInt(date1[0]) > Integer.parseInt(date2[0])) {
+                return 1;
+            } else if (Integer.parseInt(date1[0]) < Integer.parseInt(date2[0])) {
+                return -1;
+            } else {
+                if (Integer.parseInt(date1[1]) > Integer.parseInt(date2[1])) {
+                    return 1;
+                } else if (Integer.parseInt(date1[1]) < Integer.parseInt(date2[1])) {
+                    return -1;
+                } else {
+                    return 0;
+                }
+            }
+        }
+    }
+
+    /**
      * toString method for Comment
      * 
      * @return String
