@@ -101,7 +101,7 @@ public class Search extends Pane {
         searchIcon.getChildren().add(searchField);
 
         Button searchButton = new Button("Search");
-        searchButton.getStyleClass().add("brand-button");
+        searchButton.getStyleClass().add("accent-button");
         searchButton.setOnAction(event -> {
             String query = searchField.getText().trim();
             if (query.isEmpty()) {
@@ -176,7 +176,10 @@ public class Search extends Pane {
             }
         });
 
-        column.getChildren().addAll(searchIcon, searchButton, searchError, searchResults);
+        HBox searchBoxGroup = new HBox(10);
+        searchBoxGroup.getChildren().addAll(searchIcon, searchButton);
+
+        column.getChildren().addAll(searchBoxGroup, searchError, searchResults);
         flowPane.getChildren().add(column);
 
         // Stack pane to centralize content

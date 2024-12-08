@@ -7,6 +7,7 @@ import com.lewall.api.Connection;
 import com.lewall.components.Footer;
 import com.lewall.components.Navbar;
 import com.lewall.components.PostItem;
+import com.lewall.components.PostListView;
 import com.lewall.db.models.Post;
 import com.lewall.dtos.FollowingPostsDTO;
 import com.lewall.dtos.UserFollowingPostsDTO;
@@ -58,54 +59,10 @@ public class Home extends Pane {
             items.addAll(followingPostsDTO.getPosts());
         });
 
-        ListView<Post> postListView = new ListView<>(items);
-        postListView.setPrefWidth(480);
-
-        postListView.setCellFactory(param -> new ListCell<Post>() {
-            @Override
-            protected void updateItem(Post item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                    setGraphic(null);
-                } else {
-                    boolean isLast = getIndex() == items.size() - 1;
-                    VBox post = new PostItem(
-                            item,
-                            pid -> {
-                                items.removeIf(ele -> ele.getId().equals(pid));
-                            }, updatedPost -> {
-                                item.setLikes(updatedPost.getLikes());
-                                item.setUsersLiked(updatedPost.getUsersLiked());
-                                postListView.refresh();
-                            });
-                    post.setPadding(new Insets(0, 0, isLast ? 40 : 10, 0));
-                    setGraphic(post);
-                }
-            }
-        });
-
-        // Calculate the visible items
-
-        // postListView.setOnScroll(event -> {
-        // // Use lookup to get the VirtualFlow
-        // VirtualFlow<?> flow = (VirtualFlow<?>) postListView.lookup(".virtual-flow");
-        // if (flow != null) {
-        // int firstVisibleIndex = flow.getFirstVisibleCell().getIndex();
-        // int lastVisibleIndex = flow.getLastVisibleCell().getIndex();
-
-        // System.out.println("Visible items:" + firstVisibleIndex + " to " +
-        // lastVisibleIndex);
-        // }
-        // });
+        ListView<Post> postListView = new PostListView(items);
 
         VBox column = new VBox(10);
         FlowPane.setMargin(column, new Insets(10, 0, 0, 85));
-        // column.setAlignment(Pos.CENTER);
-
-        // UserDTO userDTO = LocalStorage.get("/user", UserDTO.class);
-        // if (userDTO != null) {
-        // String displayName = userDTO.getUser().getDisplayName();
 
         Text fyp = new Text("Your LeWall");
         VBox.setMargin(fyp, new Insets(0, 0, 0, 10));
