@@ -3,6 +3,7 @@ package com.lewall.components;
 import com.lewall.Navigator;
 import com.lewall.Navigator.EPage;
 import com.lewall.api.LocalStorage;
+import com.lewall.common.Theme;
 import com.lewall.db.models.User;
 import com.lewall.dtos.UserDTO;
 
@@ -10,7 +11,11 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 
 /**
  * UserCard component for displaying user details in search results.
@@ -25,7 +30,7 @@ public class UserCard extends HBox {
      * Constructs a UserCard for the given user.
      * 
      * @param user
-     *             the user to display
+     *            the user to display
      */
     public UserCard(User user) {
         this.user = user;
@@ -36,74 +41,44 @@ public class UserCard extends HBox {
         this.setPadding(new Insets(10));
         this.getStyleClass().add("user-card");
 
-        VBox userDetails = new VBox();
-        userDetails.setAlignment(Pos.CENTER_LEFT);
-        // userDetails.getStyleClass().add("user-card");
-
         if (user.getPassword().isEmpty()) {
-            Label displayName = new Label(user.getUsername());
+            Text displayName = new Text(user.getUsername());
             displayName.getStyleClass().add("user-text");
-            userDetails.getChildren().addAll(displayName);
+            this.getChildren().addAll(displayName);
         } else {
-            Label displayName = new Label(user.getDisplayName());
-            displayName.getStyleClass().add("user-text");
+            Text displayName = new Text(user.getDisplayName());
+            displayName.setFill(Color.WHITE);
 
-            Label mutual = new Label("");
+            Text mutual = new Text("");
+            mutual.setFill(Color.web(Theme.ACCENT));
+
+            Region spacer = new Region();
+            HBox.setHgrow(spacer, Priority.ALWAYS);
 
             UserDTO userDTO = LocalStorage.get("/user", UserDTO.class);
             if (userDTO != null) {
-                String loggedInUser = userDTO.getUser().getDisplayName();
-
                 if (!displayName.equals(user.getDisplayName())) {
                     if (user.getFollowers().contains(userDTO.getUser().getId().toString())
                             && user.getFollowing().contains(userDTO.getUser().getId().toString())) {
-                        mutual = new Label("    Follows you");
-                        mutual.getStyleClass().add("user-mutual-text");
-                        userDetails.getChildren().addAll(displayName, mutual);
+                        mutual.setText("Matuals");
+                        this.getChildren().addAll(displayName, spacer, mutual);
                     } else if (user.getFollowers().contains(userDTO.getUser().getId().toString())) {
-                        mutual = new Label("    You follow");
-                        mutual.getStyleClass().add("user-mutual-text");
-                        userDetails.getChildren().addAll(displayName, mutual);
+                        mutual.setText("You follow");
+                        this.getChildren().addAll(displayName, spacer, mutual);
                     } else if (user.getFollowing().contains(userDTO.getUser().getId().toString())) {
-                        mutual = new Label("    Mutuals");
-                        mutual.getStyleClass().add("user-mutual-text");
-                        userDetails.getChildren().addAll(displayName, mutual);
+                        mutual.setText("Follows you");
+                        this.getChildren().addAll(displayName, spacer, mutual);
                     } else {
-                        userDetails.getChildren().addAll(displayName);
+                        this.getChildren().addAll(displayName);
                     }
                 }
             }
-            /*
-             * Label email = new Label(user.getEmail());
-             * email.getStyleClass().add("user-text");
-             * 
-             * Label followers = new Label(user.getFollowers().size() + " followers");
-             * followers.getStyleClass().add("user-text");
-             * 
-             * Label following = new Label(user.getFollowing().size() + " following");
-             * following.getStyleClass().add("user-text");
-             * 
-             * userDetails.getChildren().addAll(displayName, email, followers, following);
-             */
         }
-        this.getChildren().addAll(userDetails);
 
         // this.getStyleClass().add("user-card");
+        this.getStyleClass().add("grey-bg");
+        this.getStyleClass().add("grey-border");
         this.getStyleClass().add("user-card");
-
-        this.setOnMouseEntered(e -> {
-            // this.getChildren().forEach(child ->
-            // child.getStyleClass().remove("user-card"));
-            this.getStyleClass().add("user-text-hover");
-            // this.setStyle("-fx-background-color: #f0f0f0;");
-            // this.getChildren().forEach(child -> child.forEach(child ->
-            // child.setStyle("user-text-hover"));
-        });
-        this.setOnMouseExited(e -> {
-            this.getStyleClass().add("user-card");
-
-            // this.getChildren().forEach(child -> child.getStyleClass().add("user-card"));
-        });
     }
 
     /**

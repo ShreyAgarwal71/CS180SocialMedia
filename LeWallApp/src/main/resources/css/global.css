@@ -272,11 +272,15 @@
 }
 
 .user-card {
-    -fx-background-color: #0E0E0E;
+    transition: all 250ms ease;
+    -fx-opacity: 1;
+    -fx-cursor: hand;
 }
 
 .user-card:hover {
-    -fx-background-color: #ffffff;
+    transition: all 250ms ease;
+    -fx-opacity: 0.75;
+    -fx-cursor: hand;
 }
 
 .user-mutual-text {
