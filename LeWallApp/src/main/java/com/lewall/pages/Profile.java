@@ -18,6 +18,8 @@ import com.lewall.dtos.PostsDTO;
 import com.lewall.dtos.UnfollowUserDTO;
 import com.lewall.dtos.UserDTO;
 import com.lewall.dtos.UserIdDTO;
+import com.lewall.dtos.BlockUserDTO;
+import com.lewall.dtos.UnblockUserDTO;
 
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -202,7 +204,45 @@ public class Profile extends Pane {
 							});
 				}
 			});
-			content.getChildren().add(followButton);
+
+			boolean hasBlockedProfileUser = getAuthenicatedUser().getBlockedUsers()
+					.contains(profileUser.getId().toString());
+
+			Button blockButton = new Button(isFollowingProfileUser ? "Unblock" : "Block");
+			followButton.getStyleClass().add("accent-button");
+			followButton.setPrefWidth(300);
+			followButton.setOnAction(e -> {
+				if (getAuthenicatedUser().getFollowing().contains(profileUser.getId().toString())) {
+					Connection
+							.<UnblockUserDTO, UserDTO>post("/user/unblock", new UnblockUserDTO(profileUser.getId()))
+							.thenAccept(response -> {
+								Platform.runLater(() -> {
+									followButton.setText("Block");
+								});
+
+								profileUser = response.getBody().getUser();
+								userFollowers.set(profileUser.getFollowers().size() + "");
+
+								// Update the user in local storage
+								Connection.<UserDTO>get("/user", true);
+							});
+				} else {
+					Connection.<BlockUserDTO, UserDTO>post("/user/block", new BlockUserDTO(profileUser.getId()))
+							.thenAccept(response -> {
+								Platform.runLater(() -> {
+									followButton.setText("Unblock");
+								});
+
+								profileUser = response.getBody().getUser();
+								userFollowers.set(profileUser.getFollowers().size() + "");
+
+								// Update the user in local storage
+								Connection.<UserDTO>get("/user", true);
+							});
+				}
+			});
+
+			content.getChildren().addAll(blockButton, followButton);
 		}
 
 		StackPane idCardItems = new StackPane();

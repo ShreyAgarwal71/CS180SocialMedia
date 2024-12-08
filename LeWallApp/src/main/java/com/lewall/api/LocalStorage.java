@@ -20,7 +20,9 @@ import com.google.gson.GsonBuilder;
 import com.lewall.App;
 
 /**
- * Class to manage client-side storage in the application
+ * Class to manage client-side storage in the application. This class is used to
+ * store data locally on the user's machine.
+ * 
  *
  * @Author Ates Isfendiyaroglu and Mahit Mehta
  * @version 16 November 2024
@@ -30,8 +32,8 @@ public class LocalStorage {
 	private static Logger logger = LogManager.getLogger(LocalStorage.class);
 	private static HashMap<String, String> storage;
 
-    private static final GsonBuilder builder = new GsonBuilder();
-    private static final Gson gson = builder.create();
+	private static final GsonBuilder builder = new GsonBuilder();
+	private static final Gson gson = builder.create();
 
 	private static final String FILE_NAME = "state.ser";
 
@@ -153,7 +155,7 @@ public class LocalStorage {
 	 * @return value
 	 */
 	public static <T> T get(String key, Class<T> type) {
-		String serializedJSON = storage.get(key);	
+		String serializedJSON = storage.get(key);
 		if (serializedJSON == null) {
 			return null;
 		}

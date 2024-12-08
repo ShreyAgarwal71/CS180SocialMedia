@@ -26,7 +26,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 /**
- * Static class to manage client-server communication in the application
+ * Static class to manage client-server communication in the application.
  * 
  * @author Mahit Mehta
  * @version 16 November 2024
