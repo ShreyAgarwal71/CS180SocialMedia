@@ -55,9 +55,9 @@ public class PostService implements IService {
      * 
      * @param userId
      * @param postId
-     * @return
+     * @return updated Post
      */
-    public static boolean likePost(UUID userId, UUID postId) {
+    public static Post likePost(UUID userId, UUID postId) {
         Post post = posts.findOne(p -> p.getId().equals(postId));
         if (post == null) {
             throw new BadRequest("Post not found");
@@ -67,7 +67,11 @@ public class PostService implements IService {
             throw new BadRequest("Already liked post");
         }
 
-        return posts.updateElement(post.getId(), post);
+        if (!posts.updateElement(post.getId(), post)) {
+            return null;
+        }
+
+        return posts.findById(postId);
     }
 
     /**
@@ -77,7 +81,7 @@ public class PostService implements IService {
      * @param postId
      * @return
      */
-    public static boolean unlikePost(UUID userId, UUID postId) {
+    public static Post unlikePost(UUID userId, UUID postId) {
         Post post = posts.findOne(p -> p.getId().equals(postId));
         if (post == null) {
             throw new BadRequest("Post not found");
@@ -87,7 +91,11 @@ public class PostService implements IService {
             throw new BadRequest("Not liked post");
         }
 
-        return posts.updateElement(post.getId(), post);
+        if (!posts.updateElement(post.getId(), post)) {
+            return null;
+        }
+
+        return posts.findById(postId);
     }
 
     /**

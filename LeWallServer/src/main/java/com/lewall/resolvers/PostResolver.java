@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import com.lewall.api.InternalServerError;
 import com.lewall.api.Request;
+import com.lewall.db.models.Post;
 import com.lewall.resolvers.ResolverTools.AuthGuard;
 import com.lewall.resolvers.ResolverTools.BaseResolver;
 import com.lewall.resolvers.ResolverTools.Endpoint;
@@ -21,6 +22,7 @@ import com.lewall.dtos.CommentsDTO;
 import com.lewall.dtos.PostCommentsDTO;
 import com.lewall.dtos.PostsDTO;
 import com.lewall.dtos.HidePostDTO;
+import com.lewall.dtos.PostDTO;
 import com.lewall.dtos.PublicPrivateDTO;
 import com.lewall.dtos.ClassesDTO;
 
@@ -90,14 +92,17 @@ public class PostResolver implements BaseResolver, IPostResolver {
      * @return void
      */
     @AuthGuard()
-    @Endpoint(endpoint = "/like", method = Request.EMethod.POST, requestBodyType = LikePostDTO.class)
-    public void likePost(Request<LikePostDTO> request) {
+    @Endpoint(endpoint = "/like", method = Request.EMethod.POST, requestBodyType = LikePostDTO.class, responseBodyType = PostDTO.class)
+    public PostDTO likePost(Request<LikePostDTO> request) {
         UUID postId = request.getBody().getPostId();
         UUID userId = request.getUserId();
 
-        if (!PostService.likePost(userId, postId)) {
+        Post updatedPost = PostService.likePost(userId, postId);
+        if (updatedPost == null) {
             throw new InternalServerError("Failed to Like Post");
         }
+
+        return new PostDTO(updatedPost);
     }
 
     /**
@@ -110,14 +115,17 @@ public class PostResolver implements BaseResolver, IPostResolver {
      * @return void
      */
     @AuthGuard()
-    @Endpoint(endpoint = "/unlike", method = Request.EMethod.POST, requestBodyType = UnlikePostDTO.class)
-    public void unlikePost(Request<UnlikePostDTO> request) {
+    @Endpoint(endpoint = "/unlike", method = Request.EMethod.POST, requestBodyType = UnlikePostDTO.class, responseBodyType = PostDTO.class)
+    public PostDTO unlikePost(Request<UnlikePostDTO> request) {
         UUID postId = request.getBody().getPostId();
         UUID userId = request.getUserId();
 
-        if (!PostService.unlikePost(userId, postId)) {
+        Post updatedPost = PostService.unlikePost(userId, postId);
+        if (updatedPost == null) {
             throw new InternalServerError("Failed to Unlike Post");
         }
+
+        return new PostDTO(updatedPost);
     }
 
     /**
