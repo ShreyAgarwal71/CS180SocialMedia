@@ -133,7 +133,8 @@ public class UserService implements IService {
         userToBlock.unfollowUser(user.toString());
         userToBlock.removeFollower(user.toString());
 
-        return user.addBlockedUser(blockUserID.toString()) && users.updateElement(user.getId(), user);
+        return user.addBlockedUser(blockUserID.toString()) && users.updateElement(user.getId(), user)
+                && users.updateElement(userToBlock.getId(), userToBlock);
     }
 
     /**
@@ -228,7 +229,8 @@ public class UserService implements IService {
         List<Post> posts2 = new ArrayList<>();
         for (int i = 0; i < posts1.size(); i++) {
             for (int j = 0; j < posts1.get(i).size(); j++) {
-                if (!(user.getBlockedUsers().contains(posts1.get(i).get(j).getUserId().toString()))
+                if (!(users.findById(posts1.get(i).get(j).getUserId()).getBlockedUsers()
+                        .contains(user.getId().toString()))
                         && !(user.getHiddenPosts().contains(posts1.get(i).get(j).getId().toString()))
                         && !(posts1.get(i).get(j).getIsPrivate())) {
                     posts2.add(posts1.get(i).get(j));

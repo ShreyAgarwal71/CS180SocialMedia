@@ -168,9 +168,12 @@ public class Search extends Pane {
 
             if (!isSearchingResults) {
                 searchResults.getChildren().clear();
-                Text noResults = new Text("No matches found.");
-                noResults.getStyleClass().add("brand-subtitle");
-                searchResults.getChildren().add(noResults);
+                resultsTitle.setText("No results");
+                searchResults.getChildren().add(resultsTitle);
+            } else {
+                searchResults.getChildren().clear();
+                resultsTitle.setText("No results found.");
+                searchResults.getChildren().add(resultsTitle);
             }
         });
 
