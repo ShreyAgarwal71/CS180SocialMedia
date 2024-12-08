@@ -13,8 +13,12 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.HBox;
 
 public class CommentListView extends ListView<AggregatedComment> {
+    ListView<AggregatedComment> that;
+
     public CommentListView(ObservableList<AggregatedComment> items, UUID postOwner, Consumer<Void> refetch) {
         super(items);
+
+        that = this;
 
         this.setCellFactory(param -> new ListCell<AggregatedComment>() {
             @Override
@@ -31,8 +35,13 @@ public class CommentListView extends ListView<AggregatedComment> {
                                 .thenAccept((res) -> {
                                     refetch.accept(null);
                                 });
-                    }, (v) -> {
-                        // Update comment;
+                    }, (updatedComment) -> {
+                        item.getComment().setLikes(updatedComment.getComment().getLikes());
+                        item.getComment().setLikedBy(updatedComment.getComment().getLikedBy());
+
+                        item.getComment().setDislikes(updatedComment.getComment().getDislikes());
+                        item.getComment().setDislikedBy(updatedComment.getComment().getDislikedBy());
+                        that.refresh();
                     });
                     setGraphic(comment);
                 }

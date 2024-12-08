@@ -335,6 +335,7 @@ public class PostItem extends VBox {
                 Connection.<AddCommentDTO, Void>post("/comment/add",
                         new AddCommentDTO(item.getPost().getId(), commentField.getText(), date))
                         .thenAccept(response -> {
+                            commentField.setText("");
                             Connection
                                     .<PostCommentsDTO, AggregatedCommentsDTO>post("/post/getComments",
                                             new PostCommentsDTO(item.getPost().getId()))

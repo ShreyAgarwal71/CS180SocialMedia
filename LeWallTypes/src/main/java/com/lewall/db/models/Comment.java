@@ -22,7 +22,7 @@ public class Comment extends Model {
     private String date;
     private int likes;
     private Set<String> likedBy;
-	private int dislikes;
+    private int dislikes;
     private Set<String> dislikedBy;
     private Comment[] comments;
 
@@ -45,7 +45,7 @@ public class Comment extends Model {
         this.date = date;
         this.likes = likes;
         this.likedBy = new HashSet<>();
-		this.dislikes = dislikes;
+        this.dislikes = dislikes;
         this.dislikedBy = new HashSet<>();
         this.comments = new Comment[0];
     }
@@ -95,14 +95,14 @@ public class Comment extends Model {
         return likes;
     }
 
-	/**
-	 * Getter for dislikes
-	 * 
-	 * @return dislikes
-	 */
-	public int getDislikes() {
-		return dislikes;
-	}
+    /**
+     * Getter for dislikes
+     * 
+     * @return dislikes
+     */
+    public int getDislikes() {
+        return dislikes;
+    }
 
     /**
      * Getter for comments
@@ -122,14 +122,22 @@ public class Comment extends Model {
         return likedBy;
     }
 
-	/**
-	 * Getter for dislikedBy
-	 *
-	 * @return dislikedBy
-	 */
-	public Set<String> getDislikedBy() {
-		return dislikedBy;
-	}
+    /**
+     * Getter for dislikedBy
+     *
+     * @return dislikedBy
+     */
+    public Set<String> getDislikedBy() {
+        return dislikedBy;
+    }
+
+    public void setDislikes(int dislikes) {
+        this.dislikes = dislikes;
+    }
+
+    public void setDislikedBy(Set<String> dislikedBy) {
+        this.dislikedBy = dislikedBy;
+    }
 
     /**
      * Setter for comments
@@ -200,7 +208,7 @@ public class Comment extends Model {
      * @param userId
      */
     public boolean addLike(String userId) {
-		if (likedBy.contains(userId) || dislikedBy.contains(userId)) {
+        if (likedBy.contains(userId) || dislikedBy.contains(userId)) {
             return false;
         }
         this.likes++;
@@ -208,20 +216,20 @@ public class Comment extends Model {
         return true;
     }
 
-	/**
-	 * Add a dislike to the comment
-	 *
-	 * @param userId
-	 * @return exitCode
-	 */
-	public boolean addDislike(String userId) {
-		if (likedBy.contains(userId) || dislikedBy.contains(userId)) {
-			return false;
-		}
-		this.dislikes++;
-		dislikedBy.add(userId);
-		return true;
-	}
+    /**
+     * Add a dislike to the comment
+     *
+     * @param userId
+     * @return exitCode
+     */
+    public boolean addDislike(String userId) {
+        if (likedBy.contains(userId) || dislikedBy.contains(userId)) {
+            return false;
+        }
+        this.dislikes++;
+        dislikedBy.add(userId);
+        return true;
+    }
 
     /**
      * Remove a like from the comment
@@ -250,6 +258,7 @@ public class Comment extends Model {
         }
         return false;
     }
+
     /**
      * Equals method for Comment
      * 

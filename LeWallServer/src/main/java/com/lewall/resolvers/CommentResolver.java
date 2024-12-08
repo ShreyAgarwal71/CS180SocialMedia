@@ -2,6 +2,8 @@ package com.lewall.resolvers;
 
 import java.util.UUID;
 
+import org.w3c.dom.Comment;
+
 import com.lewall.api.InternalServerError;
 import com.lewall.api.Request;
 import com.lewall.resolvers.ResolverTools.AuthGuard;
@@ -11,6 +13,7 @@ import com.lewall.resolvers.ResolverTools.Resolver;
 import com.lewall.services.CommentService;
 
 import com.lewall.dtos.AddCommentDTO;
+import com.lewall.dtos.CommentDTO;
 import com.lewall.dtos.DeleteCommentDTO;
 import com.lewall.dtos.UnlikeCommentDTO;
 import com.lewall.interfaces.ICommentResolver;
@@ -78,14 +81,16 @@ public class CommentResolver implements BaseResolver, ICommentResolver {
      * @return void
      */
     @AuthGuard()
-    @Endpoint(endpoint = "/like", method = Request.EMethod.POST, requestBodyType = LikeCommentDTO.class)
-    public void likeComment(Request<LikeCommentDTO> request) {
+    @Endpoint(endpoint = "/like", method = Request.EMethod.POST, requestBodyType = LikeCommentDTO.class, responseBodyType = CommentDTO.class)
+    public CommentDTO likeComment(Request<LikeCommentDTO> request) {
         UUID commentId = request.getBody().getCommentId();
         UUID userId = request.getUserId();
 
         if (!CommentService.likeComment(userId, commentId)) {
             throw new InternalServerError("Failed to Like Comment");
         }
+
+        return new CommentDTO(CommentService.getComment(commentId));
     }
 
     /**
@@ -98,14 +103,16 @@ public class CommentResolver implements BaseResolver, ICommentResolver {
      * @return void
      */
     @AuthGuard()
-    @Endpoint(endpoint = "/dislike", method = Request.EMethod.POST, requestBodyType = LikeCommentDTO.class)
-    public void dislikeComment(Request<LikeCommentDTO> request) {
+    @Endpoint(endpoint = "/dislike", method = Request.EMethod.POST, requestBodyType = LikeCommentDTO.class, responseBodyType = CommentDTO.class)
+    public CommentDTO dislikeComment(Request<LikeCommentDTO> request) {
         UUID commentId = request.getBody().getCommentId();
         UUID userId = request.getUserId();
 
         if (!CommentService.dislikeComment(userId, commentId)) {
             throw new InternalServerError("Failed to dislike Comment");
         }
+
+        return new CommentDTO(CommentService.getComment(commentId));
     }
 
     /**
@@ -118,14 +125,16 @@ public class CommentResolver implements BaseResolver, ICommentResolver {
      * @return void
      */
     @AuthGuard()
-    @Endpoint(endpoint = "/unlike", method = Request.EMethod.POST, requestBodyType = UnlikeCommentDTO.class)
-    public void unlikeComment(Request<UnlikeCommentDTO> request) {
+    @Endpoint(endpoint = "/unlike", method = Request.EMethod.POST, requestBodyType = UnlikeCommentDTO.class, responseBodyType = CommentDTO.class)
+    public CommentDTO unlikeComment(Request<UnlikeCommentDTO> request) {
         UUID commentId = request.getBody().getCommentId();
         UUID userId = request.getUserId();
 
         if (!CommentService.unlikeComment(userId, commentId)) {
             throw new InternalServerError("Failed to Unlike Comment");
         }
+
+        return new CommentDTO(CommentService.getComment(commentId));
     }
 
     /**
@@ -138,13 +147,15 @@ public class CommentResolver implements BaseResolver, ICommentResolver {
      * @return void
      */
     @AuthGuard()
-    @Endpoint(endpoint = "/unDislike", method = Request.EMethod.POST, requestBodyType = UnlikeCommentDTO.class)
-    public void unDislikeComment(Request<UnlikeCommentDTO> request) {
+    @Endpoint(endpoint = "/unDislike", method = Request.EMethod.POST, requestBodyType = UnlikeCommentDTO.class, responseBodyType = CommentDTO.class)
+    public CommentDTO unDislikeComment(Request<UnlikeCommentDTO> request) {
         UUID commentId = request.getBody().getCommentId();
         UUID userId = request.getUserId();
 
         if (!CommentService.unDislikeComment(userId, commentId)) {
             throw new InternalServerError("Failed to Unlike Comment");
         }
+
+        return new CommentDTO(CommentService.getComment(commentId));
     }
 }

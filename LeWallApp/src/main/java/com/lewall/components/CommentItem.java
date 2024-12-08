@@ -6,9 +6,12 @@ import java.util.function.Consumer;
 import com.lewall.api.Connection;
 import com.lewall.api.LocalStorage;
 import com.lewall.common.AggregatedComment;
+import com.lewall.common.AggregatedPost;
 import com.lewall.common.Theme;
 import com.lewall.dtos.CommentDTO;
 import com.lewall.dtos.LikeCommentDTO;
+import com.lewall.dtos.LikePostDTO;
+import com.lewall.dtos.PostDTO;
 import com.lewall.dtos.UserDTO;
 
 import javafx.application.Platform;
@@ -128,6 +131,34 @@ public class CommentItem extends HBox {
                         .thenAccept(response -> {
                             Platform.runLater(() -> {
                                 likesButton.setGraphic(likeIcon);
+                                setUpdatedCommment.accept(new AggregatedComment(
+                                        response.getBody().getComment(),
+                                        item.getUser()));
+                            });
+                        });
+            }
+        });
+
+        dislikesButton.setOnAction(event -> {
+            if (!hasDisliked) {
+                Connection
+                        .<LikeCommentDTO, CommentDTO>post("/post/dislike",
+                                new LikeCommentDTO(item.getComment().getId()))
+                        .thenAccept(response -> {
+                            Platform.runLater(() -> {
+                                dislikesButton.setGraphic(dislikedIcon);
+                                setUpdatedCommment.accept(new AggregatedComment(
+                                        response.getBody().getComment(),
+                                        item.getUser()));
+                            });
+                        });
+            } else {
+                Connection
+                        .<LikeCommentDTO, CommentDTO>post("/post/unDislike",
+                                new LikeCommentDTO(item.getComment().getId()))
+                        .thenAccept(response -> {
+                            Platform.runLater(() -> {
+                                dislikesButton.setGraphic(dislikeIcon);
                                 setUpdatedCommment.accept(new AggregatedComment(
                                         response.getBody().getComment(),
                                         item.getUser()));

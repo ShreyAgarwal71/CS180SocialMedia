@@ -33,6 +33,10 @@ public class CommentService implements IService {
         return comments.addElement(comment);
     }
 
+    public static Comment getComment(UUID commentId) {
+        return comments.findOne(c -> c.getId().equals(commentId));
+    }
+
     /**
      * Edit a comment
      * 
