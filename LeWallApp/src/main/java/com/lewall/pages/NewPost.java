@@ -1,10 +1,8 @@
 package com.lewall.pages;
 
 import java.time.format.DateTimeFormatter;
-import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.List;
-import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -105,7 +103,7 @@ public class NewPost extends Pane {
 						body, date, selectedClass);
 				// TODO: IMG-URL
 
-				CreatePostDTO post = new CreatePostDTO(body, date, null, "Class");
+				CreatePostDTO post = new CreatePostDTO(body, date, null, courseDropdown.getValue());
 				Connection.post("/post/create", post).thenAccept(response -> {
 					Platform.runLater(() -> {
 						Navigator.navigateTo(Navigator.EPage.PROFILE);
