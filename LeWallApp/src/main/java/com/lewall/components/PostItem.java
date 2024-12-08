@@ -2,26 +2,23 @@ package com.lewall.components;
 
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-import com.lewall.Navigator;
-import com.lewall.Navigator.EPage;
 import com.lewall.api.Connection;
 import com.lewall.api.LocalStorage;
 import com.lewall.common.AggregatedComment;
 import com.lewall.common.AggregatedPost;
 import com.lewall.common.Theme;
-import com.lewall.db.models.Post;
+import com.lewall.db.models.Comment;
 import com.lewall.dtos.UserDTO;
-import com.lewall.dtos.UserIdDTO;
 import com.lewall.dtos.AddCommentDTO;
 import com.lewall.dtos.AggregatedCommentsDTO;
 import com.lewall.dtos.AggregatedPostsDTO;
 import com.lewall.dtos.CommentsDTO;
 import com.lewall.dtos.DeletePostDTO;
-import com.lewall.dtos.FollowingPostsDTO;
 import com.lewall.dtos.PostDTO;
 import com.lewall.dtos.LikePostDTO;
 import com.lewall.dtos.PostCommentsDTO;
@@ -85,6 +82,7 @@ public class PostItem extends VBox {
 
         VBox postContents = new VBox(5);
         VBox postQuote = getPostQuoteComponent(
+				item.getPost().getDate(),
                 item.getPost().getMessagePost(),
                 imageURL == null ? width - 20 : height - 10);
 
@@ -137,7 +135,8 @@ public class PostItem extends VBox {
         HBox postClass = new HBox(5);
         postClass.setPadding(new Insets(5, 0, 0, 10));
 
-        Text postClassText = new Text("@" + item.getPost().getClassId() + " • 2 days ago");
+        Text postClassText = new Text("@" + item.getPost().getClassId());
+		System.out.println(item.getPost().getClassId());
         postClassText.setFill(Color.web(Theme.TEXT_GREY));
         postClass.getChildren().add(postClassText);
 
@@ -374,7 +373,7 @@ public class PostItem extends VBox {
         return postReactions;
     }
 
-    private VBox getPostQuoteComponent(String quote, double width) {
+    private VBox getPostQuoteComponent(String date, String quote, double width) {
         VBox postQuote = new VBox(10);
         postQuote.setPadding(new Insets(10));
         postQuote.setAlignment(Pos.CENTER_LEFT);
@@ -399,7 +398,7 @@ public class PostItem extends VBox {
 
         Text postAuthor = new Text();
         postAuthor.textProperty().bind(author);
-        Text postImprintedDate = new Text("Imprinted Dec. 1st 2024");
+        Text postImprintedDate = new Text(processDateStr(date));
 
         postAuthor.setFont(Theme.INRIA_SERIF);
         postImprintedDate.setFont(Theme.INRIA_SERIF_SMALL);
@@ -416,4 +415,23 @@ public class PostItem extends VBox {
 
         return postQuote;
     }
+
+	private String processDateStr(String date) {
+		String[] splitDate = date.trim().split("/");
+		HashMap<String, String> months = new HashMap<>(12);
+		months.put("01", "Jan.");
+		months.put("02", "Feb.");
+		months.put("03", "Mar.");
+		months.put("04", "Apr.");
+		months.put("05", "May.");
+		months.put("06", "Jun.");
+		months.put("07", "Jul.");
+		months.put("08", "Aug.");
+		months.put("09", "Sep.");
+		months.put("10", "Oct.");
+		months.put("11", "Nov.");
+		months.put("12", "Dec.");
+
+		return String.format("%s %s, %s", months.get(splitDate[0]), splitDate[1], splitDate[2]);
+	}
 }
