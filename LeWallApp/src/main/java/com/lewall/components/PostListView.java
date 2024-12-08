@@ -48,6 +48,9 @@ public class PostListView extends ListView<AggregatedPost> {
                             }, updatedPost -> {
                                 item.getPost().setLikes(updatedPost.getPost().getLikes());
                                 item.getPost().setUsersLiked(updatedPost.getPost().getUsersLiked());
+
+                                item.getPost().setDislikes(updatedPost.getPost().getDislikes());
+                                item.getPost().setUsersDisliked(updatedPost.getPost().getUsersDisliked());
                                 that.refresh();
                             },
                             comments -> {

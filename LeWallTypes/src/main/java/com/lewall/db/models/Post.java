@@ -35,12 +35,13 @@ public class Post extends Model {
      * @param postId
      * @param likes
      */
-    public Post(UUID userId, String messagePost, String date, int likes, int dislikes, String imageURL, String classId) {
+    public Post(UUID userId, String messagePost, String date, int likes, int dislikes, String imageURL,
+            String classId) {
         this.userId = userId;
         this.messagePost = messagePost;
         this.date = date; // MM/DD/YYYY
         this.likes = likes;
-		this.dislikes = dislikes;
+        this.dislikes = dislikes;
         this.imageURL = imageURL;
         this.usersLiked = new HashSet<>();
         this.usersDisliked = new HashSet<>();
@@ -89,9 +90,9 @@ public class Post extends Model {
      * 
      * @return dislikes
      */
-	public int getDislikes() {
-		return dislikes;
-	}
+    public int getDislikes() {
+        return dislikes;
+    }
 
     /**
      * getter for imageURL
@@ -111,14 +112,14 @@ public class Post extends Model {
         return usersLiked;
     }
 
-	/**
-	 * Getter for usersDisliked
-	 *
-	 * @return usersDisliked
-	 */
-	public Set<String> getUsersDisliked() {
-		return usersDisliked;
-	}
+    /**
+     * Getter for usersDisliked
+     *
+     * @return usersDisliked
+     */
+    public Set<String> getUsersDisliked() {
+        return usersDisliked;
+    }
 
     /**
      * Getter for classId
@@ -166,12 +167,30 @@ public class Post extends Model {
     }
 
     /**
+     * Setter for dislikes
+     * 
+     * @param likes
+     */
+    public void setDislikes(int dislikes) {
+        this.dislikes = dislikes;
+    }
+
+    /**
      * Setter for likes
      * 
      * @param likes
      */
     public void setLikes(int likes) {
         this.likes = likes;
+    }
+
+    /**
+     * Setter for usersDisliked
+     * 
+     * @param usersLiked
+     */
+    public void setUsersDisliked(Set<String> usersDisliked) {
+        this.usersDisliked = usersDisliked;
     }
 
     /**
@@ -208,9 +227,9 @@ public class Post extends Model {
      * @return boolean
      */
     public boolean addLike(String userId) {
-		if (usersLiked.contains(userId) || usersDisliked.contains(userId)) {
-			return false;
-		}
+        if (usersLiked.contains(userId) || usersDisliked.contains(userId)) {
+            return false;
+        }
         if (usersLiked.add(userId)) {
             this.likes++;
             return true;
@@ -225,9 +244,9 @@ public class Post extends Model {
      * @return boolean
      */
     public boolean addDislike(String userId) {
-		if (usersLiked.contains(userId) || usersDisliked.contains(userId)) {
-			return false;
-		}
+        if (usersLiked.contains(userId) || usersDisliked.contains(userId)) {
+            return false;
+        }
         if (usersDisliked.add(userId)) {
             this.dislikes++;
             return true;

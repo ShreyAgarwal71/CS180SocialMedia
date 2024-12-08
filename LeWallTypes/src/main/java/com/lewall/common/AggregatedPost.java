@@ -8,10 +8,10 @@ import com.lewall.db.models.User;
 
 public class AggregatedPost {
     private Post post;
-    private List<Comment> comments;
+    private List<AggregatedComment> comments;
     private User user;
 
-    public AggregatedPost(Post post, List<Comment> comments, User user) {
+    public AggregatedPost(Post post, List<AggregatedComment> comments, User user) {
         this.post = post;
         this.comments = comments;
         this.user = user;
@@ -21,11 +21,11 @@ public class AggregatedPost {
         return post;
     }
 
-    public List<Comment> getComments() {
+    public List<AggregatedComment> getComments() {
         return comments;
     }
 
-    public void setComments(List<Comment> comments) {
+    public void setComments(List<AggregatedComment> comments) {
         this.comments = comments;
     }
 
