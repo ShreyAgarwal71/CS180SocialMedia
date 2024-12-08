@@ -149,7 +149,7 @@ public class UserResolver implements BaseResolver, IUserResolver {
      * @return void
      */
     @AuthGuard()
-    @Endpoint(endpoint = "/block", method = Request.EMethod.GET, requestBodyType = BlockUserDTO.class)
+    @Endpoint(endpoint = "/block", method = Request.EMethod.POST, requestBodyType = BlockUserDTO.class)
     public void blockUser(Request<BlockUserDTO> request) {
         UUID blockedUserId = request.getBody().getBlockedUserId();
         UUID userId = request.getUserId();
@@ -169,7 +169,7 @@ public class UserResolver implements BaseResolver, IUserResolver {
      * @return void
      */
     @AuthGuard()
-    @Endpoint(endpoint = "/unblock", method = Request.EMethod.GET, requestBodyType = UnblockUserDTO.class)
+    @Endpoint(endpoint = "/unblock", method = Request.EMethod.POST, requestBodyType = UnblockUserDTO.class)
     public void unblockUser(Request<UnblockUserDTO> request) {
         UUID blockedUserId = request.getBody().getUnblockedUserId();
         UUID userId = request.getUserId();

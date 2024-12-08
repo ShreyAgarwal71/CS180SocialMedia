@@ -220,6 +220,8 @@ public class Profile extends Pane {
 			blockButton.setPrefWidth(300);
 			blockButton.setOnAction(e -> {
 				System.out.println(getAuthenicatedUser().getBlockedUsers().toString());
+				System.out.println(profileUser.getId().toString());
+				System.out.println(getAuthenicatedUser().getBlockedUsers().contains(profileUser.getId().toString()));
 				if (getAuthenicatedUser().getBlockedUsers().contains(profileUser.getId().toString())) {
 					Connection
 							.<UnblockUserDTO, UserDTO>post("/user/unblock", new UnblockUserDTO(profileUser.getId()))
