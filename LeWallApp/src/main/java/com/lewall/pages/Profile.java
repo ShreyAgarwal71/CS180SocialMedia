@@ -99,7 +99,7 @@ public class Profile extends Pane {
 		profileSubtitle.setFill(Color.web(Theme.ACCENT));
 		VBox.setMargin(profileSubtitle, new Insets(3, 0, 0, 0));
 
-		Rectangle idCard = new Rectangle(315, otherUser ? 150 : 115);
+		Rectangle idCard = new Rectangle(315, otherUser ? 170 : 115);
 		idCard.setFill(Color.rgb(25, 18, 35));
 		idCard.setStroke(Color.rgb(255, 255, 255, 0.05));
 		idCard.setStrokeWidth(1);
@@ -215,20 +215,22 @@ public class Profile extends Pane {
 			boolean hasBlockedProfileUser = getAuthenicatedUser().getBlockedUsers()
 					.contains(profileUser.getId().toString());
 
-			Button blockButton = new Button(isFollowingProfileUser ? "Unblock" : "Block");
-			followButton.getStyleClass().add("accent-button");
-			followButton.setPrefWidth(300);
-			followButton.setOnAction(e -> {
-				if (getAuthenicatedUser().getFollowing().contains(profileUser.getId().toString())) {
+			Button blockButton = new Button(hasBlockedProfileUser ? "Unblock" : "Block");
+			blockButton.getStyleClass().add("accent-button");
+			blockButton.setPrefWidth(300);
+			blockButton.setOnAction(e -> {
+				System.out.println(getAuthenicatedUser().getBlockedUsers().toString());
+				if (getAuthenicatedUser().getBlockedUsers().contains(profileUser.getId().toString())) {
 					Connection
 							.<UnblockUserDTO, UserDTO>post("/user/unblock", new UnblockUserDTO(profileUser.getId()))
 							.thenAccept(response -> {
 								Platform.runLater(() -> {
-									followButton.setText("Block");
+									blockButton.setText("Block");
 								});
 
 								profileUser = response.getBody().getUser();
 								userFollowers.set(profileUser.getFollowers().size() + "");
+								userFollowing.set(profileUser.getFollowing().size() + "");
 
 								// Update the user in local storage
 								Connection.<UserDTO>get("/user", true);
@@ -237,11 +239,12 @@ public class Profile extends Pane {
 					Connection.<BlockUserDTO, UserDTO>post("/user/block", new BlockUserDTO(profileUser.getId()))
 							.thenAccept(response -> {
 								Platform.runLater(() -> {
-									followButton.setText("Unblock");
+									blockButton.setText("Unblock");
 								});
 
 								profileUser = response.getBody().getUser();
 								userFollowers.set(profileUser.getFollowers().size() + "");
+								userFollowing.set(profileUser.getFollowing().size() + "");
 
 								// Update the user in local storage
 								Connection.<UserDTO>get("/user", true);

@@ -280,7 +280,8 @@ public class UserService implements IService {
 
         List<User> users2 = new ArrayList<>();
         for (int i = 0; i < users1.size(); i++) {
-            if (!(user.getBlockedUsers().contains(users1.get(i).getId().toString()))
+            System.out.println(users1.get(i).getBlockedUsers().contains(user.getId().toString()));
+            if (!(users1.get(i).getBlockedUsers().contains(user.getId().toString()))
                     && !(user.getHiddenPosts().contains(users1.get(i).getId().toString()))) {
                 users2.add(users1.get(i));
             }
