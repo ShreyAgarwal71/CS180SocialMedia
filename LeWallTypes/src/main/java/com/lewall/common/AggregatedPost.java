@@ -25,6 +25,10 @@ public class AggregatedPost {
         return comments;
     }
 
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
     public User getUser() {
         return user;
     }

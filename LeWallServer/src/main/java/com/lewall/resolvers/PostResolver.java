@@ -204,7 +204,7 @@ public class PostResolver implements BaseResolver, IPostResolver {
      * @return {@link CommentsDTO}
      */
     @AuthGuard()
-    @Endpoint(endpoint = "/getComments", method = Request.EMethod.GET, requestBodyType = PostCommentsDTO.class, responseBodyType = CommentsDTO.class)
+    @Endpoint(endpoint = "/getComments", method = Request.EMethod.POST, requestBodyType = PostCommentsDTO.class, responseBodyType = CommentsDTO.class)
     public CommentsDTO getComments(Request<PostCommentsDTO> request) {
         UUID postId = request.getBody().getPostId();
 

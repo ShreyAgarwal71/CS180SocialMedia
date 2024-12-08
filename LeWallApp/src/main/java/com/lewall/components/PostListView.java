@@ -49,6 +49,13 @@ public class PostListView extends ListView<AggregatedPost> {
                                 item.getPost().setLikes(updatedPost.getPost().getLikes());
                                 item.getPost().setUsersLiked(updatedPost.getPost().getUsersLiked());
                                 that.refresh();
+                            },
+                            comments -> {
+                                item.setComments(comments);
+                                that.refresh();
+                            },
+                            pid -> {
+
                             });
                     post.setPadding(new Insets(0, 0, isLast ? 40 : 10, 0));
                     setGraphic(post);

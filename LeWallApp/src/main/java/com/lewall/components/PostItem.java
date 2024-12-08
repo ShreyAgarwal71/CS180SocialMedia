@@ -2,6 +2,7 @@ package com.lewall.components;
 
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -11,14 +12,18 @@ import com.lewall.api.Connection;
 import com.lewall.api.LocalStorage;
 import com.lewall.common.AggregatedPost;
 import com.lewall.common.Theme;
+import com.lewall.db.models.Comment;
 import com.lewall.db.models.Post;
 import com.lewall.dtos.UserDTO;
 import com.lewall.dtos.UserIdDTO;
 import com.lewall.dtos.AddCommentDTO;
+import com.lewall.dtos.AggregatedPostsDTO;
+import com.lewall.dtos.CommentsDTO;
 import com.lewall.dtos.DeletePostDTO;
 import com.lewall.dtos.FollowingPostsDTO;
 import com.lewall.dtos.PostDTO;
 import com.lewall.dtos.LikePostDTO;
+import com.lewall.dtos.PostCommentsDTO;
 
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -28,6 +33,7 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
@@ -50,10 +56,17 @@ import javafx.scene.text.Text;
 public class PostItem extends VBox {
     private StringProperty author = new SimpleStringProperty("");
     private final Consumer<AggregatedPost> setUpdatedPost;
+    private final Consumer<List<Comment>> updateComments;
 
-    public PostItem(AggregatedPost item, Consumer<UUID> onDelete, Consumer<AggregatedPost> setUpdatedPost) {
+    public PostItem(
+            AggregatedPost item,
+            Consumer<UUID> onDelete,
+            Consumer<AggregatedPost> setUpdatedPost,
+            Consumer<List<Comment>> updateComments,
+            Consumer<UUID> refreshPost) {
         super(5);
         this.setUpdatedPost = setUpdatedPost;
+        this.updateComments = updateComments;
 
         author.set(item.getUser().getDisplayName());
 
@@ -243,6 +256,11 @@ public class PostItem extends VBox {
             Button postCommentButton = new Button("Post");
             postCommentButton.getStyleClass().add("accent-button");
 
+            ObservableList<Comment> comments = FXCollections.observableArrayList();
+            comments.addAll(item.getComments());
+
+            ListView<Comment> commentListView = new CommentListView(comments);
+
             // add a comment
             postCommentButton.setOnAction(e -> {
                 DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy");
@@ -251,16 +269,26 @@ public class PostItem extends VBox {
                 Connection.<AddCommentDTO, Void>post("/comment/add",
                         new AddCommentDTO(item.getPost().getId(), commentField.getText(), date))
                         .thenAccept(response -> {
-                            System.out.println("Comment added");
+                            Connection
+                                    .<PostCommentsDTO, CommentsDTO>post("/post/getComments",
+                                            new PostCommentsDTO(item.getPost().getId()))
+                                    .thenAccept(commentsResponse -> {
+                                        Platform.runLater(() -> {
+                                            comments.clear();
+                                            comments.addAll(commentsResponse.getBody().getComments());
+                                        });
+                                    });
                         });
             });
 
             createCommentContainer.getChildren().addAll(commentField, postCommentButton);
 
-            mainStackCopy.getChildren().addAll(closeButton, createCommentContainer);
+            mainStackCopy.getChildren().addAll(closeButton, commentListView, createCommentContainer);
             mainStackCopy.setAlignment(Pos.TOP_LEFT);
             mainStack.getChildren().addAll(mainStackCopy);
             closeButton.setOnAction(e -> {
+                updateComments.accept(comments);
+
                 mainStack.getChildren().remove(dimBackground);
                 mainStack.getChildren().remove(mainStackCopy);
             });
