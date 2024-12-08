@@ -6,6 +6,7 @@ import com.lewall.dtos.DeletePostDTO;
 import com.lewall.dtos.UnlikePostDTO;
 import com.lewall.dtos.UserIdDTO;
 import com.lewall.dtos.LikePostDTO;
+import com.lewall.dtos.AggregatedCommentsDTO;
 import com.lewall.dtos.CommentsDTO;
 import com.lewall.dtos.PostCommentsDTO;
 import com.lewall.dtos.PostsDTO;
@@ -47,7 +48,7 @@ public interface IPostResolver {
 	/**
 	 * Resolves a get commments of a post request
 	 */
-	public CommentsDTO getComments(Request<PostCommentsDTO> request);
+	public AggregatedCommentsDTO getComments(Request<PostCommentsDTO> request);
 
 	/**
 	 * Resolves all posts of a specific user

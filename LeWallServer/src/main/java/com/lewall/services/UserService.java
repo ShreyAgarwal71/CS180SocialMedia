@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.lewall.api.BadRequest;
+import com.lewall.common.AggregatedComment;
 import com.lewall.common.AggregatedPost;
 import com.lewall.db.collections.CommentCollection;
 import com.lewall.db.collections.PostCollection;
@@ -36,7 +37,8 @@ public class UserService implements IService {
     public static AggregatedPost getAggregatedPost(Post post) {
         User user = users.findById(post.getUserId());
         List<Comment> postComments = comments.findAll(c -> c.getPostId().equals(post.getId()));
-        AggregatedPost aggregatedPost = new AggregatedPost(post, postComments, user);
+        List<AggregatedComment> aggregatedComments = PostService.aggregatedComments(postComments);
+        AggregatedPost aggregatedPost = new AggregatedPost(post, aggregatedComments, user);
         return aggregatedPost;
     }
 
