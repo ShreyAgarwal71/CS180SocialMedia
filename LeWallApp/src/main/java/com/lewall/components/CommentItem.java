@@ -142,7 +142,7 @@ public class CommentItem extends HBox {
         dislikesButton.setOnAction(event -> {
             if (!hasDisliked) {
                 Connection
-                        .<LikeCommentDTO, CommentDTO>post("/post/dislike",
+                        .<LikeCommentDTO, CommentDTO>post("/comment/dislike",
                                 new LikeCommentDTO(item.getComment().getId()))
                         .thenAccept(response -> {
                             Platform.runLater(() -> {
@@ -154,7 +154,7 @@ public class CommentItem extends HBox {
                         });
             } else {
                 Connection
-                        .<LikeCommentDTO, CommentDTO>post("/post/unDislike",
+                        .<LikeCommentDTO, CommentDTO>post("/comment/unDislike",
                                 new LikeCommentDTO(item.getComment().getId()))
                         .thenAccept(response -> {
                             Platform.runLater(() -> {

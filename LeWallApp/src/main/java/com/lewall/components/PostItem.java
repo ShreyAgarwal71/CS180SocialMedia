@@ -79,7 +79,7 @@ public class PostItem extends VBox {
 
         VBox postContents = new VBox(5);
         VBox postQuote = getPostQuoteComponent(
-				item.getPost().getDate(),
+                item.getPost().getDate(),
                 item.getPost().getMessagePost(),
                 imageURL == null ? width - 20 : height - 10);
 
@@ -413,22 +413,22 @@ public class PostItem extends VBox {
         return postQuote;
     }
 
-	private String processDateStr(String date) {
-		String[] splitDate = date.trim().split("/");
-		HashMap<String, String> months = new HashMap<>(12);
-		months.put("01", "Jan.");
-		months.put("02", "Feb.");
-		months.put("03", "Mar.");
-		months.put("04", "Apr.");
-		months.put("05", "May.");
-		months.put("06", "Jun.");
-		months.put("07", "Jul.");
-		months.put("08", "Aug.");
-		months.put("09", "Sep.");
-		months.put("10", "Oct.");
-		months.put("11", "Nov.");
-		months.put("12", "Dec.");
+    private String processDateStr(String date) {
+        String[] splitDate = date.trim().split("/");
+        HashMap<String, String> months = new HashMap<>(12);
+        months.put("01", "Jan.");
+        months.put("02", "Feb.");
+        months.put("03", "Mar.");
+        months.put("04", "Apr.");
+        months.put("05", "May.");
+        months.put("06", "Jun.");
+        months.put("07", "Jul.");
+        months.put("08", "Aug.");
+        months.put("09", "Sep.");
+        months.put("10", "Oct.");
+        months.put("11", "Nov.");
+        months.put("12", "Dec.");
 
-		return String.format("%s %s, %s", months.get(splitDate[0]), splitDate[1], splitDate[2]);
-	}
+        return String.format("Established %s %s, %s", months.get(splitDate[0]), splitDate[1], splitDate[2]);
+    }
 }

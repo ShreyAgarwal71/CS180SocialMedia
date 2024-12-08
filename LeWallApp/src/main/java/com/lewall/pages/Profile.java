@@ -230,10 +230,11 @@ public class Profile extends Pane {
 
 		ObservableList<AggregatedPost> items = FXCollections.observableArrayList();
 
-		Connection.<AggregatedPostsDTO>get("/user/getPosts", false).thenAccept(response -> {
-			AggregatedPostsDTO postsDTO = response.getBody();
-			items.addAll(postsDTO.getAggregatedPosts());
-		});
+		Connection.<UserIdDTO, AggregatedPostsDTO>post("/user/getPosts", new UserIdDTO(profileUser.getId()))
+				.thenAccept(response -> {
+					AggregatedPostsDTO postsDTO = response.getBody();
+					items.addAll(postsDTO.getAggregatedPosts());
+				});
 
 		ListView<AggregatedPost> postListView = new PostListView(items);
 		postListView.setMaxHeight(220);
