@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
-import java.util.UUID;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -208,9 +207,6 @@ public class UserServiceTest {
 	 */
 	@Test
 	public void getFollowingPostsTest() {
-		UUID target = UUID.randomUUID();
-		UUID extra = UUID.randomUUID();
-
 		User u1 = new User("user1", "qweqwe", "user1", "bio", "user1@hj.kl");
 		User u2 = new User("user2", "qweqwe", "user2", "bio", "user2@hj.kl");
 		User u3 = new User("user3", "qweqwe", "user3", "bio", "user3@hj.kl");
@@ -226,12 +222,12 @@ public class UserServiceTest {
 
 		String[] expectedMsg = { "msg1", "msg2", "msg3", "msg4" };
 		String[] expectedDate = { "11/22/2024", "11/21/2024", "11/20/2024", "11/19/2024" };
-		Post p1 = new Post(u2.getId(), "msg1", "11/22/2024", 0, null, "RandomClass");
-		Post p2 = new Post(u2.getId(), "msg2", "11/21/2024", 0, null, "RandomClass1");
-		Post p3 = new Post(u3.getId(), "msg3", "11/20/2024", 0, null, "RandomClass");
-		Post p4 = new Post(u3.getId(), "msg4", "11/19/2024", 0, null, "RandomClass");
-		Post p5 = new Post(u4.getId(), "msg5", "11/18/2024", 0, null, "RandomClass");
-		Post p6 = new Post(u4.getId(), "msg6", "11/17/2024", 0, null, "RandomClass1");
+		Post p1 = new Post(u2.getId(), "msg1", "11/22/2024", 0, 0, null, "RandomClass");
+		Post p2 = new Post(u2.getId(), "msg2", "11/21/2024", 0, 0, null, "RandomClass1");
+		Post p3 = new Post(u3.getId(), "msg3", "11/20/2024", 0, 0, null, "RandomClass");
+		Post p4 = new Post(u3.getId(), "msg4", "11/19/2024", 0, 0, null, "RandomClass");
+		Post p5 = new Post(u4.getId(), "msg5", "11/18/2024", 0, 0, null, "RandomClass");
+		Post p6 = new Post(u4.getId(), "msg6", "11/17/2024", 0, 0, null, "RandomClass1");
 
 		UserService.db.getPostCollection().addElement(p1);
 		UserService.db.getPostCollection().addElement(p2);
@@ -256,17 +252,14 @@ public class UserServiceTest {
 	 */
 	@Test
 	public void getClassFeedTest() {
-		UUID target = UUID.randomUUID();
-		UUID extra = UUID.randomUUID();
-
 		User u1 = new User("mj", "96bulls", "mjordan", "bio", "mj@bulls.us");
 		UserService.db.getUserCollection().addUser(u1);
 
 		String[] expectedMsg = { "msg1", "msg3" };
 		String[] expectedDate = { "11/17/2024", "11/19/2024" };
-		Post p1 = new Post(u1.getId(), "msg1", "11/17/2024", 0, null, "RandomClass3");
-		Post p2 = new Post(u1.getId(), "msg2", "11/18/2024", 0, null, "RandomClass1");
-		Post p3 = new Post(u1.getId(), "msg3", "11/19/2024", 0, null, "RandomClass3");
+		Post p1 = new Post(u1.getId(), "msg1", "11/17/2024", 0, 0, null, "RandomClass3");
+		Post p2 = new Post(u1.getId(), "msg2", "11/18/2024", 0, 0, null, "RandomClass1");
+		Post p3 = new Post(u1.getId(), "msg3", "11/19/2024", 0, 0, null, "RandomClass3");
 
 		UserService.db.getPostCollection().addElement(p1);
 		UserService.db.getPostCollection().addElement(p2);

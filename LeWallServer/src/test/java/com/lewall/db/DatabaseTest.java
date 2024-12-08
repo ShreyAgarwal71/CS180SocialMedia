@@ -181,9 +181,9 @@ public class DatabaseTest {
 		User testUser = new User("testUsername", "testPassword", "testDisplayName", "bio", "testEmail");
 		db.getUserCollection().addElement(testUser);
 
-		Post testPostOne = new Post(testUser.getId(), "testMessageOne", "testDateOne", 0, "testImageURLOne",
+		Post testPostOne = new Post(testUser.getId(), "testMessageOne", "testDateOne", 0, 0, "testImageURLOne",
 				"");
-		Post testPostTwo = new Post(testUser.getId(), "testMessageTwo", "testDateTwo", 0, "testImageURLTwo",
+		Post testPostTwo = new Post(testUser.getId(), "testMessageTwo", "testDateTwo", 0, 0, "testImageURLTwo",
 				"");
 
 		db.getPostCollection().addElement(testPostOne);
@@ -204,7 +204,7 @@ public class DatabaseTest {
 
 		UUID userId = UUID.randomUUID();
 
-		Post testPostOne = new Post(userId, "testMessageOne", "testDateOne", 0, "testImageURLOne", "");
+		Post testPostOne = new Post(userId, "testMessageOne", "testDateOne", 0, 0, "testImageURLOne", "");
 
 		db.getPostCollection().addElement(testPostOne);
 		assertFalse(db.getPostCollection().addElement(testPostOne), "Expected duplicate post to not be added");
@@ -223,7 +223,7 @@ public class DatabaseTest {
 		Database db = new Database();
 
 		UUID userId = UUID.randomUUID();
-		Post testPostOne = new Post(userId, "testMessageOne", "testDateOne", 0, "testImageURLOne",
+		Post testPostOne = new Post(userId, "testMessageOne", "testDateOne", 0, 0, "testImageURLOne",
 				"");
 
 		db.getPostCollection().addElement(testPostOne);
@@ -245,7 +245,7 @@ public class DatabaseTest {
 		Database db = new Database();
 
 		UUID userId = UUID.randomUUID();
-		Post testPostOne = new Post(userId, "testMessageOne", "testDateOne", 0, "testImageURLOne", "");
+		Post testPostOne = new Post(userId, "testMessageOne", "testDateOne", 0, 0, "testImageURLOne", "");
 
 		db.getPostCollection().addElement(testPostOne);
 
@@ -272,8 +272,8 @@ public class DatabaseTest {
 		UUID userId = UUID.randomUUID();
 		UUID postId = UUID.randomUUID();
 
-		Comment testCommentOne = new Comment(userId, postId, "testCommentOne", "testDateOne", 0);
-		Comment testCommentTwo = new Comment(userId, postId, "testCommentTwo", "testDateTwo", 1);
+		Comment testCommentOne = new Comment(userId, postId, "testCommentOne", "testDateOne", 0, 0);
+		Comment testCommentTwo = new Comment(userId, postId, "testCommentTwo", "testDateTwo", 1, 0);
 
 		db.getCommentCollection().addElement(testCommentOne);
 		db.getCommentCollection().addElement(testCommentTwo);
@@ -293,7 +293,7 @@ public class DatabaseTest {
 		UUID userId = UUID.randomUUID();
 		UUID postId = UUID.randomUUID();
 
-		Comment testComment = new Comment(userId, postId, "testCommentOne", "testDateOne", 0);
+		Comment testComment = new Comment(userId, postId, "testCommentOne", "testDateOne", 0, 0);
 
 		db.getCommentCollection().addElement(testComment);
 		assertFalse(db.getCommentCollection().addElement(testComment),
@@ -314,7 +314,7 @@ public class DatabaseTest {
 		UUID userId = UUID.randomUUID();
 		UUID postId = UUID.randomUUID();
 
-		Comment testComment = new Comment(userId, postId, "testCommentOne", "testDateOne", 1);
+		Comment testComment = new Comment(userId, postId, "testCommentOne", "testDateOne", 1, 0);
 
 		db.getCommentCollection().addElement(testComment);
 
@@ -336,7 +336,7 @@ public class DatabaseTest {
 		UUID userId = UUID.randomUUID();
 		UUID postId = UUID.randomUUID();
 
-		Comment testComment = new Comment(userId, postId, "testCommentOne", "testDateOne", 1);
+		Comment testComment = new Comment(userId, postId, "testCommentOne", "testDateOne", 1, 0);
 
 		db.getCommentCollection().addElement(testComment);
 
