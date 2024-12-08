@@ -75,7 +75,8 @@ public class Home extends Pane {
                             pid -> {
                                 items.removeIf(ele -> ele.getId().equals(pid));
                             }, updatedPost -> {
-                                items.set(items.indexOf(item), updatedPost);
+                                item.setLikes(updatedPost.getLikes());
+                                item.setUsersLiked(updatedPost.getUsersLiked());
                                 postListView.refresh();
                             });
                     post.setPadding(new Insets(0, 0, isLast ? 40 : 10, 0));
