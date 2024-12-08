@@ -1,5 +1,8 @@
 package com.lewall.components;
 
+import java.util.UUID;
+import java.util.function.Consumer;
+
 import com.lewall.Navigator;
 import com.lewall.Navigator.EPage;
 import com.lewall.api.Connection;
@@ -9,6 +12,8 @@ import com.lewall.db.models.Post;
 import com.lewall.dtos.UserDTO;
 import com.lewall.dtos.UserIdDTO;
 import com.lewall.dtos.DeletePostDTO;
+import com.lewall.dtos.PostDTO;
+import com.lewall.dtos.LikePostDTO;
 
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -36,9 +41,11 @@ import javafx.scene.text.Text;
 
 public class PostItem extends VBox {
     private StringProperty author = new SimpleStringProperty("");
+    private final Consumer<Post> setUpdatedPost;
 
-    public PostItem(Post item) {
+    public PostItem(Post item, Consumer<UUID> onDelete, Consumer<Post> setUpdatedPost) {
         super(5);
+        this.setUpdatedPost = setUpdatedPost;
 
         Connection.<UserIdDTO, UserDTO>post("/user/get", new UserIdDTO(item.getUserId())).thenAccept(response -> {
             UserDTO userDTO = response.getBody();
@@ -66,7 +73,7 @@ public class PostItem extends VBox {
             StackPane.setAlignment(postContents, Pos.CENTER_RIGHT);
         }
 
-        HBox postReactions = getPostReactionsComponent(item.getLikes(), 10, mainStack);
+        HBox postReactions = getPostReactionsComponent(item, mainStack);
 
         postContents.getChildren().addAll(postQuote, postReactions);
 
@@ -124,7 +131,7 @@ public class PostItem extends VBox {
                 deleteButton.setOnAction(event -> {
                     Connection.post("/post/delete", new DeletePostDTO(item.getId())).thenAccept(response -> {
                         Platform.runLater(() -> {
-                            Navigator.navigateTo(Navigator.EPage.PROFILE);
+                            onDelete.accept(item.getId());
                         });
                     });
                 });
@@ -144,13 +151,13 @@ public class PostItem extends VBox {
         // this.getChildren().addAll(postClass, mainStack);
     }
 
-    private HBox getPostReactionsComponent(int likes, int comments, StackPane mainStack) {
+    private HBox getPostReactionsComponent(Post item, StackPane mainStack) {
         HBox postReactions = new HBox(10);
         postReactions.setAlignment(Pos.CENTER);
 
         postReactions.getStyleClass().addAll("grey-border", "semi-grey-bg");
 
-        Text postLikes = new Text(likes + "");
+        Text postLikes = new Text(item.getLikes() + "");
         postLikes.setFont(Theme.INRIA_SERIF_SMALL);
         postLikes.setFill(Color.web(Theme.TEXT_GREY));
 
@@ -160,24 +167,55 @@ public class PostItem extends VBox {
         likeIcon.setFitWidth(22);
         likeIcon.setFitHeight(22);
 
-        likedIcon.setFitWidth(18);
-        likedIcon.setFitHeight(18);
+        likedIcon.setFitWidth(22);
+        likedIcon.setFitHeight(22);
+        Button likesButton = new Button();
+        likesButton.getStyleClass().add("brand-text-button");
+
+        UserDTO authenticatedUser = LocalStorage.get("/user", UserDTO.class);
+        boolean hasLiked = item.getUsersLiked().contains(authenticatedUser.getUser().getId().toString());
+        if (hasLiked) {
+            likesButton.setGraphic(likedIcon);
+        } else {
+            likesButton.setGraphic(likeIcon);
+        }
+
+        likesButton.setOnAction(event -> {
+            if (!hasLiked) {
+                Connection.<LikePostDTO, PostDTO>post("/post/like", new LikePostDTO(item.getId()))
+                        .thenAccept(response -> {
+                            Platform.runLater(() -> {
+                                likesButton.setGraphic(likedIcon);
+                                setUpdatedPost.accept(response.getBody().getPost());
+                            });
+                        });
+            } else {
+                Connection.<LikePostDTO, PostDTO>post("/post/unlike", new LikePostDTO(item.getId()))
+                        .thenAccept(response -> {
+                            Platform.runLater(() -> {
+                                likesButton.setGraphic(likeIcon);
+                                setUpdatedPost.accept(response.getBody().getPost());
+                            });
+                        });
+            }
+        });
 
         ImageView commentIcon = new ImageView(new Image("imgs/comment.png"));
 
         commentIcon.setFitWidth(22);
         commentIcon.setFitHeight(22);
 
-        Text postComments = new Text(comments + "");
+        Text postComments = new Text("0");
         postComments.setFont(Theme.INRIA_SERIF_SMALL);
         postComments.setFill(Color.web(Theme.TEXT_GREY));
 
         Button seeCommentsButton = new Button();
         seeCommentsButton.setGraphic(commentIcon);
+        seeCommentsButton.getStyleClass().add("brand-text-button");
 
         seeCommentsButton.setOnAction(event -> {
             Rectangle dimBackground = new Rectangle(450, 225);
-            dimBackground.setFill(new Color(0, 0, 0, 0.5));
+            dimBackground.setFill(new Color(0, 0, 0, 0.25));
             mainStack.getChildren().addAll(dimBackground);
 
             VBox mainStackCopy = new VBox();
@@ -196,7 +234,7 @@ public class PostItem extends VBox {
             });
         });
 
-        HBox likeGroup = new HBox(5, postLikes, likeIcon);
+        HBox likeGroup = new HBox(5, postLikes, likesButton);
         HBox commentGroup = new HBox(5, postComments, seeCommentsButton);
 
         likeGroup.setAlignment(Pos.CENTER);

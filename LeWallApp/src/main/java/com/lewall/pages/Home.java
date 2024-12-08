@@ -18,6 +18,7 @@ import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.skin.VirtualFlow;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -69,12 +70,33 @@ public class Home extends Pane {
                     setGraphic(null);
                 } else {
                     boolean isLast = getIndex() == items.size() - 1;
-                    VBox post = new PostItem(item);
+                    VBox post = new PostItem(
+                            item,
+                            pid -> {
+                                items.removeIf(ele -> ele.getId().equals(pid));
+                            }, updatedPost -> {
+                                items.set(items.indexOf(item), updatedPost);
+                                postListView.refresh();
+                            });
                     post.setPadding(new Insets(0, 0, isLast ? 40 : 10, 0));
                     setGraphic(post);
                 }
             }
         });
+
+        // Calculate the visible items
+
+        // postListView.setOnScroll(event -> {
+        // // Use lookup to get the VirtualFlow
+        // VirtualFlow<?> flow = (VirtualFlow<?>) postListView.lookup(".virtual-flow");
+        // if (flow != null) {
+        // int firstVisibleIndex = flow.getFirstVisibleCell().getIndex();
+        // int lastVisibleIndex = flow.getLastVisibleCell().getIndex();
+
+        // System.out.println("Visible items:" + firstVisibleIndex + " to " +
+        // lastVisibleIndex);
+        // }
+        // });
 
         VBox column = new VBox(10);
         FlowPane.setMargin(column, new Insets(10, 0, 0, 85));
