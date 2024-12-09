@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.lewall.interfaces.IScheduledComponent;
 import com.lewall.pages.Home;
 import com.lewall.pages.Login;
 import com.lewall.pages.NewPost;
@@ -141,6 +142,12 @@ public class Navigator {
 			}
 
 			Scene scene = null;
+
+			if (history.size() > 0) {
+				if (history.peek().scene.getRoot() instanceof IScheduledComponent) {
+					((IScheduledComponent) history.peek().scene.getRoot()).shutdownPolling();
+				}
+			}
 
 			history.push(new Page(page, scene));
 

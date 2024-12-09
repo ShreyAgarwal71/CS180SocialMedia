@@ -1,5 +1,7 @@
 package com.lewall.pages;
 
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+
 import com.lewall.Navigator.NavigatorPageState;
 import com.lewall.api.Connection;
 import com.lewall.common.AggregatedPost;
@@ -7,7 +9,9 @@ import com.lewall.components.Footer;
 import com.lewall.components.Navbar;
 import com.lewall.components.PostListView;
 import com.lewall.dtos.FollowingPostsDTO;
+import com.lewall.interfaces.IScheduledComponent;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -27,7 +31,13 @@ import javafx.scene.text.Text;
  * @author Mahit Mehta
  * @version 17 November 2024
  */
-public class Home extends Pane {
+public class Home extends Pane implements IScheduledComponent {
+    private final ScheduledThreadPoolExecutor SCHEDULER = new ScheduledThreadPoolExecutor(1);
+
+    public void shutdownPolling() {
+        SCHEDULER.shutdown();
+    }
+
     /**
      * Constructor for the home page
      */
@@ -39,12 +49,6 @@ public class Home extends Pane {
         flowPane.prefHeightProperty().bind(this.heightProperty());
 
         flowPane.setOrientation(Orientation.VERTICAL);
-        // Post(UUID userId, String messagePost, String date, int likes, String
-        // imageURL, UUID classId)
-
-        // Connection.<MainFeed>get("/getFollowerPosts", false).thenAccept(response -> {
-        // System.out.println(response.getBody().);
-        // });
 
         ObservableList<AggregatedPost> items = FXCollections.observableArrayList();
 
@@ -52,6 +56,25 @@ public class Home extends Pane {
             FollowingPostsDTO followingPostsDTO = response.getBody();
             items.addAll(followingPostsDTO.getAggregatedPosts());
         });
+
+        SCHEDULER.scheduleAtFixedRate(() -> {
+            Connection.<FollowingPostsDTO>get("/user/getFollowerPosts", false).thenAccept(response -> {
+                FollowingPostsDTO followingPostsDTO = response.getBody();
+                Platform.runLater(() -> {
+                    for (AggregatedPost post : followingPostsDTO.getAggregatedPosts()) {
+                        for (AggregatedPost item : items) {
+                            if (post.getPost().getId().equals(item.getPost().getId())) {
+                                item.getPost().setLikes(post.getPost().getLikes());
+                                item.getPost().setUsersLiked(post.getPost().getUsersLiked());
+                                item.getPost().setDislikes(post.getPost().getDislikes());
+
+                                break;
+                            }
+                        }
+                    }
+                });
+            });
+        }, 0, 1, java.util.concurrent.TimeUnit.SECONDS);
 
         ListView<AggregatedPost> postListView = new PostListView(items);
 
