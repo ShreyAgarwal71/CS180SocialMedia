@@ -70,6 +70,8 @@ public class PostItem extends VBox {
 
         StackPane mainStack = new StackPane();
         String imageURL = item.getPost().getImageURL();
+		if (!imgValid(imageURL))
+			imageURL = null;
         int width = 450;
         int height = 225;
 
@@ -104,27 +106,27 @@ public class PostItem extends VBox {
         mainStack.getChildren().add(container);
 
         if (imageURL != null) {
-            Image image = new Image(imageURL, true);
-            ImageView imageView = new ImageView(image);
+			Image image = new Image(imageURL, true);
+			ImageView imageView = new ImageView(image);
 
-            imageView.setPreserveRatio(true);
-            imageView.setSmooth(true);
+			imageView.setPreserveRatio(true);
+			imageView.setSmooth(true);
 
-            imageView.setFitWidth(container.getHeight() - 15);
-            imageView.setFitHeight(container.getHeight() - 15);
+			imageView.setFitWidth(container.getHeight() - 15);
+			imageView.setFitHeight(container.getHeight() - 15);
 
-            VBox imageContainer = new VBox();
-            imageContainer.setMaxWidth(container.getHeight() - 15);
-            imageContainer.setAlignment(Pos.CENTER);
-            imageContainer.getStyleClass().addAll("grey-border", "semi-grey-bg");
-            imageContainer.getChildren().add(imageView);
+			VBox imageContainer = new VBox();
+			imageContainer.setMaxWidth(container.getHeight() - 15);
+			imageContainer.setAlignment(Pos.CENTER);
+			imageContainer.getStyleClass().addAll("grey-border", "semi-grey-bg");
+			imageContainer.getChildren().add(imageView);
 
-            StackPane.setMargin(imageContainer, new Insets(10, 5, 10, 10));
-            StackPane.setAlignment(imageContainer, Pos.CENTER_LEFT);
-            StackPane.setMargin(postContents, new Insets(10, 10, 10, 5));
-            postContents.setMaxWidth(container.getHeight() - 10);
+			StackPane.setMargin(imageContainer, new Insets(10, 5, 10, 10));
+			StackPane.setAlignment(imageContainer, Pos.CENTER_LEFT);
+			StackPane.setMargin(postContents, new Insets(10, 10, 10, 5));
+			postContents.setMaxWidth(container.getHeight() - 10);
 
-            mainStack.getChildren().add(imageContainer);
+			mainStack.getChildren().add(imageContainer);
         } else {
             postContents.setMaxWidth(width - 20);
             StackPane.setMargin(postContents, new Insets(10));
@@ -452,4 +454,14 @@ public class PostItem extends VBox {
 
         return String.format("Established %s %s, %s", months.get(splitDate[0]), splitDate[1], splitDate[2]);
     }
+
+	private boolean imgValid(String imageURL) {
+		try {
+			Image image = new Image(imageURL, true);
+			new ImageView(image);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
 }
