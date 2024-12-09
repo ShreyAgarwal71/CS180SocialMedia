@@ -1,5 +1,9 @@
 # LeWall Server
 
+## Overview
+
+The LeWallServer handles the business logic, user authentication, and all database interactions for the application. The server receives requests from the client-side and processes them accordingly, ensuring data is retrieved, updated, or deleted as needed. It is built with Java and Maven as the dependency management tool.
+
 ---
 
 ### Prerequisites
@@ -40,94 +44,53 @@ The main components of the project include:
 
 ---
 
-### Directory Layout
-
-```plaintext
-├── LeWallServer/
-│   ├── pom.xml
-│   └── src/
-│       ├── main/
-│       │   └── java/com/lewall/
-│       │       ├── db/
-│       │             ├── collections
-│       │                 ├── CommentCollection.java
-│       │                 ├── PostCollection.java
-│       │                 └── UserCollection.java
-│       │             └──helpers
-│       │                 ├── BaseCollection.java
-│       │                 ├── Collection.java
-│       │                 └── RwLockArrayList.java
-│       │         ├── helpers
-│       │           ├── PostSort.java
-│       │         ├── interfaces
-│       │             ├── IAuthResolver.java
-│       │             ├── ICommentResolver.java
-│       │             ├── IPostResolver.java
-│       │           ├── IRootResolver.java
-│       │           └── IUserResolver.java
-│       │         ├── resolvers
-│       │             ├── AuthResolver.java
-│       │             ├── CommentResolver.java
-│       │             ├── PostResolver.java
-│       │           ├── RootResolver.java
-│       │           └── UserResolver.java
-│       │         ├── services
-│       │             ├── AuthService.java
-│       │             ├── CommentService.java
-│       │             ├── IService.java
-│       │           ├── PostService.java
-│       │           └── UserService.java
-│       │         ├── AppServer.java
-│       │         └──Worker.java
-│       │     ├── resources/
-│       │         └──log4j2.xml
-│       │     ├── test/java/com/lewall/
-│       │         ├── db/
-│       │             ├── models/
-│       │                ├──CommentTest.java
-│       │                ├──PostTest.java
-│       │                ├──UserTest.java
-│       │          ├── models/
-│       │              ├──CommentTest.java
-│       │              ├──PostTest.java
-│       │              ├──UserTest.java
-│       │
-
-```
-
----
-
 ## Classes
 
-- **CommentCollection**: A Collection class to manage comments in the database. This class is responsible for reading and writing comment data to and from the disk. It also provides methods to find comments by their postID.
-- **PostCollection**: A Collection class to manage posts in the database. This class is responsible for reading and writing post data to and from the disk. It also provides methods to find posts by their postID.
-- **UserCollection**: A Collection class to manage users in the database of our program. This class is responsible for reading and writing user data to and from the disk. It also provides methods to find users by their username.
+### Resolvers:
 
-- **BaseCollection**: This class is the base class for all the collections in the database. It provides the basic functionality for adding, updating, removing, and finding elements in the collection.
-- **Collection**: A Collection interface to help manage our program's database collections. This interface provides methods to read and write data to and from the disk, add, update, and remove elements from the collection, and find elements in the collection that match a given predicate.
-- **RwLockArrayList**: A thread-safe ArrayList that uses a ReadWriteLock to manage access to the list. This class is used to store data in the database. It provides methods to add, remove, and get elements from the list. It also provides methods to lock and unlock the read and write locks. This class is used by the database to store user, post, and comment data. This class is a generic class. The type of the elements in the list is specified by the type parameter T
+The backend uses six main resolver classes, each responsible for handling specific types of data. These resolvers act as interfaces between the client and the business logic:
 
-- **Database**: A Database class to manage the Collection singletons in the database. This class is responsible for reading and writing user, post, and comment data to and from the disk. It also provides methods to get the UserCollection, the PostCollection, and the CommentCollection. The Database class is a singleton class.
+AuthResolver: Manages requests related to user authentication and authorization (e.g., logging in, registering).
 
-- **PostSort**: Quicksort algorith to sort a List of posts by date from newest to oldest
+UserResolver: Handles user-specific data like profile management, following/unfollowing, and searching users.
 
-- **IAuthResolver.java**: Interface for AuthResolver
-- **ICommentResolver.java**: Interface for CommentResolver
-- **IPostResolver.java**: Interface for PostResolver
-- **IRootResolver.java**: Interface for RootResolver
-- **IUserResolver.java**: Interface for User Resolver
+PostResolver: Manages posts—creating, deleting, liking, disliking, hiding, and fetching posts.
+CommentResolver: Handles operations on comments, including creation, deletion, liking, and fetching comments related to posts.
 
-- **AuthResolver.java**: Define the endpoints of the business logic for user authentication
-- **CommentResolver.java**: Define the endpoints of the business logic for comments, including add, delete, like and unlike
-- **PostResolver.java**: Define the endpoints of the business logic for posts, including create, delete, like, unlike, hide and make private posts
-- **RootResolver.java**: Health check resolver
-- **UserResolver.java**: Define the endpoints of the business logic for users, including follow, unfollow, block, unblock, change profile name, create 2 feeds, one for posts from people the user follows and the other feed is all the post in the given class
+Also manages interactions such as liking/unliking posts or comments, following/unfollowing users, and blocking/unblocking other users.
 
-- **AuthService.java**: Defines method to authenticate user
-- **CommentService.java**: Defines method to to add, delete, like and unlike
-- **IService.java**: Interface for services
-- **PostService.java**: Defines method to create, delete, like, unlike, hide and make private posts
-- **UserService.java**: Defines method to follow, unfollow, block, unblock, change profile name, create 2 feeds, one for posts from people the user follows and the other feed is all the post in the given class
+### Services:
+
+Each resolver works in conjunction with services that contain the core logic of the application. These services implement the business logic for managing users, posts, comments, and interactions.
+
+The UserService, PostService, and CommentService handle operations like creating, deleting, and updating posts and comments, as well as implementing actions such as following, unfollowing, and blocking users.
+
+These services interact with the models (objects like User, Post, Comment, etc.) to manipulate and persist data. For example, the PostService will create a new post object, persist it, and return a response to the client side.
+
+### DTOs (Data Transfer Objects):
+
+DTOs are used to send and receive data between the client and server. These objects contain only the necessary data required for a specific operation and prevent unnecessary data transfer, optimizing network performance.
+
+Examples of DTOs include AuthTokenDTO, UserDTO, PostDTO, and CommentDTO. These objects ensure that the client receives only the required fields, such as post content or user details, and not the entire user object, which may contain sensitive information like passwords.
+
+### API Endpoints:
+
+The server exposes a set of RESTful API endpoints for communication with the client-side application. These endpoints handle CRUD operations for posts and comments, as well as user management (e.g., logging in, registering, and fetching user data).
+
+### Example endpoints might include:
+
+    POST /login for authentication.
+    GET /posts/{userId} for fetching posts from a specific user.
+    POST /posts for creating new posts.
+    DELETE /posts/{postId} for deleting a post.
+
+The server uses HTTP status codes to indicate the success or failure of requests, such as 200 OK, 404 Not Found, or 500 Internal Server Error.
+
+### Exception Handling:
+
+The server also includes custom exceptions to handle errors, ensuring that users receive appropriate error messages when something goes wrong (e.g., when a post is not found or when a user attempts an unauthorized action).
+
+Custom exception handling allows the server to respond with helpful messages, reducing ambiguity and improving the user experience.
 
 ---
 

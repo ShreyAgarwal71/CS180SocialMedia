@@ -193,9 +193,21 @@ public class Profile extends Pane {
 		VBox userDetails = new VBox(15);
 		userDetails.getChildren().addAll(nameAndDetails, userStats);
 
-		ImageView pfp = new ImageView(new Image("./imgs/pfp.png"));
-		pfp.setFitWidth(65);
-		pfp.setFitHeight(65);
+		ImageView pfp;
+		if (profileUser.getBio() != null && !profileUser.getBio().isEmpty() && imgValid(profileUser.getBio())) {
+			pfp = new ImageView(new Image(profileUser.getBio()));
+
+			pfp.setPreserveRatio(true);
+			pfp.setSmooth(true);
+
+			pfp.setFitWidth(65);
+			pfp.setFitHeight(65);
+
+		} else {
+			pfp = new ImageView(new Image("./imgs/pfp.png"));
+			pfp.setFitWidth(65);
+			pfp.setFitHeight(65);
+		}
 
 		HBox profile = new HBox(15);
 		profile.getChildren().addAll(pfp, userDetails);
@@ -360,5 +372,15 @@ public class Profile extends Pane {
 
 	private User getAuthenicatedUser() {
 		return LocalStorage.get("/user", UserDTO.class).getUser();
+	}
+
+	private boolean imgValid(String imageURL) {
+		try {
+			Image image = new Image(imageURL, true);
+			new ImageView(image);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 }
