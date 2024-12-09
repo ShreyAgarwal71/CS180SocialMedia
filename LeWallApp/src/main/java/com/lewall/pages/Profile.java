@@ -124,8 +124,10 @@ public class Profile extends Pane {
 			Connection.<UserIdDTO, AggregatedPostsDTO>post("/user/getPosts", new UserIdDTO(profileUser.getId()))
 					.thenAccept(response -> {
 						AggregatedPostsDTO postsDTO = response.getBody();
-						items.clear();
-						items.addAll(postsDTO.getAggregatedPosts());
+						Platform.runLater(() -> {
+							items.clear();
+							items.addAll(postsDTO.getAggregatedPosts());
+						});
 					});
 		});
 
