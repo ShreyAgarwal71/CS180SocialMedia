@@ -123,6 +123,16 @@ public class Register extends Pane {
         });
         VBox.setMargin(emailField, new Insets(0, 0, 7, 0));
 
+        TextField imageField = new TextField();
+        imageField.setFocusTraversable(false);
+        imageField.getStyleClass().add("brand-field");
+        imageField.setMaxSize(200, 30);
+        imageField.setPromptText("Optional Profile Image URL");
+        imageField.onKeyPressedProperty().set(e -> {
+            registerError.setText("");
+        });
+        VBox.setMargin(imageField, new Insets(0, 0, 7, 0));
+
         PasswordField passwordField = new PasswordField();
 
         Button registerButton = new Button("Register");
@@ -130,6 +140,7 @@ public class Register extends Pane {
             String email = emailField.getText();
             String password = passwordField.getPassword();
             String username = email;
+            String bio = imageField.getText();
             String displayName = displayNameField.getText();
 
             if (displayName == null || displayName.isEmpty()) {
@@ -149,7 +160,7 @@ public class Register extends Pane {
             }
 
             Connection.<CreateUserDTO, AuthTokenDTO>post("/auth/register", new CreateUserDTO(
-                    username, password, displayName, "", email))
+                    username, password, displayName, bio, email))
                     .thenAccept(response -> {
                         String token = response.getBody().getToken();
                         if (token != null) {
@@ -215,6 +226,7 @@ public class Register extends Pane {
                 subTitle,
                 displayNameField,
                 emailField,
+                imageField,
                 passwordField,
                 registerError,
                 registerButton,
