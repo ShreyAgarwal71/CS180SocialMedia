@@ -181,6 +181,12 @@ public class Profile extends Pane {
 			Button followButton = new Button(isFollowingProfileUser ? "Unfollow" : "Follow");
 			followButton.getStyleClass().add("accent-button");
 			followButton.setPrefWidth(300);
+
+			if (getAuthenicatedUser().getBlockedUsers().contains(profileUser.getId().toString())) {
+				followButton.setDisable(true);
+				followButton.setOpacity(0.75);
+			}
+
 			followButton.setOnAction(e -> {
 				if (getAuthenicatedUser().getFollowing().contains(profileUser.getId().toString())) {
 					Connection
@@ -238,6 +244,8 @@ public class Profile extends Pane {
 								});
 
 								Platform.runLater(() -> {
+									followButton.setDisable(false);
+									followButton.setOpacity(1.00);
 									blockButton.setText("Block");
 								});
 							}).exceptionally(ee -> {
@@ -247,6 +255,7 @@ public class Profile extends Pane {
 				} else {
 					Connection.<BlockUserDTO, UserDTO>post("/user/block", new BlockUserDTO(profileUser.getId()))
 							.thenAccept(response -> {
+
 								profileUser = response.getBody().getUser();
 								userFollowers.set(profileUser.getFollowers().size() + "");
 								userFollowing.set(profileUser.getFollowing().size() + "");
@@ -255,6 +264,9 @@ public class Profile extends Pane {
 								});
 
 								Platform.runLater(() -> {
+									followButton.setText("Follow");
+									followButton.setOpacity(0.75);
+									followButton.setDisable(true);
 									blockButton.setText("Unblock");
 								});
 							});
