@@ -7,7 +7,6 @@ import com.lewall.dtos.UnlikePostDTO;
 import com.lewall.dtos.UserIdDTO;
 import com.lewall.dtos.LikePostDTO;
 import com.lewall.dtos.AggregatedCommentsDTO;
-import com.lewall.dtos.CommentsDTO;
 import com.lewall.dtos.PostCommentsDTO;
 import com.lewall.dtos.PostsDTO;
 import com.lewall.dtos.HidePostDTO;
