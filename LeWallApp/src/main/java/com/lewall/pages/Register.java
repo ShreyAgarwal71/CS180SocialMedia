@@ -153,6 +153,11 @@ public class Register extends Pane {
                 return;
             }
 
+            if (bio != null && !imgValid(bio)) {
+                registerError.setText("Invalid Image URL");
+                return;
+            }
+
             if (!Validation.isSecurePassword(password)) {
                 registerError.setText(
                         "Password must have 8+ characters, 1 lowercase and uppercase letter, number, & special character.");
@@ -245,5 +250,15 @@ public class Register extends Pane {
         mainStack.getChildren().add(footer);
 
         this.getChildren().add(mainStack);
+    }
+
+    private boolean imgValid(String imageURL) {
+        try {
+            Image image = new Image(imageURL, true);
+            new ImageView(image);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }
