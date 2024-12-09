@@ -62,6 +62,18 @@ public class NewPost extends Pane {
 		quoteArea.setPrefWidth(400);
 		quoteGroup.getChildren().addAll(quoteAreaLabel, quoteArea);
 
+		VBox imgG = new VBox(3);
+		Text imgAreaLabel = new Text("Image URL (Optional)");
+		VBox.setMargin(imgAreaLabel, new Insets(0, 0, 0, 5));
+		imgAreaLabel.getStyleClass().add("brand-label");
+		TextArea imgArea = new TextArea();
+		imgArea.setPromptText("Enter an image url (optional)");
+		imgArea.setWrapText(true);
+		imgArea.getStyleClass().add("brand-text-area");
+		imgArea.setPrefHeight(12);
+		imgArea.setPrefWidth(400);
+		imgG.getChildren().addAll(imgAreaLabel, imgArea);
+
 		VBox courseGroup = new VBox(3);
 
 		Text courseLabel = new Text("Select Class");
@@ -97,13 +109,19 @@ public class NewPost extends Pane {
 
 			String selectedClass = courseDropdown.getValue();
 
+			String imgUrl = imgArea.getText();
+
 			if (!body.isEmpty() && !selectedClass.isEmpty() && selectedClass != null) {
 				logger.info(
 						"New post created: Body = {}, Date = {}, Class = {}",
 						body, date, selectedClass);
-				// TODO: IMG-URL
 
-				CreatePostDTO post = new CreatePostDTO(body, date, null, courseDropdown.getValue());
+				CreatePostDTO post;
+				if (imgUrl == null || imgUrl.isEmpty()) {
+					post = new CreatePostDTO(body, date, null, courseDropdown.getValue());
+				} else {
+					post = new CreatePostDTO(body, date, imgUrl, courseDropdown.getValue());
+				}
 				Connection.post("/post/create", post).thenAccept(response -> {
 					Platform.runLater(() -> {
 						Navigator.navigateTo(Navigator.EPage.PROFILE);
@@ -137,7 +155,7 @@ public class NewPost extends Pane {
 		VBox postForm = new VBox(10);
 		FlowPane.setMargin(postForm, new Insets(10, 0, 0, 90));
 		postForm.setAlignment(Pos.TOP_LEFT);
-		postForm.getChildren().addAll(areaTitle, courseGroup, quoteGroup, submitButton);
+		postForm.getChildren().addAll(areaTitle, courseGroup, quoteGroup, imgG, submitButton);
 
 		fp.getChildren().add(postForm);
 
