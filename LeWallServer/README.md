@@ -120,3 +120,9 @@ mvn test
 ```
 
 Tests are located in the `test` directory, this covers the main functionalities of user and post management.
+
+Tested database functionality for User, Post, Comment, and interfaces​
+Tested the Collections classes in our Database
+Tests the Authentication endpoints & services​
+Tests user services
+We created 10,000 users and performed insertion and deletions operations using 10 threads​
