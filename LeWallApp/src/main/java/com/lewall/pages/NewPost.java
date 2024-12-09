@@ -120,10 +120,6 @@ public class NewPost extends Pane {
 				CreatePostDTO post;
 				if (imgUrl == null || imgUrl.isEmpty()) {
 					post = new CreatePostDTO(body, date, null, courseDropdown.getValue());
-				} else {
-					post = new CreatePostDTO(body, date, imgUrl, courseDropdown.getValue());
-				}
-				if (imgValid(imgUrl)) {
 					Connection.post("/post/create", post).thenAccept(response -> {
 						Platform.runLater(() -> {
 							Navigator.navigateTo(Navigator.EPage.PROFILE);
@@ -132,9 +128,20 @@ public class NewPost extends Pane {
 					logger.info(
 							"New post created: Body = {}, Date = {}, Class = {}",
 							body, date, selectedClass);
-
 				} else {
-					imgErr.setText("Invalid Image URL!");
+					post = new CreatePostDTO(body, date, imgUrl, courseDropdown.getValue());
+					if (imgValid(imgUrl)) {
+						Connection.post("/post/create", post).thenAccept(response -> {
+							Platform.runLater(() -> {
+								Navigator.navigateTo(Navigator.EPage.PROFILE);
+							});
+						});
+						logger.info(
+								"New post created: Body = {}, Date = {}, Class = {}",
+								body, date, selectedClass);
+					} else {
+						imgErr.setText("Invalid Image URL!");
+					}
 				}
 			} else {
 				logger.warn("Post creation failed: Title or Body is empty");
