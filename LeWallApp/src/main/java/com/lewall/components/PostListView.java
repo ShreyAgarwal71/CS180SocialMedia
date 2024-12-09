@@ -3,10 +3,7 @@ package com.lewall.components;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-
 import com.lewall.common.AggregatedPost;
-import com.lewall.interfaces.IScheduledComponent;
 
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -19,6 +16,10 @@ public class PostListView extends ListView<AggregatedPost> {
     ListView<AggregatedPost> that;
     Set<UUID> visiblePostIds = new HashSet<>();
 
+    public Set<UUID> getVisiblePostIds() {
+        return visiblePostIds;
+    }
+
     public PostListView(ObservableList<AggregatedPost> items) {
         super(items);
         that = this;
@@ -27,13 +28,13 @@ public class PostListView extends ListView<AggregatedPost> {
         // Calculate the visible items
 
         this.setOnScroll(event -> {
-            // Use lookup to get the VirtualFlow
-            VirtualFlow<?> flow = (VirtualFlow<?>) this.lookup(".virtual-flow");
-            if (flow != null) {
-                int firstVisibleIndex = flow.getFirstVisibleCell().getIndex();
-                int lastVisibleIndex = flow.getLastVisibleCell().getIndex();
+            VirtualFlow<?> flow2 = (VirtualFlow<?>) this.lookup(".virtual-flow");
+            if (flow2 != null) {
+                int firstVisibleIndex = flow2.getFirstVisibleCell().getIndex();
+                int lastVisibleIndex = flow2.getLastVisibleCell().getIndex();
 
                 // Add the visible items to the set
+                visiblePostIds.clear();
                 for (int i = firstVisibleIndex; i <= lastVisibleIndex; i++) {
                     visiblePostIds.add(items.get(i).getPost().getId());
                 }

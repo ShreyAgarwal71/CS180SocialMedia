@@ -10,22 +10,15 @@ import com.lewall.api.LocalStorage;
 import com.lewall.components.Footer;
 import com.lewall.components.Navbar;
 import com.lewall.components.UserCard;
-import com.lewall.components.ClassCard;
-import com.lewall.dtos.ClassesDTO;
 import com.lewall.dtos.UserDTO;
 import com.lewall.dtos.UserSearchDTO;
 import com.lewall.dtos.UsersFoundDTO;
-import com.lewall.db.models.Post;
 import com.lewall.db.models.User;
 
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -36,7 +29,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import java.util.List;
-import java.util.ArrayList;
 
 /**
  * Search page for the application with GUI search functionality

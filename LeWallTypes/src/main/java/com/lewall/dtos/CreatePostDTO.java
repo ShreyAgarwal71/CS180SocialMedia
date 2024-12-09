@@ -1,7 +1,5 @@
 package com.lewall.dtos;
 
-import java.util.UUID;
-
 public class CreatePostDTO {
     private String messagePost;
     private String date;

@@ -2,8 +2,6 @@ package com.lewall.resolvers;
 
 import java.util.UUID;
 
-import org.w3c.dom.Comment;
-
 import com.lewall.api.InternalServerError;
 import com.lewall.api.Request;
 import com.lewall.resolvers.ResolverTools.AuthGuard;
@@ -32,9 +30,9 @@ public class CommentResolver implements BaseResolver, ICommentResolver {
      * Add a comment to a post
      * 
      * @param request
-     *            {@link Request} with {@link AddCommentDTO} body
+     *                {@link Request} with {@link AddCommentDTO} body
      * @throws InternalServerError
-     *             if unable to add comment
+     *                             if unable to add comment
      * @return void
      */
     @AuthGuard()
@@ -55,9 +53,9 @@ public class CommentResolver implements BaseResolver, ICommentResolver {
      * Delete a comment
      * 
      * @param request
-     *            {@link Request} with {@link DeleteCommentDTO} body
+     *                {@link Request} with {@link DeleteCommentDTO} body
      * @throws InternalServerError
-     *             if unable to delete comment
+     *                             if unable to delete comment
      * @return void
      */
     @AuthGuard()
@@ -75,9 +73,9 @@ public class CommentResolver implements BaseResolver, ICommentResolver {
      * Like a comment
      * 
      * @param request
-     *            {@link Request} with {@link LikeCommentDTO} body
+     *                {@link Request} with {@link LikeCommentDTO} body
      * @throws InternalServerError
-     *             if unable to like comment
+     *                             if unable to like comment
      * @return void
      */
     @AuthGuard()
@@ -97,9 +95,9 @@ public class CommentResolver implements BaseResolver, ICommentResolver {
      * Dislike a comment
      * 
      * @param request
-     *            {@link Request} with {@link LikeCommentDTO} body
+     *                {@link Request} with {@link LikeCommentDTO} body
      * @throws InternalServerError
-     *             if unable to like comment
+     *                             if unable to like comment
      * @return void
      */
     @AuthGuard()
@@ -119,9 +117,9 @@ public class CommentResolver implements BaseResolver, ICommentResolver {
      * Unlike a comment
      * 
      * @param request
-     *            {@link Request} with {@link UnlikeCommentDTO} body
+     *                {@link Request} with {@link UnlikeCommentDTO} body
      * @throws InternalServerError
-     *             if unable to unlike comment
+     *                             if unable to unlike comment
      * @return void
      */
     @AuthGuard()
@@ -141,9 +139,9 @@ public class CommentResolver implements BaseResolver, ICommentResolver {
      * Un-dislike a comment
      * 
      * @param request
-     *            {@link Request} with {@link UnlikeCommentDTO} body
+     *                {@link Request} with {@link UnlikeCommentDTO} body
      * @throws InternalServerError
-     *             if unable to unlike comment
+     *                             if unable to unlike comment
      * @return void
      */
     @AuthGuard()

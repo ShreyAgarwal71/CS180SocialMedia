@@ -5,8 +5,6 @@ import java.util.Stack;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.lewall.interfaces.IScheduledComponent;
 import com.lewall.pages.Home;
 import com.lewall.pages.Login;

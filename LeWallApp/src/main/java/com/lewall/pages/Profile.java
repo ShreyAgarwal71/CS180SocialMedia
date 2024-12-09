@@ -17,7 +17,6 @@ import com.lewall.db.models.Post;
 import com.lewall.db.models.User;
 import com.lewall.dtos.AggregatedPostsDTO;
 import com.lewall.dtos.FollowUserDTO;
-import com.lewall.dtos.FollowingPostsDTO;
 import com.lewall.dtos.PostsDTO;
 import com.lewall.dtos.UnfollowUserDTO;
 import com.lewall.dtos.UserDTO;
@@ -98,6 +97,37 @@ public class Profile extends Pane {
 		profileSubtitle.textProperty().bind(userUsername);
 		profileSubtitle.setFill(Color.web(Theme.ACCENT));
 		VBox.setMargin(profileSubtitle, new Insets(3, 0, 0, 0));
+
+		ObservableList<AggregatedPost> items = FXCollections.observableArrayList();
+
+		ListView<AggregatedPost> postListView = new PostListView(items);
+		postListView.setMaxHeight(220);
+
+		Button refresh = new Button("Refresh");
+		refresh.getStyleClass().add("brand-text-button");
+		VBox.setMargin(refresh, new Insets(3, 0, 0, 0));
+
+		refresh.setOnAction(e -> {
+			Connection.<UserIdDTO, PostsDTO>post("/post/all", new UserIdDTO(profileUser.getId()))
+					.thenAccept(response -> {
+						posts = response.getBody().getPosts();
+						userQuotes.set(posts.size() + "");
+					});
+
+			Connection.<UserIdDTO, UserDTO>post("/user/get", new UserIdDTO(profileUser.getId()))
+					.thenAccept(response -> {
+						User user = response.getBody().getUser();
+						userFollowers.set(user.getFollowers().size() + "");
+						userFollowing.set(user.getFollowing().size() + "");
+					});
+
+			Connection.<UserIdDTO, AggregatedPostsDTO>post("/user/getPosts", new UserIdDTO(profileUser.getId()))
+					.thenAccept(response -> {
+						AggregatedPostsDTO postsDTO = response.getBody();
+						items.clear();
+						items.addAll(postsDTO.getAggregatedPosts());
+					});
+		});
 
 		Rectangle idCard = new Rectangle(315, otherUser ? 180 : 115);
 		idCard.setFill(Color.rgb(25, 18, 35));
@@ -282,7 +312,7 @@ public class Profile extends Pane {
 
 		VBox idCardBox = new VBox();
 		idCardBox.setMaxWidth(300);
-		idCardBox.getChildren().addAll(profileTitle, profileSubtitle, idCardItems);
+		idCardBox.getChildren().addAll(profileTitle, profileSubtitle, refresh, idCardItems);
 
 		HBox footer = new Footer();
 		StackPane.setAlignment(footer, Pos.BOTTOM_CENTER);
@@ -291,17 +321,11 @@ public class Profile extends Pane {
 		fp.prefWidthProperty().bind(this.widthProperty());
 		fp.prefHeightProperty().bind(this.heightProperty());
 		fp.setOrientation(Orientation.VERTICAL);
-
-		ObservableList<AggregatedPost> items = FXCollections.observableArrayList();
-
 		Connection.<UserIdDTO, AggregatedPostsDTO>post("/user/getPosts", new UserIdDTO(profileUser.getId()))
 				.thenAccept(response -> {
 					AggregatedPostsDTO postsDTO = response.getBody();
 					items.addAll(postsDTO.getAggregatedPosts());
 				});
-
-		ListView<AggregatedPost> postListView = new PostListView(items);
-		postListView.setMaxHeight(220);
 
 		VBox column = new VBox(10);
 		column.setAlignment(Pos.TOP_LEFT);

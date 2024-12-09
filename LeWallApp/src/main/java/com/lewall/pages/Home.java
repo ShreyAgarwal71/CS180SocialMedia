@@ -1,7 +1,5 @@
 package com.lewall.pages;
 
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-
 import com.lewall.Navigator.NavigatorPageState;
 import com.lewall.api.Connection;
 import com.lewall.common.AggregatedPost;
@@ -9,15 +7,13 @@ import com.lewall.components.Footer;
 import com.lewall.components.Navbar;
 import com.lewall.components.PostListView;
 import com.lewall.dtos.FollowingPostsDTO;
-import com.lewall.interfaces.IScheduledComponent;
 
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.scene.control.ListView;
+import javafx.scene.control.Button;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -31,13 +27,7 @@ import javafx.scene.text.Text;
  * @author Mahit Mehta
  * @version 17 November 2024
  */
-public class Home extends Pane implements IScheduledComponent {
-    private final ScheduledThreadPoolExecutor SCHEDULER = new ScheduledThreadPoolExecutor(1);
-
-    public void shutdownPolling() {
-        SCHEDULER.shutdown();
-    }
-
+public class Home extends Pane {
     /**
      * Constructor for the home page
      */
@@ -57,34 +47,29 @@ public class Home extends Pane implements IScheduledComponent {
             items.addAll(followingPostsDTO.getAggregatedPosts());
         });
 
-        SCHEDULER.scheduleAtFixedRate(() -> {
-            Connection.<FollowingPostsDTO>get("/user/getFollowerPosts", false).thenAccept(response -> {
-                FollowingPostsDTO followingPostsDTO = response.getBody();
-                Platform.runLater(() -> {
-                    for (AggregatedPost post : followingPostsDTO.getAggregatedPosts()) {
-                        for (AggregatedPost item : items) {
-                            if (post.getPost().getId().equals(item.getPost().getId())) {
-                                item.getPost().setLikes(post.getPost().getLikes());
-                                item.getPost().setUsersLiked(post.getPost().getUsersLiked());
-                                item.getPost().setDislikes(post.getPost().getDislikes());
-
-                                break;
-                            }
-                        }
-                    }
-                });
-            });
-        }, 0, 1, java.util.concurrent.TimeUnit.SECONDS);
-
-        ListView<AggregatedPost> postListView = new PostListView(items);
+        PostListView postListView = new PostListView(items);
 
         VBox column = new VBox(10);
         FlowPane.setMargin(column, new Insets(10, 0, 0, 85));
 
         Text fyp = new Text("Your LeWall");
         VBox.setMargin(fyp, new Insets(0, 0, 0, 10));
+
+        Button refresh = new Button("Refresh");
+        VBox.setMargin(refresh, new Insets(0, 0, 0, 10));
+
+        refresh.getStyleClass().add("brand-text-button");
+        refresh.setOnAction(e -> {
+            items.clear();
+            Connection.<FollowingPostsDTO>get("/user/getFollowerPosts", false).thenAccept(response -> {
+                FollowingPostsDTO followingPostsDTO = response.getBody();
+                items.addAll(followingPostsDTO.getAggregatedPosts());
+            });
+        });
+
         fyp.getStyleClass().add("brand-title");
         column.getChildren().add(fyp);
+        column.getChildren().add(refresh);
         column.getChildren().add(postListView);
 
         flowPane.getChildren().add(column);

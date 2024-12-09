@@ -7,7 +7,6 @@ import com.lewall.dtos.AggregatedPostsDTO;
 import com.lewall.dtos.BlockUserDTO;
 import com.lewall.dtos.UnblockUserDTO;
 import com.lewall.dtos.FollowUserDTO;
-import com.lewall.dtos.PostsDTO;
 import com.lewall.dtos.ProfileNameDTO;
 import com.lewall.dtos.UnfollowUserDTO;
 import com.lewall.dtos.UserDTO;
