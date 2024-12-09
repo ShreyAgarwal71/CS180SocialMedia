@@ -26,8 +26,8 @@
 ### Remote Server (Linux/MacOS)
 - `REMOTE=1 mvn clean compile javafx:run`
 ### Remote Server (Windows)
-- `set REMOTE=1 mvn`
-- `clean compile javafx:run`
+- `set REMOTE=1`
+- `mvn clean compile javafx:run`
 
 ---
 
