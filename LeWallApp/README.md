@@ -24,9 +24,14 @@ Built using JavaFX, the frontend features multiple pages that allow users to int
 
 > cd into LeWallApp/ before running this command
 
-- `mvn clean compile javafx:run` (Local Server)
+### Local Server
+- `mvn clean compile javafx:run`
 
-- `REMOTE=1 mvn clean compile javafx:run` (Remote Server)
+### Remote Server (Linux/MacOS)
+- `REMOTE=1 mvn clean compile javafx:run`
+### Remote Server (Windows)
+- `set REMOTE=1`
+- `mvn clean compile javafx:run`
 
 ---
 
