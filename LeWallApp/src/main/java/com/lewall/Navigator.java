@@ -5,6 +5,7 @@ import java.util.Stack;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.lewall.interfaces.IScheduledComponent;
 import com.lewall.pages.Home;
 import com.lewall.pages.Login;
 import com.lewall.pages.NewPost;
@@ -72,7 +73,7 @@ public class Navigator {
 	 * Set the stage for the application
 	 * 
 	 * @param stage
-	 *              the stage to set
+	 *            the stage to set
 	 */
 	public static void setStage(Stage stage) {
 		Navigator.stage = stage;
@@ -123,7 +124,7 @@ public class Navigator {
 	 * Navigate to a specific page
 	 * 
 	 * @param page
-	 *             the page to navigate to
+	 *            the page to navigate to
 	 * @return true if successful, false otherwise
 	 */
 	public static boolean navigateTo(EPage page, NavigatorPageState state) {
@@ -139,6 +140,12 @@ public class Navigator {
 			}
 
 			Scene scene = null;
+
+			if (history.size() > 0) {
+				if (history.peek().scene.getRoot() instanceof IScheduledComponent) {
+					((IScheduledComponent) history.peek().scene.getRoot()).shutdownPolling();
+				}
+			}
 
 			history.push(new Page(page, scene));
 

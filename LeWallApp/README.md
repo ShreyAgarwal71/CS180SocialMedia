@@ -41,6 +41,11 @@ Built using JavaFX, the frontend features multiple pages that allow users to int
 
 The pages are built using components such as NavBar, ClassCard, UserCard, PostItem and footers. For example the search page finds results and displays them all as either ClassCard components or PostCard components. Every page has the NavBar and uses it to navigate between pages. The Footer is consistent on all the pages.
 
+### Refresh:
+
+The app implements a refresh button that updates the user’s screen to current content.
+
+
 ### App:
 
 Sets up the main method

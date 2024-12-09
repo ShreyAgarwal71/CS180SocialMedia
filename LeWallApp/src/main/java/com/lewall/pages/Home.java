@@ -13,7 +13,7 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.scene.control.ListView;
+import javafx.scene.control.Button;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -39,12 +39,6 @@ public class Home extends Pane {
         flowPane.prefHeightProperty().bind(this.heightProperty());
 
         flowPane.setOrientation(Orientation.VERTICAL);
-        // Post(UUID userId, String messagePost, String date, int likes, String
-        // imageURL, UUID classId)
-
-        // Connection.<MainFeed>get("/getFollowerPosts", false).thenAccept(response -> {
-        // System.out.println(response.getBody().);
-        // });
 
         ObservableList<AggregatedPost> items = FXCollections.observableArrayList();
 
@@ -53,15 +47,29 @@ public class Home extends Pane {
             items.addAll(followingPostsDTO.getAggregatedPosts());
         });
 
-        ListView<AggregatedPost> postListView = new PostListView(items);
+        PostListView postListView = new PostListView(items);
 
         VBox column = new VBox(10);
         FlowPane.setMargin(column, new Insets(10, 0, 0, 85));
 
         Text fyp = new Text("Your LeWall");
         VBox.setMargin(fyp, new Insets(0, 0, 0, 10));
+
+        Button refresh = new Button("Refresh");
+        VBox.setMargin(refresh, new Insets(0, 0, 0, 10));
+
+        refresh.getStyleClass().add("brand-text-button");
+        refresh.setOnAction(e -> {
+            items.clear();
+            Connection.<FollowingPostsDTO>get("/user/getFollowerPosts", false).thenAccept(response -> {
+                FollowingPostsDTO followingPostsDTO = response.getBody();
+                items.addAll(followingPostsDTO.getAggregatedPosts());
+            });
+        });
+
         fyp.getStyleClass().add("brand-title");
         column.getChildren().add(fyp);
+        column.getChildren().add(refresh);
         column.getChildren().add(postListView);
 
         flowPane.getChildren().add(column);

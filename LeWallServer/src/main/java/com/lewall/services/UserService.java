@@ -128,10 +128,11 @@ public class UserService implements IService {
             throw new BadRequest("User not found");
         }
 
-        user.removeFollower(userToBlock.toString());
-        user.unfollowUser(userToBlock.toString());
-        userToBlock.unfollowUser(user.toString());
-        userToBlock.removeFollower(user.toString());
+        user.removeFollower(blockUserID.toString());
+        user.unfollowUser(blockUserID.toString());
+
+        userToBlock.unfollowUser(userId.toString());
+        userToBlock.removeFollower(userId.toString());
 
         return user.addBlockedUser(blockUserID.toString()) && users.updateElement(user.getId(), user)
                 && users.updateElement(userToBlock.getId(), userToBlock);
