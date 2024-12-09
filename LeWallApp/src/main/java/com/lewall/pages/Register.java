@@ -153,7 +153,7 @@ public class Register extends Pane {
                 return;
             }
 
-            if (bio != null && !imgValid(bio)) {
+            if (!bio.isEmpty() && !imgValid(bio)) {
                 registerError.setText("Invalid Image URL");
                 return;
             }
