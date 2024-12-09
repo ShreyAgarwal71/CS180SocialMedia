@@ -17,7 +17,6 @@ import com.lewall.db.models.Post;
 import com.lewall.db.models.User;
 import com.lewall.dtos.AggregatedPostsDTO;
 import com.lewall.dtos.FollowUserDTO;
-import com.lewall.dtos.FollowingPostsDTO;
 import com.lewall.dtos.PostsDTO;
 import com.lewall.dtos.UnfollowUserDTO;
 import com.lewall.dtos.UserDTO;

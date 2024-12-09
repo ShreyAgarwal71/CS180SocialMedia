@@ -6,12 +6,9 @@ import java.util.function.Consumer;
 import com.lewall.api.Connection;
 import com.lewall.api.LocalStorage;
 import com.lewall.common.AggregatedComment;
-import com.lewall.common.AggregatedPost;
 import com.lewall.common.Theme;
 import com.lewall.dtos.CommentDTO;
 import com.lewall.dtos.LikeCommentDTO;
-import com.lewall.dtos.LikePostDTO;
-import com.lewall.dtos.PostDTO;
 import com.lewall.dtos.UserDTO;
 
 import javafx.application.Platform;

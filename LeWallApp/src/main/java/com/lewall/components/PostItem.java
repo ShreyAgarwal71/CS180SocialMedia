@@ -49,7 +49,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import com.lewall.Navigator;
-import com.lewall.Navigator.NavigatorPageState;
 import com.lewall.Navigator.EPage;
 
 public class PostItem extends VBox {

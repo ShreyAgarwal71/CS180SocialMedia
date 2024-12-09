@@ -1,7 +1,5 @@
 package com.lewall.components;
 
-import com.lewall.Navigator;
-import com.lewall.Navigator.EPage;
 import com.lewall.api.LocalStorage;
 import com.lewall.common.Theme;
 import com.lewall.db.models.User;
@@ -9,11 +7,9 @@ import com.lewall.dtos.UserDTO;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
@@ -30,7 +26,7 @@ public class UserCard extends HBox {
      * Constructs a UserCard for the given user.
      * 
      * @param user
-     *            the user to display
+     *             the user to display
      */
     public UserCard(User user) {
         this.user = user;

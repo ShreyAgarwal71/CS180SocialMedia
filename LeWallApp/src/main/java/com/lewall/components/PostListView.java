@@ -17,20 +17,6 @@ public class PostListView extends ListView<AggregatedPost> {
 
         this.setPrefWidth(480);
 
-        // Calculate the visible items
-
-        // postListView.setOnScroll(event -> {
-        // // Use lookup to get the VirtualFlow
-        // VirtualFlow<?> flow = (VirtualFlow<?>) postListView.lookup(".virtual-flow");
-        // if (flow != null) {
-        // int firstVisibleIndex = flow.getFirstVisibleCell().getIndex();
-        // int lastVisibleIndex = flow.getLastVisibleCell().getIndex();
-
-        // System.out.println("Visible items:" + firstVisibleIndex + " to " +
-        // lastVisibleIndex);
-        // }
-        // });
-
         this.setCellFactory(param -> new ListCell<AggregatedPost>() {
             @Override
             protected void updateItem(AggregatedPost item, boolean empty) {
