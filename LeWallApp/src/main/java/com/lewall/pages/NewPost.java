@@ -32,6 +32,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 /**
  * A class to create a new post
@@ -74,6 +76,9 @@ public class NewPost extends Pane {
 		imgArea.setPrefWidth(400);
 		imgG.getChildren().addAll(imgAreaLabel, imgArea);
 
+		Text imgErr = new Text();
+		imgErr.getStyleClass().add("error-text");
+
 		VBox courseGroup = new VBox(3);
 
 		Text courseLabel = new Text("Select Class");
@@ -112,21 +117,25 @@ public class NewPost extends Pane {
 			String imgUrl = imgArea.getText();
 
 			if (!body.isEmpty() && !selectedClass.isEmpty() && selectedClass != null) {
-				logger.info(
-						"New post created: Body = {}, Date = {}, Class = {}",
-						body, date, selectedClass);
-
 				CreatePostDTO post;
 				if (imgUrl == null || imgUrl.isEmpty()) {
 					post = new CreatePostDTO(body, date, null, courseDropdown.getValue());
 				} else {
 					post = new CreatePostDTO(body, date, imgUrl, courseDropdown.getValue());
 				}
-				Connection.post("/post/create", post).thenAccept(response -> {
-					Platform.runLater(() -> {
-						Navigator.navigateTo(Navigator.EPage.PROFILE);
+				if (imgValid(imgUrl)) {
+					Connection.post("/post/create", post).thenAccept(response -> {
+						Platform.runLater(() -> {
+							Navigator.navigateTo(Navigator.EPage.PROFILE);
+						});
 					});
-				});
+					logger.info(
+							"New post created: Body = {}, Date = {}, Class = {}",
+							body, date, selectedClass);
+
+				} else {
+					imgErr.setText("Invalid Image URL!");
+				}
 			} else {
 				logger.warn("Post creation failed: Title or Body is empty");
 			}
@@ -155,7 +164,7 @@ public class NewPost extends Pane {
 		VBox postForm = new VBox(10);
 		FlowPane.setMargin(postForm, new Insets(10, 0, 0, 90));
 		postForm.setAlignment(Pos.TOP_LEFT);
-		postForm.getChildren().addAll(areaTitle, courseGroup, quoteGroup, imgG, submitButton);
+		postForm.getChildren().addAll(areaTitle, courseGroup, quoteGroup, imgG, imgErr, submitButton);
 
 		fp.getChildren().add(postForm);
 
@@ -170,5 +179,15 @@ public class NewPost extends Pane {
 		mainStack.getChildren().addAll(group, fp, navbar, footer);
 
 		this.getChildren().add(mainStack);
+	}
+
+	private boolean imgValid(String imageURL) {
+		try {
+			Image image = new Image(imageURL, true);
+			new ImageView(image);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 }
