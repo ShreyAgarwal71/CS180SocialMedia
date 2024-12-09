@@ -79,3 +79,15 @@ The app handles the responses from the server and updates the UI accordingly, wh
 Errors encountered during API calls are handled gracefully. The app displays appropriate error messages or prompts to the user, ensuring they understand what went wrong (e.g., "Invalid login credentials" or "Failed to load posts").
 
 ## Testing
+## Testing
+
+To run unit tests for this project:
+
+```bash
+mvn test
+```
+
+Tests are located in the `test` directory, this covers the main functionalities of user and post management.
+
+Stress testing on public server​
+Thorough testing of all functionalities and errors
