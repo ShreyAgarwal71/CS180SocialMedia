@@ -8,6 +8,7 @@ import com.lewall.components.Navbar;
 import com.lewall.components.PostListView;
 import com.lewall.dtos.FollowingPostsDTO;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -44,7 +45,9 @@ public class Home extends Pane {
 
         Connection.<FollowingPostsDTO>get("/user/getFollowerPosts", false).thenAccept(response -> {
             FollowingPostsDTO followingPostsDTO = response.getBody();
-            items.addAll(followingPostsDTO.getAggregatedPosts());
+            Platform.runLater(() -> {
+                items.addAll(followingPostsDTO.getAggregatedPosts());
+            });
         });
 
         PostListView postListView = new PostListView(items);
@@ -63,7 +66,9 @@ public class Home extends Pane {
             items.clear();
             Connection.<FollowingPostsDTO>get("/user/getFollowerPosts", false).thenAccept(response -> {
                 FollowingPostsDTO followingPostsDTO = response.getBody();
-                items.addAll(followingPostsDTO.getAggregatedPosts());
+                Platform.runLater(() -> {
+                    items.addAll(followingPostsDTO.getAggregatedPosts());
+                });
             });
         });
 
