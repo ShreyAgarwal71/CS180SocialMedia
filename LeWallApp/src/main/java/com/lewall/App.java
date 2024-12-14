@@ -1,5 +1,7 @@
 package com.lewall;
 
+import java.io.BufferedReader;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

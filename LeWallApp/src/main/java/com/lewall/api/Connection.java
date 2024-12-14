@@ -35,12 +35,14 @@ public class Connection {
     private static final Logger logger = LogManager.getLogger(Connection.class);
 
     private static final int MTU = 1024 * 16; // 16 KB
+    private static final int BUFFER_SIZE = MTU * 2;
 
     private static final String REMOTE_HOST = "lewall.mahitm.com";
     private static final String LOCAL_HOST = "localhost";
     private static final int PORT = 8559;
 
     private static SocketChannel serverChannel;
+    private static ByteBuffer inBuffer = ByteBuffer.allocate(BUFFER_SIZE);
 
     private static ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
 
@@ -137,7 +139,6 @@ public class Connection {
             return true;
         }
 
-        ByteBuffer buffer = ByteBuffer.allocate(MTU);
         for (SelectionKey key : selector.selectedKeys()) {
             if (!key.isReadable()) {
                 continue;
@@ -145,27 +146,28 @@ public class Connection {
 
             SocketChannel clientChannel = (SocketChannel) key.channel();
 
-            int bytesRead = clientChannel.read(buffer);
+            int bytesRead = clientChannel.read(inBuffer);
             if (bytesRead == -1) {
                 logger.error("Server Disconnected");
                 return false;
             }
 
-            buffer.flip();
+            inBuffer.flip();
 
             int packetLength = -1;
             while (true) {
-                if (buffer.remaining() < 4) {
+                if (inBuffer.remaining() < 4) {
                     break;
                 }
 
-                packetLength = buffer.getInt();
-                if (buffer.remaining() < packetLength) {
+                packetLength = inBuffer.getInt();
+                if (inBuffer.remaining() < packetLength) {
+                    inBuffer.position(inBuffer.position() - 4);
                     break;
                 }
 
                 byte[] packet = new byte[packetLength];
-                buffer.get(packet);
+                inBuffer.get(packet);
 
                 String responseJSON = new String(packet);
                 Response<?> response = gson.fromJson(responseJSON, Response.class);
@@ -179,8 +181,7 @@ public class Connection {
 
                 packetLength = -1;
             }
-
-            buffer.compact();
+            inBuffer.compact();
         }
         selector.selectedKeys().clear();
 
