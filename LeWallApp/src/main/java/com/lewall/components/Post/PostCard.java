@@ -1,17 +1,17 @@
-package com.lewall.components;
+package com.lewall.components.Post;
 
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
 import com.lewall.api.Connection;
 import com.lewall.api.LocalStorage;
-import com.lewall.common.AggregatedComment;
-import com.lewall.common.AggregatedPost;
 import com.lewall.common.Theme;
+import com.lewall.common.Util;
+import com.lewall.components.Comment.CommentListView;
+import com.lewall.components.Comment.CommentListView.ObservableComment;
+import com.lewall.components.Post.PostListView.ObservablePost;
 import com.lewall.dtos.UserDTO;
 import com.lewall.dtos.AddCommentDTO;
 import com.lewall.dtos.AggregatedCommentsDTO;
@@ -22,10 +22,6 @@ import com.lewall.dtos.PostCommentsDTO;
 import com.lewall.dtos.HidePostDTO;
 
 import javafx.application.Platform;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -48,32 +44,25 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-import com.lewall.Navigator;
-import com.lewall.Navigator.EPage;
 
-public class PostItem extends VBox {
-    private StringProperty author = new SimpleStringProperty("");
-    private final Consumer<AggregatedPost> setUpdatedPost;
-    private final Consumer<List<AggregatedComment>> updateComments;
+public class PostCard extends VBox {
+    private ObservablePost post;
 
-    public PostItem(
-            AggregatedPost item,
-            Consumer<UUID> onDelete,
-            Consumer<AggregatedPost> setUpdatedPost,
-            Consumer<List<AggregatedComment>> updateComments,
-            Consumer<UUID> refreshPost) {
+    public PostCard(
+            ObservablePost item,
+            Consumer<UUID> onDelete) {
         super(5);
-        this.setUpdatedPost = setUpdatedPost;
-        this.updateComments = updateComments;
+        this.post = item;
 
-        author.set(item.getUser().getDisplayName());
-
-        StackPane mainStack = new StackPane();
         String imageURL = item.getPost().getImageURL();
-		if (!imgValid(imageURL))
-			imageURL = null;
+        if (!Util.isImageURLValid(imageURL))
+            imageURL = null;
         int width = 450;
         int height = 225;
+
+        StackPane mainStack = new StackPane();
+        mainStack.setMaxWidth(width);
+        this.setMaxWidth(width);
 
         Rectangle container = new Rectangle(width, height);
         container.setFill(new Color(0, 0, 0, 0));
@@ -84,15 +73,13 @@ public class PostItem extends VBox {
 
         VBox postContents = new VBox(5);
         VBox postQuote = getPostQuoteComponent(
-                item.getPost().getDate(),
-                item.getPost().getMessagePost(),
                 imageURL == null ? width - 20 : height - 10);
 
         if (imageURL != null) {
             StackPane.setAlignment(postContents, Pos.CENTER_RIGHT);
         }
 
-        HBox postReactions = getPostReactionsComponent(item, mainStack);
+        HBox postReactions = getPostReactionsComponent(mainStack);
 
         postContents.getChildren().addAll(postQuote, postReactions);
 
@@ -106,27 +93,27 @@ public class PostItem extends VBox {
         mainStack.getChildren().add(container);
 
         if (imageURL != null) {
-			Image image = new Image(imageURL, true);
-			ImageView imageView = new ImageView(image);
+            Image image = new Image(imageURL, true);
+            ImageView imageView = new ImageView(image);
 
-			imageView.setPreserveRatio(true);
-			imageView.setSmooth(true);
+            imageView.setPreserveRatio(true);
+            imageView.setSmooth(true);
 
-			imageView.setFitWidth(container.getHeight() - 15);
-			imageView.setFitHeight(container.getHeight() - 15);
+            imageView.setFitWidth(container.getHeight() - 20);
+            imageView.setFitHeight(container.getHeight() - 20);
 
-			VBox imageContainer = new VBox();
-			imageContainer.setMaxWidth(container.getHeight() - 15);
-			imageContainer.setAlignment(Pos.CENTER);
-			imageContainer.getStyleClass().addAll("grey-border", "semi-grey-bg");
-			imageContainer.getChildren().add(imageView);
+            VBox imageContainer = new VBox();
+            imageContainer.setMaxWidth(container.getHeight() - 20);
+            imageContainer.setAlignment(Pos.CENTER);
+            imageContainer.getStyleClass().addAll("grey-border", "semi-grey-bg");
+            imageContainer.getChildren().add(imageView);
 
-			StackPane.setMargin(imageContainer, new Insets(10, 5, 10, 10));
-			StackPane.setAlignment(imageContainer, Pos.CENTER_LEFT);
-			StackPane.setMargin(postContents, new Insets(10, 10, 10, 5));
-			postContents.setMaxWidth(container.getHeight() - 10);
+            StackPane.setMargin(imageContainer, new Insets(10, 10, 10, 10));
+            StackPane.setAlignment(imageContainer, Pos.CENTER_LEFT);
+            StackPane.setMargin(postContents, new Insets(10, 10, 10, 10));
+            postContents.setMaxWidth(container.getHeight() - 15);
 
-			mainStack.getChildren().add(imageContainer);
+            mainStack.getChildren().add(imageContainer);
         } else {
             postContents.setMaxWidth(width - 20);
             StackPane.setMargin(postContents, new Insets(10));
@@ -147,8 +134,8 @@ public class PostItem extends VBox {
                 Button deleteButton = new Button("Delete Quote");
                 deleteButton.getStyleClass().add("brand-text-button");
                 HBox.setMargin(deleteButton, new Insets(0, 10, 0, 0));
-                deleteButton.setOnAction(event -> {
-                    Connection.post("/post/delete", new DeletePostDTO(item.getPost().getId())).thenAccept(response -> {
+                deleteButton.setOnAction(_ -> {
+                    Connection.post("/post/delete", new DeletePostDTO(item.getPost().getId())).thenAccept(_ -> {
                         Platform.runLater(() -> {
                             onDelete.accept(item.getPost().getId());
                         });
@@ -166,11 +153,10 @@ public class PostItem extends VBox {
                 Button hideButton = new Button("Hide Post");
                 hideButton.getStyleClass().add("brand-text-button");
                 HBox.setMargin(hideButton, new Insets(0, 10, 0, 0));
-                hideButton.setOnAction(event -> {
-                    Connection.post("/post/hide", new HidePostDTO(item.getPost().getId())).thenAccept(response -> {
+                hideButton.setOnAction(_ -> {
+                    Connection.post("/post/hide", new HidePostDTO(item.getPost().getId())).thenAccept(_ -> {
                         Platform.runLater(() -> {
-                            Navigator.navigateTo(EPage.HOME);
-                            // refreshPost.accept(item.getPost().getId());
+                            onDelete.accept(item.getPost().getId());
                         });
                     });
                 });
@@ -184,21 +170,21 @@ public class PostItem extends VBox {
                 this.getChildren().addAll(classAndHide, mainStack);
             }
         }
-
-        // this.getChildren().addAll(postClass, mainStack);
     }
 
-    private HBox getPostReactionsComponent(AggregatedPost item, StackPane mainStack) {
+    private HBox getPostReactionsComponent(StackPane mainStack) {
         HBox postReactions = new HBox(10);
         postReactions.setAlignment(Pos.CENTER);
 
         postReactions.getStyleClass().addAll("grey-border", "semi-grey-bg");
 
-        Text postLikes = new Text(item.getPost().getLikes() + "");
+        Text postLikes = new Text();
+        postLikes.textProperty().bind(post.getLikeCount());
         postLikes.setFont(Theme.INRIA_SERIF_SMALL);
         postLikes.setFill(Color.web(Theme.TEXT_GREY));
 
-        Text dislikes = new Text(item.getPost().getDislikes() + "");
+        Text dislikes = new Text();
+        dislikes.textProperty().bind(post.getDislikeCount());
         dislikes.setFont(Theme.INRIA_SERIF_SMALL);
         dislikes.setFill(Color.web(Theme.TEXT_GREY));
 
@@ -226,70 +212,65 @@ public class PostItem extends VBox {
         Button dislikesButton = new Button();
         dislikesButton.getStyleClass().add("brand-text-button");
 
-        UserDTO authenticatedUser = LocalStorage.get("/user", UserDTO.class);
-
-        boolean hasLiked = item.getPost().getUsersLiked().contains(authenticatedUser.getUser().getId().toString());
-        boolean hasDisliked = item.getPost().getUsersDisliked()
-                .contains(authenticatedUser.getUser().getId().toString());
-
-        if (hasLiked) {
+        if (post.isLiked().get()) {
             likesButton.setGraphic(likedIcon);
         } else {
             likesButton.setGraphic(likeIcon);
         }
 
-        if (hasDisliked) {
+        if (post.isDisliked().get()) {
             dislikesButton.setGraphic(dislikedIcon);
         } else {
             dislikesButton.setGraphic(dislikeIcon);
         }
 
-        dislikesButton.setOnAction(event -> {
-            if (!hasDisliked) {
-                Connection.<LikePostDTO, PostDTO>post("/post/dislike", new LikePostDTO(item.getPost().getId()))
-                        .thenAccept(response -> {
-                            Platform.runLater(() -> {
-                                dislikesButton.setGraphic(dislikedIcon);
-                                setUpdatedPost.accept(new AggregatedPost(
-                                        response.getBody().getPost(),
-                                        item.getComments(), item.getUser()));
-                            });
-                        });
+        post.isLiked().addListener((_, _, isNowLiked) -> {
+            if (isNowLiked) {
+                likesButton.setGraphic(likedIcon);
             } else {
-                Connection.<LikePostDTO, PostDTO>post("/post/unDislike", new LikePostDTO(item.getPost().getId()))
-                        .thenAccept(response -> {
-                            Platform.runLater(() -> {
-                                dislikesButton.setGraphic(dislikeIcon);
-                                setUpdatedPost.accept(new AggregatedPost(
-                                        response.getBody().getPost(),
-                                        item.getComments(), item.getUser()));
-                            });
-                        });
+                likesButton.setGraphic(likeIcon);
             }
         });
 
-        likesButton.setOnAction(event -> {
-            if (!hasLiked) {
-                Connection.<LikePostDTO, PostDTO>post("/post/like", new LikePostDTO(item.getPost().getId()))
-                        .thenAccept(response -> {
-                            Platform.runLater(() -> {
-                                likesButton.setGraphic(likedIcon);
-                                setUpdatedPost.accept(new AggregatedPost(
-                                        response.getBody().getPost(),
-                                        item.getComments(), item.getUser()));
-                            });
-                        });
+        post.isDisliked().addListener((_, _, isNowDisliked) -> {
+            if (isNowDisliked) {
+                dislikesButton.setGraphic(dislikedIcon);
             } else {
-                Connection.<LikePostDTO, PostDTO>post("/post/unlike", new LikePostDTO(item.getPost().getId()))
-                        .thenAccept(response -> {
-                            Platform.runLater(() -> {
-                                likesButton.setGraphic(likeIcon);
-                                setUpdatedPost.accept(new AggregatedPost(
-                                        response.getBody().getPost(),
-                                        item.getComments(), item.getUser()));
-                            });
-                        });
+                dislikesButton.setGraphic(dislikeIcon);
             }
+        });
+
+        UserDTO authenticatedUser = LocalStorage.get("/user", UserDTO.class);
+        UUID authenticatedUserId = authenticatedUser.getUser().getId();
+
+        dislikesButton.setOnAction(_ -> {
+            Connection.<LikePostDTO, PostDTO>post("/post/dislike", new LikePostDTO(post.getPost().getId()))
+                    .thenAccept(response -> {
+                        Platform.runLater(() -> {
+                            post.isLiked().set(response.getBody().getPost().getUsersLiked()
+                                    .contains(authenticatedUser.getUser().getId().toString()));
+                            post.isDisliked().set(response.getBody().getPost().getUsersDisliked()
+                                    .contains(authenticatedUser.getUser().getId().toString()));
+
+                            post.getDislikeCount().set(String.valueOf(response.getBody().getPost().getDislikes()));
+                            post.getLikeCount().set(String.valueOf(response.getBody().getPost().getLikes()));
+                        });
+                    });
+        });
+
+        likesButton.setOnAction(_ -> {
+            Connection.<LikePostDTO, PostDTO>post("/post/like", new LikePostDTO(post.getPost().getId()))
+                    .thenAccept(response -> {
+                        Platform.runLater(() -> {
+                            post.isLiked().set(response.getBody().getPost().getUsersLiked()
+                                    .contains(authenticatedUser.getUser().getId().toString()));
+                            post.isDisliked().set(response.getBody().getPost().getUsersDisliked()
+                                    .contains(authenticatedUser.getUser().getId().toString()));
+
+                            post.getDislikeCount().set(String.valueOf(response.getBody().getPost().getDislikes()));
+                            post.getLikeCount().set(String.valueOf(response.getBody().getPost().getLikes()));
+                        });
+                    });
         });
 
         ImageView commentIcon = new ImageView(new Image("imgs/comment.png"));
@@ -297,7 +278,8 @@ public class PostItem extends VBox {
         commentIcon.setFitWidth(22);
         commentIcon.setFitHeight(22);
 
-        Text postComments = new Text(item.getComments().size() + "");
+        Text postComments = new Text();
+        postComments.textProperty().bind(post.getCommentCount());
         postComments.setFont(Theme.INRIA_SERIF_SMALL);
         postComments.setFill(Color.web(Theme.TEXT_GREY));
 
@@ -305,7 +287,7 @@ public class PostItem extends VBox {
         seeCommentsButton.setGraphic(commentIcon);
         seeCommentsButton.getStyleClass().add("brand-text-button");
 
-        seeCommentsButton.setOnAction(event -> {
+        seeCommentsButton.setOnAction(_ -> {
             Rectangle dimBackground = new Rectangle(450, 225);
             dimBackground.setFill(new Color(0, 0, 0, 0.25));
             mainStack.getChildren().addAll(dimBackground);
@@ -323,44 +305,46 @@ public class PostItem extends VBox {
             TextField commentField = new TextField();
             commentField.setPromptText("Write a comment...");
             commentField.getStyleClass().add("brand-field");
-            commentField.setPrefWidth(230);
+            commentField.setPrefWidth(235);
             Button postCommentButton = new Button("Post");
             postCommentButton.getStyleClass().add("accent-button");
 
-            ObservableList<AggregatedComment> comments = FXCollections.observableArrayList();
-            comments.addAll(item.getComments());
-
-            ListView<AggregatedComment> commentListView = new CommentListView(
-                    comments,
-                    item.getPost().getUserId(),
-                    (v) -> {
+            ListView<ObservableComment> commentListView = new CommentListView(
+                    post.getComments(),
+                    post.getPost().getUserId(),
+                    _ -> {
                         Connection
                                 .<PostCommentsDTO, AggregatedCommentsDTO>post("/post/getComments",
-                                        new PostCommentsDTO(item.getPost().getId()))
+                                        new PostCommentsDTO(post.getPost().getId()))
                                 .thenAccept(commentsResponse -> {
                                     Platform.runLater(() -> {
-                                        comments.clear();
-                                        comments.addAll(commentsResponse.getBody().getComments());
+                                        post.getComments().clear();
+                                        commentsResponse.getBody().getComments().forEach(comment -> {
+                                            post.getComments().add(new ObservableComment(comment, authenticatedUserId));
+                                        });
                                     });
                                 });
                     });
 
             // add a comment
-            postCommentButton.setOnAction(e -> {
+            postCommentButton.setOnAction(_ -> {
                 DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy");
                 String date = dtf.format(Instant.now().atZone(java.time.ZoneId.of("UTC")));
 
                 Connection.<AddCommentDTO, Void>post("/comment/add",
-                        new AddCommentDTO(item.getPost().getId(), commentField.getText(), date))
-                        .thenAccept(response -> {
+                        new AddCommentDTO(post.getPost().getId(), commentField.getText(), date))
+                        .thenAccept(_ -> {
                             commentField.setText("");
                             Connection
                                     .<PostCommentsDTO, AggregatedCommentsDTO>post("/post/getComments",
-                                            new PostCommentsDTO(item.getPost().getId()))
+                                            new PostCommentsDTO(post.getPost().getId()))
                                     .thenAccept(commentsResponse -> {
                                         Platform.runLater(() -> {
-                                            comments.clear();
-                                            comments.addAll(commentsResponse.getBody().getComments());
+                                            post.getComments().clear();
+                                            commentsResponse.getBody().getComments().forEach(comment -> {
+                                                post.getComments()
+                                                        .add(new ObservableComment(comment, authenticatedUserId));
+                                            });
                                         });
                                     });
                         });
@@ -371,9 +355,7 @@ public class PostItem extends VBox {
             mainStackCopy.getChildren().addAll(closeButton, commentListView, createCommentContainer);
             mainStackCopy.setAlignment(Pos.TOP_LEFT);
             mainStack.getChildren().addAll(mainStackCopy);
-            closeButton.setOnAction(e -> {
-                updateComments.accept(comments);
-
+            closeButton.setOnAction(_ -> {
                 mainStack.getChildren().remove(dimBackground);
                 mainStack.getChildren().remove(mainStackCopy);
             });
@@ -393,7 +375,7 @@ public class PostItem extends VBox {
         return postReactions;
     }
 
-    private VBox getPostQuoteComponent(String date, String quote, double width) {
+    private VBox getPostQuoteComponent(double width) {
         VBox postQuote = new VBox(10);
         postQuote.setPadding(new Insets(10));
         postQuote.setAlignment(Pos.CENTER_LEFT);
@@ -410,15 +392,14 @@ public class PostItem extends VBox {
                 new CornerRadii(0),
                 new BorderWidths(1))));
 
-        quote = String.format("\"%s\"", quote);
+        String quote = String.format("\"%s\"", post.getPost().getMessagePost());
         Text postText = new Text(quote);
         postText.setWrappingWidth(width - 20);
         postText.setFill(Color.web(Theme.TEXT_GREY));
         postText.setFont(Theme.INRIA_SERIF);
 
-        Text postAuthor = new Text();
-        postAuthor.textProperty().bind(author);
-        Text postImprintedDate = new Text(processDateStr(date));
+        Text postAuthor = new Text(post.getUser().getDisplayName());
+        Text postImprintedDate = new Text(Util.formatDateString(post.getPost().getDate()));
 
         postAuthor.setFont(Theme.INRIA_SERIF);
         postImprintedDate.setFont(Theme.INRIA_SERIF_SMALL);
@@ -435,33 +416,4 @@ public class PostItem extends VBox {
 
         return postQuote;
     }
-
-    private String processDateStr(String date) {
-        String[] splitDate = date.trim().split("/");
-        HashMap<String, String> months = new HashMap<>(12);
-        months.put("01", "Jan.");
-        months.put("02", "Feb.");
-        months.put("03", "Mar.");
-        months.put("04", "Apr.");
-        months.put("05", "May.");
-        months.put("06", "Jun.");
-        months.put("07", "Jul.");
-        months.put("08", "Aug.");
-        months.put("09", "Sep.");
-        months.put("10", "Oct.");
-        months.put("11", "Nov.");
-        months.put("12", "Dec.");
-
-        return String.format("Established %s %s, %s", months.get(splitDate[0]), splitDate[1], splitDate[2]);
-    }
-
-	private boolean imgValid(String imageURL) {
-		try {
-			Image image = new Image(imageURL, true);
-			new ImageView(image);
-			return true;
-		} catch (Exception e) {
-			return false;
-		}
-	}
 }

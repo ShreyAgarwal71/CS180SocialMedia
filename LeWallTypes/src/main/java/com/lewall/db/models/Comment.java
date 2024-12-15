@@ -203,60 +203,46 @@ public class Comment extends Model {
     }
 
     /**
-     * Add a like to the comment
+     * Toggle like of a post
      * 
      * @param userId
      */
-    public boolean addLike(String userId) {
-        if (likedBy.contains(userId) || dislikedBy.contains(userId)) {
-            return false;
-        }
-        this.likes++;
-        likedBy.add(userId);
-        return true;
-    }
-
-    /**
-     * Add a dislike to the comment
-     *
-     * @param userId
-     * @return exitCode
-     */
-    public boolean addDislike(String userId) {
-        if (likedBy.contains(userId) || dislikedBy.contains(userId)) {
-            return false;
-        }
-        this.dislikes++;
-        dislikedBy.add(userId);
-        return true;
-    }
-
-    /**
-     * Remove a like from the comment
-     * 
-     * @param userId
-     */
-    public boolean removeLike(String userId) {
+    public void toggleLike(String userId) {
         if (likedBy.contains(userId)) {
-            this.likes--;
             likedBy.remove(userId);
-            return true;
+            this.likes--;
+            return;
         }
-        return false;
+
+        if (dislikedBy.contains(userId)) {
+            dislikedBy.remove(userId);
+            this.dislikes--;
+        }
+
+        likedBy.add(userId);
+        this.likes++;
     }
 
     /**
-     * Remove a like from the comment
+     * Toggle dislike of a post
      * 
      * @param userId
+     * @return boolean
      */
-    public boolean removeDislike(String userId) {
+    public void toggleDislike(String userId) {
         if (dislikedBy.contains(userId)) {
-            this.dislikes--;
             dislikedBy.remove(userId);
-            return true;
+            this.dislikes--;
+            return;
         }
-        return false;
+
+        if (likedBy.contains(userId)) {
+            likedBy.remove(userId);
+            this.likes--;
+        }
+
+        dislikedBy.add(userId);
+        this.dislikes++;
     }
 
     /**

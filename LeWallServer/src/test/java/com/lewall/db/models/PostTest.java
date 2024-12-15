@@ -85,10 +85,10 @@ public class PostTest {
 		Post testPost = new Post(userId, "testMessage", "12-12-24", 1234, 0,
 				"https://www.mahitm.com/cdn/v1/post/1234", "classId");
 
-		testPost.addLike(userId.toString());
+		testPost.toggleLike(userId.toString());
 		assertEquals(testPost.getLikes(), 1235, "Ensure the addLike method is working");
 
-		testPost.removeLike(userId.toString());
+		testPost.toggleDislike(userId.toString());
 		assertEquals(testPost.getLikes(), 1234, "Ensure the removeLike method is working");
 	}
 

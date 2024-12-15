@@ -221,65 +221,46 @@ public class Post extends Model {
     }
 
     /**
-     * Add a like to the post
+     * Toggle like of a post
      * 
      * @param userId
-     * @return boolean
      */
-    public boolean addLike(String userId) {
-        if (usersLiked.contains(userId) || usersDisliked.contains(userId)) {
-            return false;
-        }
-        if (usersLiked.add(userId)) {
-            this.likes++;
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Add a dislike to the post
-     * 
-     * @param userId
-     * @return boolean
-     */
-    public boolean addDislike(String userId) {
-        if (usersLiked.contains(userId) || usersDisliked.contains(userId)) {
-            return false;
-        }
-        if (usersDisliked.add(userId)) {
-            this.dislikes++;
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Remove a like from the post
-     * 
-     * @param userId
-     * @return boolean
-     */
-    public boolean removeLike(String userId) {
-        if (usersLiked.remove(userId)) {
+    public void toggleLike(String userId) {
+        if (usersLiked.contains(userId)) {
+            usersLiked.remove(userId);
             this.likes--;
-            return true;
+            return;
         }
-        return false;
+
+        if (usersDisliked.contains(userId)) {
+            usersDisliked.remove(userId);
+            this.dislikes--;
+        }
+
+        usersLiked.add(userId);
+        this.likes++;
     }
 
     /**
-     * Remove a dislike from the post
+     * Toggle dislike of a post
      * 
      * @param userId
      * @return boolean
      */
-    public boolean removeDislike(String userId) {
-        if (usersDisliked.remove(userId)) {
+    public void toggleDislike(String userId) {
+        if (usersDisliked.contains(userId)) {
+            usersDisliked.remove(userId);
             this.dislikes--;
-            return true;
+            return;
         }
-        return false;
+
+        if (usersLiked.contains(userId)) {
+            usersLiked.remove(userId);
+            this.likes--;
+        }
+
+        usersDisliked.add(userId);
+        this.dislikes++;
     }
 
     public void setImageURL(String imageURL) {

@@ -13,16 +13,13 @@ import javafx.scene.layout.VBox;
  * @version December 6, 2024
  */
 public class ClassCard extends HBox {
-    private String className;
-
     /**
      * Constructs a ClassCard for the given class.
      * 
-     * @param className the class to display
+     * @param className
+     *            the class to display
      */
     public ClassCard(String className) {
-        this.className = className;
-
         // Set layout properties
         this.setAlignment(Pos.CENTER_LEFT);
         this.setSpacing(10);
@@ -39,10 +36,10 @@ public class ClassCard extends HBox {
 
         this.setStyle("user-card");
 
-        this.setOnMouseEntered(e -> {
+        this.setOnMouseEntered(_ -> {
             this.setStyle("-fx-background-color: #f0f0f0;");
         });
-        this.setOnMouseExited(e -> {
+        this.setOnMouseExited(_ -> {
             this.setStyle("user-card");
         });
     }

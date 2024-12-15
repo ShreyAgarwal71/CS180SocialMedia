@@ -26,12 +26,7 @@ public interface ICommentResolver {
 	public void deleteComment(Request<DeleteCommentDTO> request);
 
 	/**
-	 * Resolves a like comment request
+	 * Resolves a toggle of a like comment request
 	 */
 	public CommentDTO likeComment(Request<LikeCommentDTO> request);
-
-	/**
-	 * Resolves an unlike comment request
-	 */
-	public CommentDTO unlikeComment(Request<UnlikeCommentDTO> request);
 }

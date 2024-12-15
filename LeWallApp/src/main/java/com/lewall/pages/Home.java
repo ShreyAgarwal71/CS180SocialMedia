@@ -1,12 +1,17 @@
 package com.lewall.pages;
 
+import java.util.UUID;
+
 import com.lewall.Navigator.NavigatorPageState;
 import com.lewall.api.Connection;
+import com.lewall.api.LocalStorage;
 import com.lewall.common.AggregatedPost;
 import com.lewall.components.Footer;
 import com.lewall.components.Navbar;
-import com.lewall.components.PostListView;
+import com.lewall.components.Post.PostListView;
+import com.lewall.components.Post.PostListView.ObservablePost;
 import com.lewall.dtos.FollowingPostsDTO;
+import com.lewall.dtos.UserDTO;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -41,16 +46,21 @@ public class Home extends Pane {
 
         flowPane.setOrientation(Orientation.VERTICAL);
 
-        ObservableList<AggregatedPost> items = FXCollections.observableArrayList();
+        ObservableList<ObservablePost> items = FXCollections.observableArrayList();
+        UserDTO authenticatedUser = LocalStorage.get("/user", UserDTO.class);
+        UUID authenticatedUserId = authenticatedUser.getUser().getId();
 
         Connection.<FollowingPostsDTO>get("/user/getFollowerPosts", false).thenAccept(response -> {
             FollowingPostsDTO followingPostsDTO = response.getBody();
             Platform.runLater(() -> {
-                items.addAll(followingPostsDTO.getAggregatedPosts());
+                for (AggregatedPost post : followingPostsDTO.getAggregatedPosts()) {
+                    items.add(new ObservablePost(post, authenticatedUserId));
+                }
             });
         });
 
         PostListView postListView = new PostListView(items);
+        postListView.setPrefHeight(490);
 
         VBox column = new VBox(10);
         FlowPane.setMargin(column, new Insets(10, 0, 0, 85));
@@ -62,12 +72,16 @@ public class Home extends Pane {
         VBox.setMargin(refresh, new Insets(0, 0, 0, 10));
 
         refresh.getStyleClass().add("brand-text-button");
-        refresh.setOnAction(e -> {
+        refresh.setOnAction(_ -> {
             items.clear();
             Connection.<FollowingPostsDTO>get("/user/getFollowerPosts", false).thenAccept(response -> {
                 FollowingPostsDTO followingPostsDTO = response.getBody();
                 Platform.runLater(() -> {
-                    items.addAll(followingPostsDTO.getAggregatedPosts());
+                    Platform.runLater(() -> {
+                        for (AggregatedPost post : followingPostsDTO.getAggregatedPosts()) {
+                            items.add(new ObservablePost(post, authenticatedUserId));
+                        }
+                    });
                 });
             });
         });

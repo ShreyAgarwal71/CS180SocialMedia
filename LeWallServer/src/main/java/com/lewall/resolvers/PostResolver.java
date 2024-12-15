@@ -70,9 +70,9 @@ public class PostResolver implements BaseResolver, IPostResolver {
      * Delete a post
      * 
      * @param request
-     *                {@link Request} with {@link DeletePostDTO} body
+     *            {@link Request} with {@link DeletePostDTO} body
      * @throws InternalServerError
-     *                             if unable to delete post
+     *             if unable to delete post
      * @return void
      */
     @AuthGuard()
@@ -87,12 +87,12 @@ public class PostResolver implements BaseResolver, IPostResolver {
     }
 
     /**
-     * Like a post
+     * Toggle like of a post
      * 
      * @param request
-     *                {@link Request} with {@link LikePostDTO} body
+     *            {@link Request} with {@link LikePostDTO} body
      * @throws InternalServerError
-     *                             if unable to like post
+     *             if unable to toggle like of a post
      * @return void
      */
     @AuthGuard()
@@ -101,21 +101,21 @@ public class PostResolver implements BaseResolver, IPostResolver {
         UUID postId = request.getBody().getPostId();
         UUID userId = request.getUserId();
 
-        Post updatedPost = PostService.likePost(userId, postId);
+        Post updatedPost = PostService.toggleLike(userId, postId);
         if (updatedPost == null) {
-            throw new InternalServerError("Failed to Like Post");
+            throw new InternalServerError("Failed to Toggle Like of Post");
         }
 
         return new PostDTO(updatedPost);
     }
 
     /**
-     * Dislike a post
+     * Toggle dislike of a post
      * 
      * @param request
-     *                {@link Request} with {@link LikePostDTO} body
+     *            {@link Request} with {@link LikePostDTO} body
      * @throws InternalServerError
-     *                             if unable to like post
+     *             if unable to toggle dislike of a post
      * @return void
      */
     @AuthGuard()
@@ -126,53 +126,7 @@ public class PostResolver implements BaseResolver, IPostResolver {
 
         Post updatedPost = PostService.dislikePost(userId, postId);
         if (updatedPost == null) {
-            throw new InternalServerError("Failed to Dislike Post");
-        }
-
-        return new PostDTO(updatedPost);
-    }
-
-    /**
-     * Unlike a post
-     * 
-     * @param request
-     *                {@link Request} with {@link UnlikePostDTO} body
-     * @throws InternalServerError
-     *                             if unable to unlike post
-     * @return void
-     */
-    @AuthGuard()
-    @Endpoint(endpoint = "/unlike", method = Request.EMethod.POST, requestBodyType = UnlikePostDTO.class, responseBodyType = PostDTO.class)
-    public PostDTO unlikePost(Request<UnlikePostDTO> request) {
-        UUID postId = request.getBody().getPostId();
-        UUID userId = request.getUserId();
-
-        Post updatedPost = PostService.unlikePost(userId, postId);
-        if (updatedPost == null) {
-            throw new InternalServerError("Failed to Unlike Post");
-        }
-
-        return new PostDTO(updatedPost);
-    }
-
-    /**
-     * Un-dislike a post
-     * 
-     * @param request
-     *                {@link Request} with {@link UnlikePostDTO} body
-     * @throws InternalServerError
-     *                             if unable to unlike post
-     * @return void
-     */
-    @AuthGuard()
-    @Endpoint(endpoint = "/unDislike", method = Request.EMethod.POST, requestBodyType = UnlikePostDTO.class, responseBodyType = PostDTO.class)
-    public PostDTO unDislikePost(Request<UnlikePostDTO> request) {
-        UUID postId = request.getBody().getPostId();
-        UUID userId = request.getUserId();
-
-        Post updatedPost = PostService.unDislikePost(userId, postId);
-        if (updatedPost == null) {
-            throw new InternalServerError("Failed to Unlike Post");
+            throw new InternalServerError("Failed to Toggle dislike of a Post");
         }
 
         return new PostDTO(updatedPost);
@@ -182,9 +136,9 @@ public class PostResolver implements BaseResolver, IPostResolver {
      * Hide a post
      * 
      * @param request
-     *                {@link Request} with {@link HidePostDTO} body
+     *            {@link Request} with {@link HidePostDTO} body
      * @throws InternalServerError
-     *                             if unable to hide post
+     *             if unable to hide post
      * @return void
      */
     @AuthGuard()
@@ -202,9 +156,9 @@ public class PostResolver implements BaseResolver, IPostResolver {
      * Get comments for a post
      * 
      * @param request
-     *                {@link Request} with {@link PostCommentsDTO} body
+     *            {@link Request} with {@link PostCommentsDTO} body
      * @throws InternalServerError
-     *                             if unable to get comments
+     *             if unable to get comments
      * @return {@link CommentsDTO}
      */
     @AuthGuard()
@@ -226,9 +180,9 @@ public class PostResolver implements BaseResolver, IPostResolver {
      * Make a post private or public
      * 
      * @param request
-     *                {@link Request} with {@link PublicPrivateDTO} body
+     *            {@link Request} with {@link PublicPrivateDTO} body
      * @throws InternalServerError
-     *                             if unable to make post private or public
+     *             if unable to make post private or public
      * @return void
      */
     @AuthGuard()

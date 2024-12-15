@@ -1,6 +1,7 @@
 package com.lewall.pages;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,7 +13,8 @@ import com.lewall.common.AggregatedPost;
 import com.lewall.common.Theme;
 import com.lewall.components.Footer;
 import com.lewall.components.Navbar;
-import com.lewall.components.PostListView;
+import com.lewall.components.Post.PostListView;
+import com.lewall.components.Post.PostListView.ObservablePost;
 import com.lewall.db.models.Post;
 import com.lewall.db.models.User;
 import com.lewall.dtos.AggregatedPostsDTO;
@@ -98,16 +100,18 @@ public class Profile extends Pane {
 		profileSubtitle.setFill(Color.web(Theme.ACCENT));
 		VBox.setMargin(profileSubtitle, new Insets(3, 0, 0, 0));
 
-		ObservableList<AggregatedPost> items = FXCollections.observableArrayList();
+		ObservableList<ObservablePost> items = FXCollections.observableArrayList();
+		UserDTO authenticatedUser = LocalStorage.get("/user", UserDTO.class);
+		UUID authenicatedUserId = authenticatedUser.getUser().getId();
 
-		ListView<AggregatedPost> postListView = new PostListView(items);
-		postListView.setMaxHeight(220);
+		ListView<ObservablePost> postListView = new PostListView(items);
+		postListView.setMaxHeight(255);
 
 		Button refresh = new Button("Refresh");
 		refresh.getStyleClass().add("brand-text-button");
 		VBox.setMargin(refresh, new Insets(3, 0, 0, 0));
 
-		refresh.setOnAction(e -> {
+		refresh.setOnAction(_ -> {
 			Connection.<UserIdDTO, PostsDTO>post("/post/all", new UserIdDTO(profileUser.getId()))
 					.thenAccept(response -> {
 						posts = response.getBody().getPosts();
@@ -126,7 +130,9 @@ public class Profile extends Pane {
 						AggregatedPostsDTO postsDTO = response.getBody();
 						Platform.runLater(() -> {
 							items.clear();
-							items.addAll(postsDTO.getAggregatedPosts());
+							for (AggregatedPost post : postsDTO.getAggregatedPosts()) {
+								items.add(new ObservablePost(post, authenicatedUserId));
+							}
 						});
 					});
 		});
@@ -231,7 +237,7 @@ public class Profile extends Pane {
 				followButton.setOpacity(0.75);
 			}
 
-			followButton.setOnAction(e -> {
+			followButton.setOnAction(_ -> {
 				if (getAuthenicatedUser().getFollowing().contains(profileUser.getId().toString())) {
 					Connection
 							.<UnfollowUserDTO, UserDTO>post("/user/unfollow", new UnfollowUserDTO(profileUser.getId()))
@@ -241,7 +247,7 @@ public class Profile extends Pane {
 								userFollowing.set(profileUser.getFollowing().size() + "");
 
 								// Update the user in local storage
-								Connection.<UserDTO>get("/user", true).thenAccept((res) -> {
+								Connection.<UserDTO>get("/user", true).thenAccept((_) -> {
 								});
 
 								Platform.runLater(() -> {
@@ -256,7 +262,7 @@ public class Profile extends Pane {
 								userFollowing.set(profileUser.getFollowing().size() + "");
 
 								// Update the user in local storage
-								Connection.<UserDTO>get("/user", true).thenAccept((res) -> {
+								Connection.<UserDTO>get("/user", true).thenAccept((_) -> {
 								});
 
 								Platform.runLater(() -> {
@@ -272,7 +278,7 @@ public class Profile extends Pane {
 			Button blockButton = new Button(hasBlockedProfileUser ? "Unblock" : "Block");
 			blockButton.getStyleClass().add("brand-text-button");
 			blockButton.setPrefWidth(300);
-			blockButton.setOnAction(e -> {
+			blockButton.setOnAction(_ -> {
 				System.out.println(getAuthenicatedUser().getBlockedUsers().toString());
 				System.out.println(profileUser.getId().toString());
 				System.out.println(getAuthenicatedUser().getBlockedUsers().contains(profileUser.getId().toString()));
@@ -284,7 +290,7 @@ public class Profile extends Pane {
 								userFollowers.set(profileUser.getFollowers().size() + "");
 								userFollowing.set(profileUser.getFollowing().size() + "");
 
-								Connection.<UserDTO>get("/user", true).thenAccept((res) -> {
+								Connection.<UserDTO>get("/user", true).thenAccept(_ -> {
 								});
 
 								Platform.runLater(() -> {
@@ -304,7 +310,7 @@ public class Profile extends Pane {
 								userFollowers.set(profileUser.getFollowers().size() + "");
 								userFollowing.set(profileUser.getFollowing().size() + "");
 
-								Connection.<UserDTO>get("/user", true).thenAccept((res) -> {
+								Connection.<UserDTO>get("/user", true).thenAccept((_) -> {
 								});
 
 								Platform.runLater(() -> {
@@ -338,7 +344,9 @@ public class Profile extends Pane {
 		Connection.<UserIdDTO, AggregatedPostsDTO>post("/user/getPosts", new UserIdDTO(profileUser.getId()))
 				.thenAccept(response -> {
 					AggregatedPostsDTO postsDTO = response.getBody();
-					items.addAll(postsDTO.getAggregatedPosts());
+					for (AggregatedPost post : postsDTO.getAggregatedPosts()) {
+						items.add(new ObservablePost(post, authenicatedUserId));
+					}
 				});
 
 		VBox column = new VBox(10);

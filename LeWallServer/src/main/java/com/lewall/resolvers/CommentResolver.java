@@ -13,7 +13,6 @@ import com.lewall.services.CommentService;
 import com.lewall.dtos.AddCommentDTO;
 import com.lewall.dtos.CommentDTO;
 import com.lewall.dtos.DeleteCommentDTO;
-import com.lewall.dtos.UnlikeCommentDTO;
 import com.lewall.interfaces.ICommentResolver;
 import com.lewall.dtos.LikeCommentDTO;
 
@@ -30,9 +29,9 @@ public class CommentResolver implements BaseResolver, ICommentResolver {
      * Add a comment to a post
      * 
      * @param request
-     *                {@link Request} with {@link AddCommentDTO} body
+     *            {@link Request} with {@link AddCommentDTO} body
      * @throws InternalServerError
-     *                             if unable to add comment
+     *             if unable to add comment
      * @return void
      */
     @AuthGuard()
@@ -53,9 +52,9 @@ public class CommentResolver implements BaseResolver, ICommentResolver {
      * Delete a comment
      * 
      * @param request
-     *                {@link Request} with {@link DeleteCommentDTO} body
+     *            {@link Request} with {@link DeleteCommentDTO} body
      * @throws InternalServerError
-     *                             if unable to delete comment
+     *             if unable to delete comment
      * @return void
      */
     @AuthGuard()
@@ -73,9 +72,9 @@ public class CommentResolver implements BaseResolver, ICommentResolver {
      * Like a comment
      * 
      * @param request
-     *                {@link Request} with {@link LikeCommentDTO} body
+     *            {@link Request} with {@link LikeCommentDTO} body
      * @throws InternalServerError
-     *                             if unable to like comment
+     *             if unable to like comment
      * @return void
      */
     @AuthGuard()
@@ -95,9 +94,9 @@ public class CommentResolver implements BaseResolver, ICommentResolver {
      * Dislike a comment
      * 
      * @param request
-     *                {@link Request} with {@link LikeCommentDTO} body
+     *            {@link Request} with {@link LikeCommentDTO} body
      * @throws InternalServerError
-     *                             if unable to like comment
+     *             if unable to like comment
      * @return void
      */
     @AuthGuard()
@@ -108,50 +107,6 @@ public class CommentResolver implements BaseResolver, ICommentResolver {
 
         if (!CommentService.dislikeComment(userId, commentId)) {
             throw new InternalServerError("Failed to dislike Comment");
-        }
-
-        return new CommentDTO(CommentService.getComment(commentId));
-    }
-
-    /**
-     * Unlike a comment
-     * 
-     * @param request
-     *                {@link Request} with {@link UnlikeCommentDTO} body
-     * @throws InternalServerError
-     *                             if unable to unlike comment
-     * @return void
-     */
-    @AuthGuard()
-    @Endpoint(endpoint = "/unlike", method = Request.EMethod.POST, requestBodyType = UnlikeCommentDTO.class, responseBodyType = CommentDTO.class)
-    public CommentDTO unlikeComment(Request<UnlikeCommentDTO> request) {
-        UUID commentId = request.getBody().getCommentId();
-        UUID userId = request.getUserId();
-
-        if (!CommentService.unlikeComment(userId, commentId)) {
-            throw new InternalServerError("Failed to Unlike Comment");
-        }
-
-        return new CommentDTO(CommentService.getComment(commentId));
-    }
-
-    /**
-     * Un-dislike a comment
-     * 
-     * @param request
-     *                {@link Request} with {@link UnlikeCommentDTO} body
-     * @throws InternalServerError
-     *                             if unable to unlike comment
-     * @return void
-     */
-    @AuthGuard()
-    @Endpoint(endpoint = "/unDislike", method = Request.EMethod.POST, requestBodyType = UnlikeCommentDTO.class, responseBodyType = CommentDTO.class)
-    public CommentDTO unDislikeComment(Request<UnlikeCommentDTO> request) {
-        UUID commentId = request.getBody().getCommentId();
-        UUID userId = request.getUserId();
-
-        if (!CommentService.unDislikeComment(userId, commentId)) {
-            throw new InternalServerError("Failed to Unlike Comment");
         }
 
         return new CommentDTO(CommentService.getComment(commentId));

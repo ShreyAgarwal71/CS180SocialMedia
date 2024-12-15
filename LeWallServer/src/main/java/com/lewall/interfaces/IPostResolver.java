@@ -30,14 +30,9 @@ public interface IPostResolver {
 	public void deletePost(Request<DeletePostDTO> request);
 
 	/**
-	 * Resolves a like post request
+	 * Resolves a toggle like post request
 	 */
 	public PostDTO likePost(Request<LikePostDTO> request);
-
-	/**
-	 * Resolves an unlike post request
-	 */
-	public PostDTO unlikePost(Request<UnlikePostDTO> request);
 
 	/**
 	 * Resolves an hide post request

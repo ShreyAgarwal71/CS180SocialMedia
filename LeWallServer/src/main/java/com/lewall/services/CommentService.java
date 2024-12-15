@@ -58,7 +58,7 @@ public class CommentService implements IService {
     }
 
     /**
-     * Like a comment
+     * Toggle like
      * 
      * @param userId
      * @param commentId
@@ -70,35 +70,13 @@ public class CommentService implements IService {
             throw new BadRequest("Comment not found");
         }
 
-        if (!comment.addLike(userId.toString())) {
-            throw new BadRequest("User has already liked this comment");
-        }
+        comment.toggleLike(userId.toString());
 
         return comments.updateElement(comment.getId(), comment);
     }
 
     /**
-     * Unlike a comment
-     * 
-     * @param userId
-     * @param commentId
-     * @return
-     */
-    public static boolean unlikeComment(UUID userId, UUID commentId) {
-        Comment comment = comments.findOne(c -> c.getId().equals(commentId));
-        if (comment == null) {
-            throw new BadRequest("Comment not found");
-        }
-
-        if (!comment.removeLike(userId.toString())) {
-            throw new BadRequest("User has not liked this comment");
-        }
-
-        return comments.updateElement(comment.getId(), comment);
-    }
-
-    /**
-     * Dislike a comment
+     * Toggle dislike
      * 
      * @param userId
      * @param commentId
@@ -110,29 +88,7 @@ public class CommentService implements IService {
             throw new BadRequest("Comment not found");
         }
 
-        if (!comment.addDislike(userId.toString())) {
-            throw new BadRequest("User has already disliked this comment");
-        }
-
-        return comments.updateElement(comment.getId(), comment);
-    }
-
-    /**
-     * Un-dislike a comment
-     * 
-     * @param userId
-     * @param commentId
-     * @return exitCode
-     */
-    public static boolean unDislikeComment(UUID userId, UUID commentId) {
-        Comment comment = comments.findOne(c -> c.getId().equals(commentId));
-        if (comment == null) {
-            throw new BadRequest("Comment not found");
-        }
-
-        if (!comment.removeDislike(userId.toString())) {
-            throw new BadRequest("User has not disliked this comment");
-        }
+        comment.toggleDislike(userId.toString());
 
         return comments.updateElement(comment.getId(), comment);
     }

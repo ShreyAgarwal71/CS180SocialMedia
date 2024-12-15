@@ -98,13 +98,13 @@ public class CommentTest {
 
 		Comment testComment = new Comment(userId, postId, "This is a comment", "11-3-24", 0, 0);
 
-		testComment.addLike("user1");
-		testComment.addLike("user2");
-		testComment.addLike("user3");
+		testComment.toggleLike("user1");
+		testComment.toggleLike("user2");
+		testComment.toggleLike("user3");
 
 		assertEquals(testComment.getLikes(), 3, "Ensure the addLike method is working");
 
-		testComment.removeLike("user2");
+		testComment.toggleLike("user2");
 
 		assertEquals(testComment.getLikes(), 2, "Ensure the removeLike method is working");
 	}

@@ -54,21 +54,19 @@ public class PostService implements IService {
     }
 
     /**
-     * Like a post
+     * Toggle like
      * 
      * @param userId
      * @param postId
      * @return updated Post
      */
-    public static Post likePost(UUID userId, UUID postId) {
+    public static Post toggleLike(UUID userId, UUID postId) {
         Post post = posts.findOne(p -> p.getId().equals(postId));
         if (post == null) {
             throw new BadRequest("Post not found");
         }
 
-        if (!post.addLike(userId.toString())) {
-            throw new BadRequest("Already liked post");
-        }
+        post.toggleLike(userId.toString());
 
         if (!posts.updateElement(post.getId(), post)) {
             return null;
@@ -78,7 +76,7 @@ public class PostService implements IService {
     }
 
     /**
-     * Dislike a post
+     * Toggle dislike
      * 
      * @param userId
      * @param postId
@@ -90,57 +88,7 @@ public class PostService implements IService {
             throw new BadRequest("Post not found");
         }
 
-        if (!post.addDislike(userId.toString())) {
-            throw new BadRequest("Already disliked post");
-        }
-
-        if (!posts.updateElement(post.getId(), post)) {
-            return null;
-        }
-
-        return posts.findById(postId);
-    }
-
-    /**
-     * Unlike a post
-     * 
-     * @param userId
-     * @param postId
-     * @return
-     */
-    public static Post unlikePost(UUID userId, UUID postId) {
-        Post post = posts.findOne(p -> p.getId().equals(postId));
-        if (post == null) {
-            throw new BadRequest("Post not found");
-        }
-
-        if (!post.removeLike(userId.toString())) {
-            throw new BadRequest("Not liked post");
-        }
-
-        if (!posts.updateElement(post.getId(), post)) {
-            return null;
-        }
-
-        return posts.findById(postId);
-    }
-
-    /**
-     * Unlike a post
-     * 
-     * @param userId
-     * @param postId
-     * @return
-     */
-    public static Post unDislikePost(UUID userId, UUID postId) {
-        Post post = posts.findOne(p -> p.getId().equals(postId));
-        if (post == null) {
-            throw new BadRequest("Post not found");
-        }
-
-        if (!post.removeDislike(userId.toString())) {
-            throw new BadRequest("Not disliked post");
-        }
+        post.toggleDislike(userId.toString());
 
         if (!posts.updateElement(post.getId(), post)) {
             return null;
