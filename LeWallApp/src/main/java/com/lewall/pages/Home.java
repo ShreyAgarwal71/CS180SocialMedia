@@ -131,16 +131,17 @@ public class Home extends Pane implements IScheduledComponent {
         refresh.getStyleClass().add("brand-text-button");
         refresh.setOnAction(_ -> {
             items.clear();
-            Connection.<FollowingPostsDTO>get("/user/getFollowerPosts", false).thenAccept(response -> {
-                FollowingPostsDTO followingPostsDTO = response.getBody();
-                Platform.runLater(() -> {
-                    Platform.runLater(() -> {
-                        for (AggregatedPost post : followingPostsDTO.getAggregatedPosts()) {
-                            items.add(new ObservablePost(post, authenticatedUserId));
-                        }
+            Connection.<LimitDTO, FollowingPostsDTO>post("/user/getFollowerPosts", new LimitDTO(3, new HashSet<>()))
+                    .thenAccept(response -> {
+                        FollowingPostsDTO followingPostsDTO = response.getBody();
+                        Platform.runLater(() -> {
+                            Platform.runLater(() -> {
+                                for (AggregatedPost post : followingPostsDTO.getAggregatedPosts()) {
+                                    items.add(new ObservablePost(post, authenticatedUserId));
+                                }
+                            });
+                        });
                     });
-                });
-            });
         });
 
         fyp.getStyleClass().add("brand-title");
