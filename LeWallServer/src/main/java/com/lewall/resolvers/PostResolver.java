@@ -1,11 +1,13 @@
 package com.lewall.resolvers;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import com.lewall.api.InternalServerError;
 import com.lewall.api.Request;
 import com.lewall.common.AggregatedComment;
+import com.lewall.common.AggregatedPost;
 import com.lewall.db.models.Comment;
 import com.lewall.db.models.Post;
 import com.lewall.resolvers.ResolverTools.AuthGuard;
@@ -16,17 +18,19 @@ import com.lewall.services.PostService;
 import com.lewall.services.UserService;
 import com.lewall.dtos.CreatePostDTO;
 import com.lewall.dtos.DeletePostDTO;
-import com.lewall.dtos.UnlikePostDTO;
 import com.lewall.dtos.UserIdDTO;
 import com.lewall.interfaces.IPostResolver;
 import com.lewall.dtos.LikePostDTO;
+import com.lewall.dtos.LimitDTO;
 import com.lewall.dtos.CommentsDTO;
 import com.lewall.dtos.PostCommentsDTO;
 import com.lewall.dtos.PostsDTO;
 import com.lewall.dtos.HidePostDTO;
 import com.lewall.dtos.PostDTO;
+import com.lewall.dtos.PostRefetchDTO;
 import com.lewall.dtos.PublicPrivateDTO;
 import com.lewall.dtos.AggregatedCommentsDTO;
+import com.lewall.dtos.AggregatedPostsDTO;
 import com.lewall.dtos.ClassesDTO;
 
 /**
@@ -48,6 +52,18 @@ public class PostResolver implements BaseResolver, IPostResolver {
     public PostsDTO getPosts(Request<UserIdDTO> request) {
         UUID userId = request.getBody().getUserId();
         return new PostsDTO(UserService.getPosts(userId));
+    }
+
+    /**
+     * Refetch posts of a user
+     * 
+     * @return {@link PostsDTO}
+     */
+    @Endpoint(endpoint = "/refetch", method = Request.EMethod.POST, requestBodyType = PostRefetchDTO.class, responseBodyType = AggregatedPostsDTO.class)
+    public AggregatedPostsDTO refetchPosts(Request<PostRefetchDTO> request) {
+        Set<UUID> postIds = request.getBody().getPostIds();
+        List<AggregatedPost> posts = PostService.aggregatePosts(postIds);
+        return new AggregatedPostsDTO(posts);
     }
 
     @AuthGuard()

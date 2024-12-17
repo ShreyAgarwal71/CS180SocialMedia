@@ -7,6 +7,7 @@ import java.util.function.Consumer;
 
 import com.lewall.api.Connection;
 import com.lewall.api.LocalStorage;
+import com.lewall.common.ImageCache;
 import com.lewall.common.Theme;
 import com.lewall.common.Util;
 import com.lewall.components.Comment.CommentListView;
@@ -93,7 +94,7 @@ public class PostCard extends VBox {
         mainStack.getChildren().add(container);
 
         if (imageURL != null) {
-            Image image = new Image(imageURL, true);
+            Image image = ImageCache.getImage(imageURL);
             ImageView imageView = new ImageView(image);
 
             imageView.setPreserveRatio(true);

@@ -2,6 +2,7 @@ package com.lewall.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import com.lewall.db.collections.UserCollection;
@@ -13,6 +14,7 @@ import com.lewall.helpers.CommentSort;
 import com.lewall.db.collections.CommentCollection;
 import com.lewall.api.BadRequest;
 import com.lewall.common.AggregatedComment;
+import com.lewall.common.AggregatedPost;
 
 /**
  * A class that implements Post-managing services
@@ -29,6 +31,11 @@ public class PostService implements IService {
             String imageURL, String classId) {
         Post post = new Post(userId, messagePost, date, likes, dislikes, imageURL, classId);
         return posts.addElement(post);
+    }
+
+    public static List<AggregatedPost> aggregatePosts(Set<UUID> postIds) {
+        List<Post> modelPosts = posts.findAll((post) -> postIds.contains(post.getId()));
+        return UserService.getAggregatedPosts(modelPosts);
     }
 
     /**

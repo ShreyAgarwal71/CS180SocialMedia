@@ -13,6 +13,7 @@ import com.lewall.dtos.UserDTO;
 import com.lewall.dtos.UserFollowingPostsDTO;
 import com.lewall.dtos.UserIdDTO;
 import com.lewall.dtos.FollowingPostsDTO;
+import com.lewall.dtos.LimitDTO;
 import com.lewall.dtos.ClassPostsDTO;
 import com.lewall.dtos.ClassFeedDTO;
 
@@ -78,7 +79,7 @@ public interface IUserResolver {
 	 *
 	 * @param request
 	 */
-	public FollowingPostsDTO getFollowerPosts(Request<UserFollowingPostsDTO> request);
+	public FollowingPostsDTO getFollowerPosts(Request<LimitDTO> request);
 
 	/**
 	 * Resolves a get main feed request;

@@ -27,6 +27,7 @@ import com.lewall.interfaces.IUserResolver;
 import com.lewall.dtos.UserFollowingPostsDTO;
 import com.lewall.dtos.UserIdDTO;
 import com.lewall.dtos.FollowingPostsDTO;
+import com.lewall.dtos.LimitDTO;
 import com.lewall.dtos.ClassPostsDTO;
 import com.lewall.dtos.ClassFeedDTO;
 import com.lewall.dtos.UserSearchDTO;
@@ -236,8 +237,8 @@ public class UserResolver implements BaseResolver, IUserResolver {
      * 
      */
     @AuthGuard()
-    @Endpoint(endpoint = "/getFollowerPosts", method = Request.EMethod.GET, requestBodyType = UserFollowingPostsDTO.class, responseBodyType = FollowingPostsDTO.class)
-    public FollowingPostsDTO getFollowerPosts(Request<UserFollowingPostsDTO> request) {
+    @Endpoint(endpoint = "/getFollowerPosts", method = Request.EMethod.POST, requestBodyType = LimitDTO.class, responseBodyType = FollowingPostsDTO.class)
+    public FollowingPostsDTO getFollowerPosts(Request<LimitDTO> request) {
         UUID userId = request.getUserId();
 
         List<Post> posts = UserService.getFollowingPosts(userId);

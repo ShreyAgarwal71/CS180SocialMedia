@@ -91,26 +91,44 @@ public class PostListView extends ListView<PostListView.ObservablePost> {
         return visiblePostIds;
     }
 
+    private void determineVisibleItems() {
+        VirtualFlow<?> flow2 = (VirtualFlow<?>) that.lookup(".virtual-flow");
+        if (flow2 != null) {
+            int firstVisibleIndex = flow2.getFirstVisibleCell().getIndex();
+            int lastVisibleIndex = flow2.getLastVisibleCell().getIndex();
+
+            // Add the visible items to the set
+            visiblePostIds.clear();
+            for (int i = firstVisibleIndex; i <= lastVisibleIndex; i++) {
+                try {
+                    visiblePostIds.add(getItems().get(i).getPost().getId());
+                } catch (IndexOutOfBoundsException e) {
+                    // Ignore
+                    // Sometimes caused when removing items
+                }
+            }
+        }
+    }
+
     public PostListView(ObservableList<ObservablePost> items) {
         super(items);
         that = this;
 
         this.setPrefWidth(480);
 
-        // Determine the visible items
-        this.setOnScroll(_ -> {
-            VirtualFlow<?> flow2 = (VirtualFlow<?>) this.lookup(".virtual-flow");
-            if (flow2 != null) {
-                int firstVisibleIndex = flow2.getFirstVisibleCell().getIndex();
-                int lastVisibleIndex = flow2.getLastVisibleCell().getIndex();
+        items.addListener((javafx.collections.ListChangeListener.Change<? extends ObservablePost> _) -> {
+            if (visiblePostIds.size() != 0) {
+                determineVisibleItems();
+                return;
+            }
 
-                // Add the visible items to the set
-                visiblePostIds.clear();
-                for (int i = firstVisibleIndex; i <= lastVisibleIndex; i++) {
-                    visiblePostIds.add(items.get(i).getPost().getId());
-                }
+            for (int i = 0; i < Math.min(items.size(), 3); i++) {
+                visiblePostIds.add(items.get(i).getPost().getId());
             }
         });
+
+        // Determine the visible items on scroll
+        this.setOnScroll(_ -> determineVisibleItems());
 
         this.setCellFactory(_ -> new ListCell<ObservablePost>() {
             @Override
